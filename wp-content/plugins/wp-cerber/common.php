@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2015-19 CERBER TECH INC., http://cerber.tech
+	Copyright (C) 2015-19 CERBER TECH INC., https://cerber.tech
 	Copyright (C) 2015-19 CERBER TECH INC., https://wpcerber.com
 
     Licenced under the GNU GPL.
@@ -77,6 +77,9 @@ function cerber_admin_link( $tab = '', $args = array(), $add_nonce = false ) {
 		elseif ( in_array( $tab, array( 'geo' ) ) ) {
 			$page = 'cerber-rules';
 		}
+		elseif ( in_array( $tab, array( 'role_policies', 'global_policies' ) ) ) {
+			$page = 'cerber-users';
+		}
 		else {
 			if ( list( $prefix ) = explode( '_', $tab, 2 ) ) {
 				if ( $prefix == 'scan' ) {
@@ -87,6 +90,9 @@ function cerber_admin_link( $tab = '', $args = array(), $add_nonce = false ) {
 				}
 			}
 		}
+
+		// TODO: look up the page in tabs config
+		//$config = cerber_get_admin_page_config();
 	}
 	else {
 		$page = $args['page'];
@@ -141,20 +147,44 @@ function cerber_admin_link_add( $args = array(), $nonce = true ) {
 
 	if ( $get ) {
 		foreach ( $get as $arg => $value ) {
-			$link .= '&' . $arg . '=' . urlencode( $value );
+			if ( is_array( $value ) ) {
+				foreach ( $value as $key => $val ) {
+					$link .= '&' . $arg . '[' . $key . ']=' . urlencode( $val );
+				}
+			}
+			else {
+				$link .= '&' . $arg . '=' . urlencode( $value );
+			}
 		}
 	}
 
 	return $link;
 }
 
+/**
+ * @param array $set
+ *
+ * @return string
+ */
 function cerber_activity_link( $set = array() ) {
-	$filter = '';
-	foreach ( $set as $item ) {
-		$filter .= '&filter_activity[]=' . absint( $item );
+	static $link;
+
+	if ( ! $link ) {
+		$link = cerber_admin_link( 'activity' );
 	}
 
-	return cerber_admin_link( 'activity' ) . $filter;
+	$filter = '';
+
+	if ( 1 == count( $set ) ) {
+		$filter .= '&filter_activity=' . absint( array_shift( $set ) );
+	}
+	else {
+		foreach ( $set as $key => $item ) {
+			$filter .= '&filter_activity[' . $key . ']=' . absint( $item );
+		}
+	}
+
+	return $link . $filter;
 }
 
 function cerber_traffic_link( $set = array(), $button = true ) {
@@ -205,11 +235,9 @@ function cerber_get_site_url() {
 function cerber_get_home_url() {
 	static $url;
 
-	if ( isset( $url ) ) {
-		return $url;
+	if ( ! isset( $url ) ) {
+		$url = trim( get_home_url(), '/' );
 	}
-
-	$url = trim( get_home_url(), '/' );
 
 	return $url;
 }
@@ -385,7 +413,25 @@ function cerber_check_environment(){
 }
 
 /**
- * Health check up and self-repairing vital parts
+ * Register an issue to be used in the "trouble solving" functionality
+ *
+ * @param string $code
+ * @param string $text
+ * @param string $related_setting
+ */
+function cerber_add_issue( $code, $text, $related_setting = '' ) {
+	static $issues = array();
+	if ( ! isset( $issues[ $code ] ) ) {
+		$issues[ $code ] = array( $text, $related_setting );
+		if ( is_admin() ) {
+			// There will be a separate list of issues that is displayed separately.
+			// cerber_admin_notice( __( 'Warning:', 'wp-cerber' ) . ' ' . $text );
+		}
+	}
+}
+
+/**
+ * Health check-up and self-repairing for vital parts
  *
  */
 function cerber_watchdog( $full = false ) {
@@ -561,16 +607,15 @@ function cerber_short_ipv6( $ip ) {
  * @return array result of conversion
  * @since 3.0
  */
-function obj_to_arr_deep($var) {
-	if (is_object($var)) {
-		$var = get_object_vars($var);
+function obj_to_arr_deep( $var ) {
+	if ( is_object( $var ) ) {
+		$var = get_object_vars( $var );
 	}
-	if (is_array($var)) {
-		return array_map(__FUNCTION__, $var);
+	if ( is_array( $var ) ) {
+		return array_map( __FUNCTION__, $var );
 	}
-	else {
-		return $var;
-	}
+
+	return $var;
 }
 
 /**
@@ -655,10 +700,13 @@ function cerber_is_rest_url(){
 	}
 
 	$ret = false;
-	$uri = '/' . trim( $_SERVER['REQUEST_URI'], '/' ) . '/';
 
-	if ( 0 === strpos( $uri, '/' . rest_get_url_prefix() . '/' ) ) {
-		if ( 0 === strpos( cerber_get_home_url() . urldecode( $uri ), get_rest_url() ) ) {
+	// @since 8.1
+
+	$path = CRB_Request::get_request_path();
+
+	if ( 0 === strpos( $path, '/' . rest_get_url_prefix() . '/' ) ) {
+		if ( 0 === strpos( cerber_get_home_url() . $path , crb_get_rest_url() ) ) {
 			$ret = true;
 		}
 	}
@@ -715,9 +763,14 @@ function cerber_is_wp_cron() {
 	return false;
 }
 
-function cerber_is_wp_ajax() {
+function cerber_is_wp_ajax( $use_filter = false ) {
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		return true;
+	}
+
+	// @since 8.1.3
+	if ( $use_filter && function_exists( 'wp_doing_ajax' ) ) {
+		return wp_doing_ajax();
 	}
 
 	return false;
@@ -725,7 +778,7 @@ function cerber_is_wp_ajax() {
 
 
 /**
- * More neat way to get $_GET field with no warnings
+ * More neat way to get $_GET field
  *
  * @param $key string
  * @param $pattern string
@@ -750,7 +803,11 @@ function cerber_get_get( $key, $pattern = '' ) {
 function cerber_get_post( $key, $pattern = '' ) {
 	if ( isset( $_POST[ $key ] ) ) {
 		$ret = $_POST[ $key ];
-		if ( ! $pattern || ( $pattern && preg_match( $pattern, $ret ) ) ) {
+		if ( ! $pattern ) {
+			return $ret;
+		}
+		$pattern = '/^' . $pattern . '$/i';
+		if ( preg_match( $pattern, $ret ) ) {
 			return $ret;
 		}
 	}
@@ -839,10 +896,10 @@ function crb_admin_submit_button( $text = '', $echo = false ) {
  * @return bool|array|string
  */
 function cerber_get_bulk_action() {
-	if ( ( $ac = cerber_get_get( 'action', '[\d\w\-]+' ) ) && $ac != '-1' ) {
+	if ( ( $ac = cerber_get_get( 'action', '[\w\-]+' ) ) && $ac != '-1' ) {
 		return $ac;
 	}
-	if ( ( $ac = cerber_get_get( 'action2', '[\d\w\-]+' ) ) && $ac != '-1' ) {
+	if ( ( $ac = cerber_get_get( 'action2', '[\w\-]+' ) ) && $ac != '-1' ) {
 		return $ac;
 	}
 
@@ -954,9 +1011,20 @@ function crb_get_rest_path() {
 		$ret = ltrim( $_REQUEST['rest_route'], '/' );
 	}
 	elseif ( cerber_is_permalink_enabled() ) {
-		$pos = strlen( get_rest_url() );
-		$ret = substr( cerber_get_home_url() . urldecode( $_SERVER['REQUEST_URI'] ), $pos );
+		$path = CRB_Request::get_request_path();
+		$pos = strlen( crb_get_rest_url() );
+		$ret = substr( cerber_get_home_url() . $path, $pos ); // @since 8.1
 		$ret = trim( $ret, '/' );
+	}
+
+	return $ret;
+}
+
+function crb_get_rest_url() {
+	static $ret;
+
+	if ( ! isset( $ret ) ) {
+		$ret = get_rest_url();
 	}
 
 	return $ret;
@@ -988,6 +1056,10 @@ function cerber_last_uri() {
 
 	if ( $pos = strpos( $ret, '?' ) ) {
 		$ret = substr( $ret, 0, $pos );
+	}
+
+	if ( $pos = strpos( $ret, '#' ) ) {
+		$ret = substr( $ret, 0, $pos ); // @since 8.1 - malformed request URI
 	}
 
 	$ret = rtrim( $ret, '/' );
@@ -1145,7 +1217,7 @@ function cerber_get_labels( $type = 'activity', $all = true ) {
 		$labels[42] = __( 'Request to the Google reCAPTCHA service failed', 'wp-cerber' );
 
 		$labels[50] = __( 'Attempt to access prohibited URL', 'wp-cerber' );
-		$labels[51] = __( 'Attempt to log in with non-existent username', 'wp-cerber' );
+		$labels[51] = __( 'Attempt to log in with non-existing username', 'wp-cerber' );
 		$labels[52] = __( 'Attempt to log in with prohibited username', 'wp-cerber' );
 		// @since 4.9 // TODO 53 & 54 should be a cerber action?
 		$labels[53] = __( 'Attempt to log in denied', 'wp-cerber' );
@@ -1166,6 +1238,8 @@ function cerber_get_labels( $type = 'activity', $all = true ) {
 
 		$labels[300] = __( 'Invalid master credentials', 'wp-cerber' );
 
+		$labels[400] = 'Two-factor authentication enforced';
+
 	}
 	elseif ( $type == 'status' ) {
 		$labels[11] = __( 'Bot detected', 'wp-cerber' );
@@ -1185,6 +1259,12 @@ function cerber_get_labels( $type = 'activity', $all = true ) {
 		$labels[23] = __( 'Suspicious SQL code detected', 'wp-cerber' );
 		$labels[24] = __( 'Suspicious JavaScript code detected', 'wp-cerber' );
 		$labels[25] = __( 'Blocked by administrator', 'wp-cerber' );
+		$labels[26] = __( 'Site policy enforcement', 'wp-cerber' );
+		$labels[27] = __( '2FA code verified', 'wp-cerber' );
+		$labels[28] = __( 'Initiated by the user', 'wp-cerber' );
+
+		$labels[30] = 'Username is prohibited';
+		$labels[31] = __( 'Email address is not permitted', 'wp-cerber' );
 	}
 
 	return $labels;
@@ -1210,7 +1290,7 @@ function cerber_get_reason( $id = null ) {
 	$labels    = array();
 	$labels[701] = __( 'Limit on login attempts is reached', 'wp-cerber' );
 	$labels[702] = __( 'Attempt to access', 'wp-cerber' );
-	$labels[703] = __( 'Attempt to log in with non-existent username', 'wp-cerber' );
+	$labels[703] = __( 'Attempt to log in with non-existing username', 'wp-cerber' );
 	$labels[704] = __( 'Attempt to log in with prohibited username', 'wp-cerber' );
 	$labels[705] = __( 'Limit on failed reCAPTCHA verifications is reached', 'wp-cerber' );
 	$labels[706] = __( 'Bot activity is detected', 'wp-cerber' );
@@ -1220,6 +1300,7 @@ function cerber_get_reason( $id = null ) {
 	$labels[710] = __( 'Attempt to upload a file with malicious code', 'wp-cerber' );
 
 	$labels[711] = __( 'Multiple suspicious requests', 'wp-cerber' );
+	$labels[721] = 'Limit on 2FA verifications is reached';
 
 	if ( $id ) {
 		if ( isset( $labels[ $id ] ) ) {
@@ -1537,26 +1618,23 @@ function cerber_recaptcha_lang() {
 /*
 	Checks for a new version of WP Cerber and creates messages if needed
 */
-function cerber_check_version() {
+function cerber_check_for_newer() {
+	if ( ! $updates = get_site_transient( 'update_plugins' ) ) {
+		return false;
+	}
+
 	$ret = false;
-	if ( $updates = get_site_transient( 'update_plugins' ) ) {
-		$key = cerber_plug_in();
-		if ( isset( $updates->checked[ $key ] ) && isset( $updates->response[ $key ] ) ) {
-			$old = $updates->checked[ $key ];
-			$new = $updates->response[ $key ]->new_version;
-			if ( 1 === version_compare( $new, $old ) ) { // current version is lower than latest
-				$msg = __( 'New version is available', 'wp-cerber' ) . ' <span class="dashicons dashicons-arrow-right"></span>';
-				if ( is_multisite() ) {
-					$href = network_admin_url( 'plugins.php?plugin_status=upgrade' );
-				}
-				else {
-					$href = admin_url( 'plugins.php?plugin_status=upgrade' );
-				}
-				cerber_admin_message( '<b>' . $msg . '</b> <a href="' . $href . '">' . sprintf( __( 'Update to version %s of WP Cerber', 'wp-cerber' ), $new ) . '</a>' );
-				$ret = array( 'msg' => '<a href="' . $href . '">' . $msg . '</a>', 'ver' => $new );
-			}
+	$key = CERBER_PLUGIN_ID;
+
+	if ( isset( $updates->checked[ $key ] ) && isset( $updates->response[ $key ] ) ) {
+		$old = $updates->checked[ $key ];
+		$new = $updates->response[ $key ]->new_version;
+		if ( 1 === version_compare( $new, $old ) ) { // current version is lower than latest
+			$msg = sprintf( __( 'A new version of %s is available. Please install it.', 'wp-cerber' ), 'WP Cerber Security' );
+			$ret = array( 'msg' => $msg, 'ver' => $new );
 		}
 	}
+
 	return $ret;
 }
 
@@ -1689,9 +1767,7 @@ function cerber_db_use_mysqli() {
 }
 
 /**
- * Natively escape an SQL query
- * Based on $wpdb->_real_escape()
- *
+ * Natively escape a string for use in an SQL statement
  * The reason: https://make.wordpress.org/core/2017/10/31/changed-behaviour-of-esc_sql-in-wordpress-4-8-3/
  *
  * @param $string
@@ -2119,10 +2195,10 @@ function cerber_remove_comments( $string = '' ) {
  */
 function cerber_set_groove( $expire ) {
 	if ( ! headers_sent() ) {
-		setcookie( 'cerber_groove', md5( cerber_get_groove() ), $expire + 1, cerber_get_cookie_path() );
+		cerber_set_cookie( 'cerber_groove', md5( cerber_get_groove() ), $expire + 1 );
 
 		$groove_x = cerber_get_groove_x();
-		setcookie( 'cerber_groove_x_'.$groove_x[0], $groove_x[1], $expire + 1, cerber_get_cookie_path() );
+		cerber_set_cookie( 'cerber_groove_x_'.$groove_x[0], $groove_x[1], $expire + 1 );
 	}
 }
 
@@ -2146,10 +2222,9 @@ function cerber_get_groove() {
 */
 function cerber_check_groove( $hash = '' ) {
 	if ( ! $hash ) {
-		if ( ! isset( $_COOKIE['cerber_groove'] ) ) {
+		if ( ! $hash = cerber_get_cookie( 'cerber_groove' ) ) {
 			return false;
 		}
-		$hash = $_COOKIE['cerber_groove'];
 	}
 	$groove = cerber_get_groove();
 	if ( $hash == md5( $groove ) ) {
@@ -2164,8 +2239,7 @@ function cerber_check_groove( $hash = '' ) {
  */
 function cerber_check_groove_x() {
 	$groove_x = cerber_get_groove_x();
-	$key      = 'cerber_groove_x_' . $groove_x[0];
-	if ( isset( $_COOKIE[ $key ] ) && $_COOKIE[ $key ] == $groove_x[1] ) {
+	if ( cerber_get_cookie( 'cerber_groove_x_' . $groove_x[0] ) == $groove_x[1] ) {
 		return true;
 	}
 
@@ -2203,6 +2277,37 @@ function cerber_get_cookie_path(){
 	return '/';
 }
 
+function cerber_set_cookie( $name, $value, $expire = 0, $path = "", $domain = "", $secure = false, $httponly = false ) {
+	if ( ! $path ) {
+		$path = cerber_get_cookie_path();
+	}
+	setcookie( cerber_get_cookie_prefix() . $name, $value, $expire, $path, $domain, $secure, $httponly );
+}
+
+/**
+ * @param $name
+ * @param bool $default
+ *
+ * @return string|boolean value of the cookie, false if the cookie is not set
+ */
+function cerber_get_cookie( $name, $default = false ) {
+	return crb_array_get( $_COOKIE, cerber_get_cookie_prefix() . $name, $default );
+}
+
+function cerber_get_cookie_prefix() {
+	/*
+	if ( defined( 'CERBER_COOKIE_PREFIX' )
+	     && is_string( CERBER_COOKIE_PREFIX )
+	     && preg_match( '/^\w+$/', CERBER_COOKIE_PREFIX ) ) {
+		return CERBER_COOKIE_PREFIX;
+	}*/
+	if ( $p = crb_get_settings( 'cookiepref' ) ) {
+		return $p;
+	}
+
+	return '';
+}
+
 /**
  * Synchronize plugin settings with rules in the .htaccess file
  *
@@ -2219,18 +2324,20 @@ function cerber_htaccess_sync( $file, $settings = array() ) {
 
 	if ( 'main' == $file ) {
 		$rules    = array();
-		if ( ! empty( $settings['adminphp'] ) ) { // https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-6389
+		if ( ! empty( $settings['adminphp'] ) && ( ! defined( 'CONCATENATE_SCRIPTS' ) || ! CONCATENATE_SCRIPTS ) ) {
+		//if ( ! empty( $settings['adminphp'] ) ) {
+			// https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-6389
 			if ( ! apache_mod_loaded( 'mod_rewrite', true ) ) {
 				return new WP_Error( 'no_mod', 'The Apache mod_rewrite module is not enabled on your web server. Ask your server administrator for assistance.' );
 			}
 			$groove_x = cerber_get_groove_x();
-			$cookie   = 'cerber_groove_x_' . $groove_x[0];
+			$cookie   = cerber_get_cookie_prefix() . 'cerber_groove_x_' . $groove_x[0];
 			$rules [] = '# Protection of admin scripts is enabled (CVE-2018-6389)';
 			$rules [] = '<IfModule mod_rewrite.c>';
 			$rules [] = 'RewriteEngine On';
 			$rules [] = 'RewriteBase /';
-			$rules [] = 'RewriteCond %{REQUEST_URI} ^(.*)wp-admin/load-scripts\.php$ [OR,NC]';
-			$rules [] = 'RewriteCond %{REQUEST_URI} ^(.*)wp-admin/load-styles\.php$ [NC]';
+			$rules [] = 'RewriteCond %{REQUEST_URI} ^(.*)wp-admin/+load-scripts\.php$ [OR,NC]'; // @updated 8.1
+			$rules [] = 'RewriteCond %{REQUEST_URI} ^(.*)wp-admin/+load-styles\.php$ [NC]'; // @updated 8.1
 			$rules [] = 'RewriteCond %{HTTP_COOKIE} !' . $cookie . '=' . $groove_x[1];
 			$rules [] = 'RewriteRule (.*) - [R=403,L]';
 			$rules [] = '</IfModule>';
@@ -2491,6 +2598,38 @@ function cerber_get_wp_version() {
 	return $v;
 }
 
+function crb_get_themes() {
+
+	static $theme_headers = array(
+		'Name'        => 'Theme Name',
+		'ThemeURI'    => 'Theme URI',
+		'Description' => 'Description',
+		'Author'      => 'Author',
+		'AuthorURI'   => 'Author URI',
+		'Version'     => 'Version',
+		'Template'    => 'Template',
+		'Status'      => 'Status',
+		'Tags'        => 'Tags',
+		'TextDomain'  => 'Text Domain',
+		'DomainPath'  => 'Domain Path',
+	);
+
+	$themes = array();
+
+	if ( $list = search_theme_directories() ) {
+		foreach ( $list as $key => $info ) {
+			$css = $info['theme_root'] . '/' . $info['theme_file'];
+			if ( is_readable( $css ) ) {
+				$themes[ $key ]               = get_file_data( $info['theme_root'] . '/' . $info['theme_file'], $theme_headers, 'theme' );
+				$themes[ $key ]['theme_root'] = $info['theme_root'];
+				$themes[ $key ]['theme_file'] = $info['theme_file'];
+			}
+		}
+	}
+
+	return $themes;
+}
+
 function cerber_is_base64_encoded( $val ) {
 	$val = trim( $val );
 	if ( empty( $val ) || is_numeric( $val ) || strlen( $val ) < 8 || preg_match( '/[^A-Z0-9\+\/=]/i', $val ) ) {
@@ -2643,28 +2782,43 @@ function cerber_fromcharcode( $str ) {
 	return $ret;
 }
 
+/**
+ * @param $dir string Directory to empty with a trailing slash
+ *
+ * @return int|WP_Error
+ */
 function cerber_empty_dir( $dir ) {
 	if ( ! is_dir( $dir ) ||
 	     0 === strpos( $dir, ABSPATH ) ) { // Workaround for non-legitimate using this function
-		return false;
+		return new WP_Error( 'no-dir', 'This directory cannot be emptied' );
 	}
+
 	$files = @scandir( $dir );
-	if ( ! is_array( $files ) ) {
-		return false;
+	if ( ! is_array( $files ) || empty( $files ) ) {
+		return true;
 	}
-	if ( empty( $files ) ) {
-		return 0;
+
+	$fs = cerber_init_wp_filesystem();
+	if ( is_wp_error( $fs ) ) {
+		return $fs;
 	}
-	$count = 0;
+
+	$ret = true;
 	foreach ( $files as $file ) {
-		if ( is_file( $dir . $file ) ) {
-			if ( unlink( $dir . $file ) ) {
-				$count ++;
+		$full = $dir . $file;
+		if ( is_file( $full ) ) {
+			if ( ! unlink( $full ) ) {
+				$ret = false;
+			}
+		}
+		elseif ( ! in_array( $file, array( '..', '.' ) ) && is_dir( $full ) ) {
+			if ( ! $fs->rmdir( $full, true ) ) {
+				$ret = false;
 			}
 		}
 	}
 
-	return $count;
+	return $ret;
 }
 
 /**
@@ -2675,4 +2829,12 @@ function crb_raise_limits() {
 	@set_time_limit( 180 );
 	@ini_set( 'max_execution_time', 180 );
 	@ini_set( 'memory_limit', 512 );
+}
+
+function cerber_mask_email( $email ) {
+	list( $box, $host ) = explode( '@', $email );
+	$box  = str_pad( $box{0}, strlen( $box ), '*' );
+	$host = str_pad( substr( $host, strrpos( $host, '.' ) ), strlen( $host ), '*', STR_PAD_LEFT );
+
+	return $box . '@' . $host;
 }

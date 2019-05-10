@@ -5,6 +5,7 @@
 #crb-activation-msg i{
     font-size: 1.6em;
 }
+
 #crb-activation-msg i:nth-of-type(n+2){
     margin-left:20px;
 }
@@ -21,13 +22,22 @@
     font-weight: 500;
 }
 
+/*#crb-admin input,*/
+#crb-admin input[type="text"],
+#crb-admin input[type="number"],
+#crb-admin select,
+#crb-admin .select2-container {
+    margin: 0 0.3em 0.3em 0;
+    height: 28px;
+    vertical-align: middle;
+}
+
 .crb-main a:focus,
 #crb-aside a:focus {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
 }
 
-/* Common */
 .crb-main {
     width: auto;
     overflow: hidden;
@@ -68,6 +78,9 @@
 }
 .crb-settings .form-table th {
     min-width: 200px;
+    /*
+    padding-top: 15px;
+    vertical-align: middle;*/
 }
 .crb-settings input[type="text"] {
     padding: 0.4em;
@@ -87,6 +100,9 @@
 }
 .crb-settings .crb-disable-this {
     display: none;
+}
+.crb-settings .crb-disabled th {
+    color: #888;
 }
 
 #crb-admin [class^='select2'] {
@@ -314,9 +330,10 @@
     background: #FFF
 }
 
-.crb-table td {
+.crb-table > tbody > tr > td {
     vertical-align: middle;
     color: #222;
+    min-width: 70px;
 }
 
 /*#crb-traffic td:nth-child(2),
@@ -332,6 +349,11 @@
 #crb-traffic p{
     margin: 1em 0 0 0;
     color: #555;
+}
+@media screen and (max-width: 1024px) {
+    #crb-traffic td {
+        word-break: break-all;
+    }
 }
 #crb-traffic .crb-request span{
     margin-right: 0.5em;
@@ -415,6 +437,7 @@ td.crb-traffic-details div{
 .crb-fields-table td {
     vertical-align: top;
     border: 1px solid #CCC;
+    word-break: break-all;
 }
 .crb-fields-table td:first-child {
     min-width: 150px;
@@ -427,11 +450,11 @@ td.crb-traffic-details div{
 }
 #crb-traffic-form input,
 #crb-traffic-form select{
-    width: 100%;
+    width: 290px; /* Select2 uses px */
 }
 #crb-traffic-form input[type=submit]{
     font-weight: bold;
-    margin-top: 10px;
+    margin-bottom: 20px;
 }
 #crb-traffic-form p {
     padding: 0 !important;
@@ -440,6 +463,20 @@ td.crb-traffic-details div{
     font-weight: bold;
     color: #333;
     font-family: 'Roboto', sans-serif;
+}
+#crb-traffic-form > div {
+    display: table;
+    margin: 0 auto;
+}
+#crb-traffic-form > div > div {
+    display: table-cell;
+    width: 300px;
+    padding: 1em 1.5em 1em 1.5em;
+}
+@media screen and (max-width: 800px) {
+    #crb-traffic-form > div > div {
+        display: block;
+    }
 }
 
 /* IP info like WHOIS details */
@@ -450,6 +487,10 @@ td.crb-traffic-details div{
 }
 
 /* Activity */
+
+.crb-tab-activity .crb-quick-nav {
+    padding-bottom: 10px;
+}
 
 #activity-filter {
     margin-top: 0.5em;
@@ -472,13 +513,6 @@ td.crb-traffic-details div{
 }
 #activity-filter input[type="submit"]{
     margin-right: 3em;
-}
-#activity-filter input,
-#activity-filter select,
-#activity-filter .select2-container {
-    margin: 0 0.3em 0.3em 0;
-    height: 28px;
-    vertical-align: middle;
 }
 #activity-filter a{
     text-decoration: none;
@@ -896,6 +930,7 @@ body.wp-cerber_page_cerber-integrity {
     color: #333;
     text-align: left;
     padding: 10px;
+    min-width: 0;
 }
 
 #crb-browse-files tr td:nth-child(3) {
@@ -1095,6 +1130,30 @@ body.wp-cerber_page_cerber-integrity {
 .crb-popup-controls .button {
     min-width: 110px;
     margin-right: 5px;
+}
+
+/* New popups */
+
+.crb-admin-mpopup .mfp-content {
+    background-color: #fff;
+    max-width: 800px;
+    margin-top: 50px;
+}
+.crb-admin-mpopup #crb-popup-wrap {
+    padding-left: 20px;
+}
+#crb-popup-wrap h3 {
+    margin-top: 0;
+}
+.crb-admin-mpopup #crb-outer {
+    padding-top: 40px;
+    margin-bottom: 60px;
+}
+.crb-admin-mpopup #crb-inner {
+    min-height: 100px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 20px;
 }
 
 /* Widgets */
@@ -1303,6 +1362,18 @@ div#whois:hover {
     margin-right: 0.5em;
 }
 
+.cerber-button  {
+    /*vertical-align: middle;*/
+}
+
+.cerber-button i {
+    vertical-align: middle;
+    font-size: 120%;
+    margin-right: 0.1em;
+    /*display: inline-block;
+    line-height: 26px;*/
+}
+
 /*  Fonts  */
 
 @font-face {
@@ -1468,26 +1539,42 @@ table.crb-geo-rule td:first-child{
 .multi-wrapper .non-selected-wrapper .item.selected {
     display: none;
 }
-
 .multi-wrapper .non-selected-wrapper, .multi-wrapper .selected-wrapper{
     height: 350px !important;
 }
 
+.crb-super-select {
+    position: relative;
+}
+.crb-super-select .crb-super-details {
+    position: absolute;
+    top: 390px;
+}
+
 /* Vertical Tabs */
 
-table.vtable td {
+table.vtable > tbody > tr > td {
     vertical-align: top;
     padding: 0;
 }
 
-table.vtable td:nth-child(2) {
-    padding-left: 1em;
-    padding-right: 1em;
+#crb-vtabs {
+    width: 20%;
+    border: 1px solid #CCC;
+    border-right: none;
+}
+
+#crb-vtabcontent {
+    border: 1px solid #ccc;
+    border-left: none;
+    background-color: #fff;
+    padding-bottom: 15px;
 }
 
 .vtabs {
     /*float: left;*/
-    border: 1px solid #CCC;
+    /*border: 1px solid #CCC;
+    border-right: none;*/
    /*background-color: #f1f1f1;*/
     /*width: 30%;*/
     /*min-width: 20%;*/
@@ -1496,7 +1583,7 @@ table.vtable td:nth-child(2) {
 
 .vtabs .tablinks {
     font-size: 110%;
-    font-weight: bold;
+    /*font-weight: bold;*/
     display: block;
     color: black;
     padding: 22px 16px;
@@ -1507,12 +1594,16 @@ table.vtable td:nth-child(2) {
     cursor: pointer;
     transition: 0.3s;
 }
+
 .vtabs .tablinks:hover {
     background-color: #ddd;
 }
 
 .vtabs .tablinks.active {
+    font-weight: bold;
     background-color: #fff;
+    /*border-left: 3px solid #fff;*/
+    padding-left: 20px;
 }
 
 .vtabs .tablinks span{
@@ -1521,19 +1612,38 @@ table.vtable td:nth-child(2) {
     font-weight: normal;
 }
 
-.vtabs-content {
+/*.vtabs-content {
     float: left;
-}
+}*/
 .vtabcontent {
     /*float: left;*/
-    padding: 40px 40px 0 40px;
-    border: 1px solid #ccc;
+    /*padding: 40px 40px 0 40px;*/
+    padding: 0 40px 0 40px;
+   /* border: 1px solid #ccc;
+    border-left: none;*/
     background-color: #fff;
     /*min-width: 50%;*/
     /*border-left: none;*/
-    min-height: 560px;
+    /*min-height: 600px;*/
     /*height: 300px;*/
 }
+.vtabcontent .form-table th {
+    min-width: 250px;
+}
+.vtabcontent .form-table select,
+.vtabcontent .form-table input {
+    min-width: 200px;
+}
+
+
+
+/*
+.vtabcontent .form-table th {
+    padding: 12px 10px 12px 0;
+}
+.vtabcontent .form-table td {
+    padding: 12px 10px 10px 0;
+}*/
 
 #crb-log-viewer pre {
     font-family: monospace;
@@ -1631,6 +1741,7 @@ input:checked + .crb-slider:before {
     background-color: #fff;
     color: #dc2f34;
     border-left: solid 2px #dc2f34;
+    margin-bottom: 1em;
 }
 
 /* Flags */

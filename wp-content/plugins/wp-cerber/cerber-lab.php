@@ -2,7 +2,7 @@
 /*
 	Cerber Laboratory (cerberlab.net) specific routines.
 
-	Copyright (C) 2015-19 CERBER TECH INC., http://cerber.tech
+	Copyright (C) 2015-19 CERBER TECH INC., https://cerber.tech
 	Copyright (C) 2015-19 CERBER TECH INC., https://wpcerber.com
 
     Licenced under the GNU GPL.
@@ -606,16 +606,10 @@ function cerber_push_lab() {
 }
 
 function lab_get_key( $refresh = false, $nocache = false) {
-	global $lab_use_wp_options;
 	static $key = null;
 
 	if ( ! isset( $key ) || $nocache ) {
-		if ( is_admin() || ! empty( $lab_use_wp_options ) ) {
-			$key = get_site_option( '_cerberkey_' ); // must be from the session cache only
-		}
-		else {
-			$key = cerber_get_site_option( '_cerberkey_' );
-		}
+		$key = cerber_get_set( '_cerberkey_' );
 	}
 
 	if ( $refresh || ! $key || ! is_array( $key ) ) {
@@ -647,7 +641,8 @@ function lab_get_key( $refresh = false, $nocache = false) {
 		$key = $new;
 		*/
 
-		update_site_option( '_cerberkey_', $key );
+		//update_site_option( '_cerberkey_', $key );
+		cerber_update_set( '_cerberkey_', $key );
 	}
 
 	return $key;
@@ -674,9 +669,9 @@ function lab_update_key( $lic, $expires = 0 ) {
 	$key    = lab_get_key();
 	$key[2] = strtoupper( $lic );
 	$key[3] = absint( $expires );
-	update_site_option( '_cerberkey_', $key );
-	//wp_cache_flush();
-	lab_get_key( false, true ); // refresh the static cache
+	delete_site_option( '_cerberkey_' ); // old
+	cerber_update_set( '_cerberkey_', $key );
+	lab_get_key( false, true ); // reload the static cache
 }
 
 function lab_validate_lic( $lic = '' ) {
@@ -826,7 +821,7 @@ function lab_user_opt_in( $button = '' ) {
 function lab_get_country( $ip, $cache_only = true ) {
 	global $remote_country;
 
-	if (!lab_lab()){
+	if ( ! lab_lab() ) {
 		return false;
 	}
 

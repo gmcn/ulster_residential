@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2015-19 CERBER TECH INC., http://cerber.tech
+	Copyright (C) 2015-19 CERBER TECH INC., https://cerber.tech
 	Copyright (C) 2015-19 CERBER TECH INC., https://wpcerber.com
 
     Licenced under the GNU GPL
@@ -63,7 +63,7 @@ function cerber_export(){
 	$data = array('cerber_version' => $p['Version'],'home'=> cerber_get_home_url(),'date'=>date('d M Y H:i:s'));
 	if (!empty($_GET['exportset'])) {
 	    $data ['options'] = crb_get_settings();
-		$data ['geo-rules'] = cerber_geo_rules();
+		$data ['geo-rules'] = cerber_get_geo_rules();
 	}
 	if ( ! empty( $_GET['exportacl'] ) ) {
 		$data ['acl'] = cerber_acl_all( 'ip, tag, comments' );
@@ -114,9 +114,14 @@ function cerber_import() {
 				if ( isset( $data['geo-rules'] ) ) {
 					update_site_option( 'geo_rule_set', $data['geo-rules'] );
 				}
+				if ( ! empty( $data['options']['crb_role_policies'] ) ) {
+					update_site_option( CERBER_SETTINGS, array( 'crb_role_policies' => $data['options']['crb_role_policies'] ) );
+				}
 			}
 
-			if ( $_POST['importacl'] && $data['acl'] && is_array( $data['acl'] ) && ! empty( $data['acl'] ) ) {
+			if ( isset( $_POST['importacl'] )
+			     && ! empty( $data['acl'] )
+			     && is_array( $data['acl'] ) ) {
 				$acl_ok = true;
 				if ( false === $wpdb->query( "DELETE FROM " . CERBER_ACL_TABLE ) ) {
 					$acl_ok = false;
@@ -204,7 +209,7 @@ function cerber_show_diag(){
         </div>
 	    <?php
 
-        echo '<div class="diag-section"><h3>Maintenance task</h3>';
+        echo '<div class="diag-section"><h3>Maintenance Tasks</h3>';
 	    cerber_cron_diag();
 	    echo '</div>';
 
@@ -553,12 +558,18 @@ function cerber_cron_diag() {
 	unset( $crb_crons['cerber_daily'] );
 	$crb_crons['cerber_daily_1'] = 'Daily task';
 
-	$errors = array();
-	$ok     = array();
+	$errors  = array();
+	$ok      = array();
+	$no_cron = false;
 	foreach ( $crb_crons as $key => $task ) {
 		$h = get_site_transient( $key );
-		if ( ! $h || ! is_array( $h )  ) {
+		if ( ! $h || ! is_array( $h ) ) {
 			$errors[] = $task . ' has never been executed';
+			if ( $oldest = cerber_db_get_var( 'SELECT MIN(stamp) FROM ' . CERBER_LOG_TABLE ) ) {
+				if ( $oldest < ( time() - 24 * 3600 ) ) {
+					$no_cron = true;
+				}
+			}
 			continue;
 		}
 		if ( empty( $h[1] ) ) {
@@ -600,8 +611,11 @@ function cerber_cron_diag() {
 	}
 	echo '<p>Background tasks: ' . $num . '</p>';
 
-	if ( $errors && defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON  ) {
-		echo '<p>Note: the internal cron launcher has been disabled on this site, you have to use external one.</p>';
+	if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+		echo '<p>Note: the internal WordPress cron launcher is disabled on this site.</p>';
+		if ( $no_cron ) {
+			echo '<p>An external cron launcher has not been configured or does not work properly.</p>';
+		}
 	}
 
 }

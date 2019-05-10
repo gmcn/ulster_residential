@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: security, malware scanner, antispam, firewall, limit login attempts, custom login url, login, recaptcha, captcha, activity, log, logging, whitelist, blacklist, access list
 Requires at least: 4.5
 Requires PHP: 5.4
-Tested up to: 5.1
-Stable tag: 8.0
+Tested up to: 5.2
+Stable tag: 8.3
 License: GPLv2
 
 Protection against hacker attacks and bots. Malware scanner & integrity checker. User activity log. Antispam reCAPTCHA. Limit login attempts.
@@ -29,6 +29,7 @@ Restricts access with the Black IP Access List and the White IP Access List.
 * Cerber anti-spam engine for protecting contact and registration forms.
 * Automatically detects and moves spam comments to trash or denies them completely.
 * [Manage multiple WP Cerber instances from one dashboard](https://wpcerber.com/manage-multiple-websites/).
+* [Two-Factor Authentication for WordPress](https://wpcerber.com/two-factor-authentication-for-wordpress/).
 * Logs users, bots, hacker and other suspicious activities.
 * Security scanner verifies the integrity of WordPress files, plugins and themes.
 * Monitors file changes and new files with email notifications and reports.
@@ -74,17 +75,21 @@ Moreover, you can create your Custom login page and forget about automatic attac
 
 Cerber Security Scanner is a sophisticated and extremely powerful tool that thoroughly scans every folder and inspects every file on a website for traces of malware, trojans, backdoors, changed and new files.
 
-[Read more about malware scanner](https://wpcerber.com/wordpress-security-scanner/).
+[Read more about the malware scanner](https://wpcerber.com/wordpress-security-scanner/).
 
 = Integrity checker =
 
 The scanner checks if all WordPress folders and files match what exist in the official WordPress core repository, compares your plugins and themes with what are in the official WordPress repository and alerts you to any changes. As with scanning free plugins and themes, the scanner scans and verifies commercial plugins and themes that are installed manually.
 
-= Automated recurring scans and email reporting =
+= Scheduled Scans With Automatic File Recovery =
 
-Cerber Security Scanner allows you to easily configure your schedule for automated recurring scanning. Once the schedule is configured the scanner will automatically perform the scan of the website and send a email report with results of the scan.
+Cerber Security Scanner allows you to configure a schedule for automated recurring scanning easily. Once the schedule is configured the scanner automatically scans the website, deletes malware and recovers modified and infected WordPress files. After every scan, you can get an optional email report with the results of the scan.
 
-[Read more about automated scans](https://wpcerber.com/automated-recurring-malware-scans/).
+[Read more about the scheduled scans](https://wpcerber.com/automated-recurring-malware-scans/).
+
+= Two-Factor Authentication =
+
+Two-Factor Authentication (2FA) provides an additional layer of security requiring a second factor of identification beyond just a username and password. When 2FA is enabled on a website, it requires a user to provide an additional verification code when signing into the website. This verification code is generated automatically and sent to the user by email.
 
 = Log, filter out and export activities =
 
@@ -117,11 +122,12 @@ It’s compatible with virtually any form you have. Tested with Caldera Forms, G
 
 **Documentation & Tutorials**
 
+* [Configuring Two-Factor Authentication](https://wpcerber.com/two-factor-authentication-for-wordpress/)
 * [How to set up notifications](https://wpcerber.com/wordpress-notifications-made-easy/)
 * [Push notifications with Pushbullet](https://wpcerber.com/wordpress-mobile-and-browser-notifications-pushbullet/)
 * [How to set up invisible reCAPTCHA for WooCommerce](https://wpcerber.com/how-to-setup-recaptcha/)
 * [Changing default plugin messages](https://wpcerber.com/wordpress-hooks/)
-* [Best alternatives to the Clef plugin](https://wpcerber.com/two-factor-authentication-plugins-for-wordpress/)
+* [2FA alternatives to the Clef plugin](https://wpcerber.com/two-factor-authentication-plugins-for-wordpress/)
 * [Why reCAPTCHA does not protect WordPress from bots and brute-force attacks](https://wpcerber.com/why-recaptcha-does-not-protect-wordpress/)
 
 **Translations**
@@ -133,7 +139,6 @@ It’s compatible with virtually any form you have. Tested with Caldera Forms, G
 * Norwegian (Bokmål), thanks to [Eirik Vorland](https://www.facebook.com/KjellDaSensei)
 * Portuguese (Portugal), thanks to Helderk
 * Portuguese (Brazil), thanks to [Felipe Turcheti](http://felipeturcheti.com)
-* Polski, thanks to [Wojciech Górski](https://www.facebook.com/profile.php?id=100010484049780)
 * Spanish, thanks to Ismael Murias and [leemon](https://profiles.wordpress.org/leemon/)
 * Український, thanks to [Nadia](https://profiles.wordpress.org/webbistro)
 * Русский, thanks to [Yui](https://profiles.wordpress.org/fierevere/)
@@ -244,11 +249,11 @@ Nope. The plugin protects your site from Brute force attacks or distributed Brut
 
 Nope. This hard task cannot be done by using a plugin. That may be done by using special hardware from your hosting provider.
 
-= What is the goal of Citadel mode? =
+= What is the goal of the Citadel mode? =
 
-Citadel mode is intended to block massive bot (botnet) attacks and also a slow brute force attack. The last type of attack has a large range of intruder IPs with a small number of attempts to login per each.
+Citadel mode is intended to block massive bot (botnet) attacks and also a slow brute force attack. The last type of attack has a large range of intruder IPs with a small number of attempts to log in per each.
 
-= How to turn off Citadel mode completely? =
+= How to turn off the Citadel mode completely? =
 
 Set Threshold fields to 0 or leave them empty.
 
@@ -312,6 +317,38 @@ To get access to your dashboard you need to copy the WP Cerber Reset folder to t
 
 
 == Changelog ==
+
+= 8.3 =
+* New: Two-Factor Authentication.
+* New: Block registrations with unwanted (banned) email domains.
+* New: Block access to the WordPress Dashboard on a per-role basis.
+* New: Redirect after login/logout on a per-role basis.
+* Update: The Users tab has been renamed to Global and now is under the new User Policies admin menu.
+* Fixed: Switching to the English language in Cerber’s admin interface has no effect.
+* Fixed: Multiple notifications about a new version of the plugin in the WordPress dashboard.
+* [Read more](https://wpcerber.com/wp-cerber-security-8-3/)
+
+= 8.2 =
+* New: Automatic recovery of infected files. When [the malware scanner](https://wpcerber.com/wordpress-security-scanner/) detects changes in the core WordPress files and plugins, it automatically recovers them.
+* New: A set of quick navigation buttons on the Activity page. They allow you to filter out log records quickly.
+* New: A unique Session ID (SID) is displayed on the Forbidden 403 Page now.
+* New: The advanced search on the Live Traffic page has got a set of new fields.
+* New: To make a website comply with GDPR, a cookie prefix can be set.
+* Update: The lockout notification settings are moved to the Notifications tab.
+* Update: The list of files to be scanned in Quick mode now also includes files with these extensions:  phtm, phtml, phps, php2, php3, php4, php5, php6, php7.
+* [Read more](https://wpcerber.com/wp-cerber-security-8-2/)
+
+= 8.1 =
+* New: In a single click you can get a list of active plugins and available updates on a slave website.
+* New: Notification about a newer versions of Cerber and WordPres available ot install on a slave.
+* New: On a master website, you can select what language to use when a slave admin page is being displayed.
+* Improvement: Long URLs on the Live Traffic page now are shortened and displayed more neatly.
+* Improvement: The plugin uninstallation process has been improved and now cleans up the database completely.
+* Improvement: Multiple translations have been updated. Thanks to Maxime, Jos Knippen, Fredrik Näslund, Francesco.
+* Fixed: The "Add to the Black List" button on the Activity log page doesn't work.
+* Fixed: When the "All suspicious activity" button is clicked on the Dashboard admin page, the "Subscribe" link on the Activity page doesn't work correctly.
+* Fixed: When you open an email report, the link to the list of deleted files during a malware scan doesn't work as expected.
+* [Read more](https://wpcerber.com/wp-cerber-security-8-1/)
 
 = 8.0 =
 * New: [Manage multiple WP Cerber instances from one dashboard](https://wpcerber.com/manage-multiple-websites/).
@@ -444,18 +481,7 @@ To get access to your dashboard you need to copy the WP Cerber Reset folder to t
 * New: The Access Lists now accept IPv6 addresses in any form and handle them in a shortened form. All existing IPs will be converted.
 * Bug fixed: If the WP REST API is blocked, a request with a specially malformed URL can bypass protection. Thanks to Tomasz Wasiak.
 * Bug fixed: An IPv4 range in the Access Lists might not work as expected, depending on server/site settings.
-
-= 6.1 =
-* New: Traffic Inspector has got a Request White List setting.
-* New: An Activity filter for the Advanced search form on the Traffic Inspector page.
-* Bug fixed: Two reCAPTCHA widgets on login/registration forms.
-* Bug fixed: A legitimate IP address can be locked out by Traffic Inspector on a Windows hosting (server).
-
-= 6.0 =
-* New: Traffic Inspector. It’s a specialized request inspection algorithm that performs inspection all suspicious incoming HTTP requests and block them before they can harm a website.
-* New: Traffic Inspector optionally logs all or just suspicious and malicious requests so you can inspect them.
-* New: Added ability to clean up Cerber’s DB tables.
-* New: If the web server has some issues and those issues can affect plugin functionality, they are shown on the Diagnostic page.
+* [Read more](https://wpcerber.com/wp-cerber-security-6-2/)
 
 == Other Notes ==
 

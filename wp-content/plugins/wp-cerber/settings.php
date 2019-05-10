@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2015-19 CERBER TECH INC., http://cerber.tech
+	Copyright (C) 2015-19 CERBER TECH INC., https://cerber.tech
 	Copyright (C) 2015-19 CERBER TECH INC., https://wpcerber.com
 
     Licenced under the GNU GPL.
@@ -36,6 +36,7 @@
 // If this file is called directly, abort executing.
 if ( ! defined( 'WPINC' ) ) { exit; }
 
+define('CERBER_SETTINGS','cerber_settings');
 define('CERBER_OPT','cerber-main');
 define('CERBER_OPT_H','cerber-hardening');
 define('CERBER_OPT_U','cerber-users');
@@ -58,6 +59,7 @@ function cerber_get_setting_id( $tab = null ) {
 		$id = crb_admin_get_page();
 	}
 	// Some tab names doesn't match WP setting names
+    // tab => settings id
 	$map = array(
 		'scan_settings'    => 'scanner', // define('CERBER_OPT_S','cerber-scanner');
 		'scan_schedule'    => 'schedule', // define('CERBER_OPT_E','cerber-schedule');
@@ -65,6 +67,7 @@ function cerber_get_setting_id( $tab = null ) {
 		'ti_settings'      => 'traffic',
 		'captcha'          => 'recaptcha',
 		'cerber-recaptcha' => 'antispam',
+		'global_policies'  => 'users',
 
 		'cerber-nexus' => 'nexus-slave',
 		'nexus_slave'  => 'nexus-slave',
@@ -98,17 +101,309 @@ function cerber_settings_config( $args = array() ) {
 	if ( $args && ! is_array( $args ) ) {
 		return false;
 	}
+
 	// WP setting is: 'cerber-'.$screen_id
 	$screens = array(
-		'users'        => array( 'us' ),
-		'antispam'     => array( 'antibot', 'antibot_more', 'commproc' ),
-		'recaptcha'    => array( 'recap' ),
-		'nexus-slave'  => array( 'slave_settings' ),
-		'nexus_master' => array( 'master_settings' ),
+		'main'          => array( 'boot', 'liloa', 'stspec', 'proactive', 'custom', 'citadel', 'activity', 'prefs' ),
+		'users'         => array( 'us' ),
+		'hardening'     => array( 'hwp', 'rapi' ),
+		'notifications' => array( 'notify', 'pushit', 'reports' ),
+		'traffic'       => array( 'tmain', 'tierrs', 'tlog' ),
+		'scanner'       => array( 'smain' ),
+		'schedule'      => array( 's1', 's2' ),
+		'policies'      => array( 'scanpls', 'scanrecover', 'scanexcl' ),
+		'antispam'      => array( 'antibot', 'antibot_more', 'commproc' ),
+		'recaptcha'     => array( 'recap' ),
+		'nexus-slave'   => array( 'slave_settings' ),
+		'nexus_master'  => array( 'master_settings' ),
 	);
+
+	// Pushbullet devices
+	$pb_set = array();
+	if ( cerber_is_admin_page( false, array( 'tab' => 'notifications' ) ) ) {
+		$pb_set = cerber_pb_get_devices();
+		if ( is_array( $pb_set ) ) {
+			if ( ! empty( $pb_set ) ) {
+				$pb_set = array( 'all' => __( 'All connected devices', 'wp-cerber' ) ) + $pb_set;
+			}
+			else {
+				$pb_set = array( 'N' => __( 'No devices found', 'wp-cerber' ) );
+			}
+		}
+		else {
+			$pb_set = array( 'N' => __( 'Not available', 'wp-cerber' ) );
+		}
+	}
+
+	// Descriptions
+	if ( ! cerber_is_permalink_enabled() ) {
+		$custom = '<span style="color:#DF0000;">' . __( 'Please enable Permalinks to use this feature. Set Permalink Settings to something other than Default.', 'wp-cerber' ) . '</span>';
+	}
+	else {
+		$custom = __( 'Be careful about enabling these options.', 'wp-cerber' ) . ' ' . __( 'If you forget your Custom login URL, you will be unable to log in.', 'wp-cerber' );
+	}
+
+	$no_wcl = __( 'These restrictions do not apply to IP addresses in the White IP Access List', 'wp-cerber' );
+
 	$sections = array(
-		'us'    => array(
-			'name'   => __( 'User related settings', 'wp-cerber' ),
+		'boot'      => array(
+			'name'   => __( 'Plugin initialization', 'wp-cerber' ),
+			'fields' => array(
+				'boot-mode' => array(
+					'title' => __( 'Load security engine', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array(
+						__( 'Legacy mode', 'wp-cerber' ),
+						__( 'Standard mode', 'wp-cerber' )
+					)
+				),
+			),
+		),
+		'liloa'     => array(
+			'name'   => __( 'Limit login attempts', 'wp-cerber' ),
+			'fields' => array(
+				'attempts'   => array(
+					'title' => __( 'Attempts', 'wp-cerber' ),
+					'type'  => 'attempts',
+				),
+				'lockout'    => array(
+					'title' => __( 'Lockout duration', 'wp-cerber' ),
+					'label' => __( 'minutes', 'wp-cerber' ),
+					'size'  => 3,
+				),
+				'aggressive' => array(
+					'title' => __( 'Aggressive lockout', 'wp-cerber' ),
+					'type'  => 'aggressive',
+				),
+				'limitwhite' => array(
+					'title' => __( 'Use White IP Access List', 'wp-cerber' ),
+					'label' => __( 'Apply limit login rules to IP addresses in the White IP Access List', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+			),
+		),
+		'proactive' => array(
+			'name' => __( 'Proactive security rules', 'wp-cerber' ),
+			'desc' => __( 'Make your protection smarter!', 'wp-cerber' ),
+			'fields' => array(
+				'subnet'     => array(
+					'title' => __( 'Block subnet', 'wp-cerber' ),
+					'label' => __( 'Always block entire subnet Class C of intruders IP', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'nonusers'   => array(
+					'title' => __( 'Non-existing users', 'wp-cerber' ),
+					'label' => __( 'Immediately block IP when attempting to log in with a non-existing username', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'noredirect' => array(
+					'title' => __( 'Disable dashboard redirection', 'wp-cerber' ),
+					'label' => __( 'Disable automatic redirection to the login page when /wp-admin/ is requested by an unauthorized request', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'wplogin'    => array(
+					'title' => __( 'Request wp-login.php', 'wp-cerber' ),
+					'label' => __( 'Immediately block IP after any request to wp-login.php', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'page404'    => array(
+					'title' => __( 'Display 404 page', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array(
+						__( 'Use 404 template from the active theme', 'wp-cerber' ),
+						__( 'Display simple 404 page', 'wp-cerber' )
+					)
+				),
+
+			),
+		),
+		'custom'    => array(
+			'name'   => __( 'Custom login page', 'wp-cerber' ),
+			'desc' => $custom,
+			'fields' => array(
+				'loginpath' => array(
+					'title'     => __( 'Custom login URL', 'wp-cerber' ),
+					'label'     => __( 'must not overlap with the existing pages or posts slug', 'wp-cerber' ),
+					'label_pos' => 'below',
+					'attr'      => array( 'title' => __( 'Custom login URL may contain Latin alphanumeric characters, dashes and underscores only', 'wp-cerber' ) ),
+					'size'      => 30,
+					'pattern'   => '[a-zA-Z0-9\-_]{1,100}',
+				),
+				'loginnowp' => array(
+					'title' => __( 'Disable wp-login.php', 'wp-cerber' ),
+					'label' => __( 'Block direct access to wp-login.php and return HTTP 404 Not Found Error', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+			),
+		),
+		'stspec'    => array(
+			'name'   => __( 'Site-specific settings', 'wp-cerber' ),
+			'fields' => array(
+				'proxy'      => array(
+					'title' => __( 'Site connection', 'wp-cerber' ),
+					'label' => __( 'My site is behind a reverse proxy', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'cookiepref' => array(
+					'title'       => __( 'Prefix for plugin cookies', 'wp-cerber' ),
+					'attr'        => array( 'title' => __( 'Prefix may contain only Latin alphanumeric characters and underscores', 'wp-cerber' ) ),
+					'placeholder' => 'Latin alphanumeric characters or underscores',
+					'size'        => 24,
+					'pattern'     => '[a-zA-Z0-9_]{1,24}',
+				),
+			),
+		),
+		'citadel'   => array(
+			'name' => __( 'Citadel mode', 'wp-cerber' ),
+			'desc' => __( 'In the Citadel mode nobody is able to log in except IPs from the White IP Access List. Active user sessions will not be affected.', 'wp-cerber' ),
+			'fields' => array(
+				'citadel'    => array(
+					'title' => __( 'Threshold', 'wp-cerber' ),
+					'type'  => 'citadel',
+				),
+				'ciduration' => array(
+					'title' => __( 'Duration', 'wp-cerber' ),
+					'label' => __( 'minutes', 'wp-cerber' ),
+					'size'  => 3
+				),
+				'cinotify'   => array(
+					'title' => __( 'Notifications', 'wp-cerber' ),
+					'type'  => 'checkbox',
+					'label' => __( 'Send notification to admin email', 'wp-cerber' ) .
+					           ' [ <a href="' . cerber_admin_link( crb_admin_get_tab(), array(
+							'page'            => crb_admin_get_page(),
+							'cerber_admin_do' => 'testnotify',
+							'type'            => 'citadel',
+						), true ) . '">' . __( 'Click to send test', 'wp-cerber' ) . '</a> ]'
+				),
+			),
+		),
+		'activity'  => array(
+			'name'   => __( 'Activity', 'wp-cerber' ),
+			'fields' => array(
+				'keeplog'     => array(
+					'title' => __( 'Keep records for', 'wp-cerber' ),
+					'label' => __( 'days', 'wp-cerber' ),
+					//'label'  => __( 'days, not logged in visitors', 'wp-cerber' ),
+					'size'  => 3
+				),
+				/*'keeplog_auth' => array(
+					'title' => __( 'Keep records for', 'wp-cerber' ),
+					'label'  => __( 'days, logged in users', 'wp-cerber' ),
+					'size'  => 3
+				),*/
+				'cerberlab'   => array(
+					'title' => __( 'Cerber Lab connection', 'wp-cerber' ),
+					'label' => __( 'Send malicious IP addresses to the Cerber Lab', 'wp-cerber' ) . ' <a target="_blank" href="http://wpcerber.com/cerber-laboratory/">Know more</a>',
+					'type'  => 'checkbox',
+				),
+				'cerberproto' => array(
+					'title' => __( 'Cerber Lab protocol', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array(
+						'HTTP',
+						'HTTPS'
+					)
+				),
+				'usefile'     => array(
+					'title' => __( 'Use file', 'wp-cerber' ),
+					'label' => __( 'Write failed login attempts to the file', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+			),
+		),
+		'prefs'     => array(
+			'name'   => __( 'Preferences', 'wp-cerber' ),
+			'fields' => array(
+				'ip_extra'   => array(
+					'title' => __( 'Drill down IP', 'wp-cerber' ),
+					'label' => __( 'Retrieve extra WHOIS information for IP', 'wp-cerber' ) . ' <a href="' . cerber_admin_link( 'help' ) . '">Know more</a>',
+					'type'  => 'checkbox',
+				),
+				'dateformat' => array(
+					'title'     => __( 'Date format', 'wp-cerber' ),
+					'label'     => sprintf( __( 'if empty, the default format %s will be used', 'wp-cerber' ), '<b>' . cerber_date( time() ) . '</b>' ) . ' <a target="_blank" href="http://wpcerber.com/date-format-setting/">Know more</a>',
+					'label_pos' => 'below',
+					'size'      => 16,
+				),
+				'admin_lang' => array(
+					'title' => __( 'Use English for admin interface', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+			),
+		),
+
+		'hwp'  => array(
+			'name'   => __( 'Hardening WordPress', 'wp-cerber' ),
+			'desc'   => $no_wcl,
+			'fields' => array(
+				'stopenum' => array(
+					'title' => __( 'Stop user enumeration', 'wp-cerber' ),
+					'label' => __( 'Block access to user pages like /?author=n', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'adminphp' => array(
+					'title' => __( 'Protect admin scripts', 'wp-cerber' ),
+					'label' => __( 'Block unauthorized access to load-scripts.php and load-styles.php', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'phpnoupl' => array(
+					'title' => __( 'Disable PHP in uploads', 'wp-cerber' ),
+					'label' => __( 'Block execution of PHP scripts in the WordPress media folder', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'nophperr' => array(
+					'title' => __( 'Disable PHP error displaying', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'xmlrpc'   => array(
+					'title' => __( 'Disable XML-RPC', 'wp-cerber' ),
+					'label' => __( 'Block access to the XML-RPC server (including Pingbacks and Trackbacks)', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'nofeeds'  => array(
+					'title' => __( 'Disable feeds', 'wp-cerber' ),
+					'label' => __( 'Block access to the RSS, Atom and RDF feeds', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+			),
+		),
+		'rapi' => array(
+			'name'   => __( 'Access to WordPress REST API', 'wp-cerber' ),
+			'desc'   => $no_wcl,
+			'fields' => array(
+				'norestuser' => array(
+					'title' => __( 'Stop user enumeration', 'wp-cerber' ),
+					'label' => __( 'Block access to user data via REST API', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'norest'     => array(
+					'title' => __( 'Disable REST API', 'wp-cerber' ),
+					'label' => __( 'Block access to WordPress REST API except any of the following', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'restauth'   => array(
+					'title' => __( 'Logged in users', 'wp-cerber' ),
+					'label' => __( 'Allow REST API for logged in users', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'restroles'  => array(
+					'title' => __( 'Allow REST API for these roles', 'wp-cerber' ),
+					'type'  => 'role_select',
+				),
+				'restwhite'  => array(
+					'title'     => __( 'Allow these namespaces', 'wp-cerber' ),
+					'type'      => 'textarea',
+					'delimiter' => "\n",
+					'list'      => true,
+					'label'     => __( 'Specify REST API namespaces to be allowed if REST API is disabled. One string per line.', 'wp-cerber' ) . ' <a target="_blank" href="https://wpcerber.com/restrict-access-to-wordpress-rest-api/">Read more</a>',
+				),
+
+			),
+		),
+
+		'us' => array(
+			//'name'   => __( 'User related settings', 'wp-cerber' ),
 			//'info'   => __( 'User related settings', 'wp-cerber' ),
 			'fields' => array(
 				'authonly'      => array(
@@ -149,6 +444,23 @@ function cerber_settings_config( $args = array() ) {
 					'default' => array( 3, 60 ),
 					'pro'     => 1
 				),
+				'emrule' => array(
+					'title' => __( 'Restrict email addresses', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array(
+						__( 'No restrictions', 'wp-cerber' ),
+						__( 'Deny all email addresses that match the following', 'wp-cerber' ),
+						__( 'Permit only email addresses that match the following', 'wp-cerber' ),
+					)
+				),
+				'emlist'    => array(
+					'title' => '',
+					'label'     => __( 'Specify email addresses, wildcards or REGEX patterns. Use comma to separate items.', 'wp-cerber' ). ' ' . __( 'To specify a REGEX pattern wrap a pattern in two forward slashes.', 'wp-cerber' ),
+					'type'      => 'textarea',
+					'delimiter' => ',',
+					'list'      => true,
+					'default'   => array(),
+				),
 				'prohibited'    => array(
 					'title'     => __( 'Prohibited usernames', 'wp-cerber' ),
 					'label'     => __( 'Usernames from this list are not allowed to log in or register. Any IP address, have tried to use any of these usernames, will be immediately blocked. Use comma to separate logins.', 'wp-cerber' ) . ' ' . __( 'To specify a REGEX pattern wrap a pattern in two forward slashes.', 'wp-cerber' ),
@@ -157,12 +469,12 @@ function cerber_settings_config( $args = array() ) {
 					'list'      => true,
 					'default'   => array(),
 				),
-				'auth_expire'   => array(
-					'title'   => __( 'User session expire', 'wp-cerber' ),
+				'auth_expire' => array(
+					'title'   => __( 'User session expiration time', 'wp-cerber' ),
 					'label'   => __( 'in minutes (leave empty to use default WP value)', 'wp-cerber' ),
 					'default' => '',
-					'type'    => 'text',
 					'size'    => 6,
+					'type'    => 'number',
 				),
 				'usersort'      => array(
 					'title'   => __( 'Sort users in dashboard', 'wp-cerber' ),
@@ -173,57 +485,394 @@ function cerber_settings_config( $args = array() ) {
 			)
 		),
 
-		'antibot'    => array(
+		'notify'  => array(
+			'name'   => __( 'Email notifications', 'wp-cerber' ),
+			'fields' => array(
+				'notify'         => array(
+					'title' => __( 'Lockout notifications', 'wp-cerber' ),
+					'type'  => 'notify',
+				),
+				'email'          => array(
+					'title'       => __( 'Email Address', 'wp-cerber' ),
+					'placeholder' => __( 'Use comma to specify multiple values', 'wp-cerber' ),
+					'delimiter'   => ',',
+					'list'        => true,
+					'maxlength'   => 1000,
+					'label'       => sprintf( __( 'if empty, the admin email %s will be used', 'wp-cerber' ), '<b>' . get_site_option( 'admin_email' ) . '</b>' )
+				),
+				'emailrate'      => array(
+					'title' => __( 'Notification limit', 'wp-cerber' ),
+					'label' => __( 'notification letters allowed per hour (0 means unlimited)', 'wp-cerber' ),
+					'size'  => 3
+				),
+				'notify-new-ver' => array(
+					'title' => __( 'New version is available', 'wp-cerber' ),
+					'type'  => 'checkbox'
+				),
+			),
+		),
+		'pushit'  => array(
+			'name'   => __( 'Push notifications', 'wp-cerber' ),
+			'fields' => array(
+				'pbtoken'  => array(
+					'title' => __( 'Pushbullet access token', 'wp-cerber' ),
+				),
+				'pbdevice' => array(
+					'title' => __( 'Pushbullet device', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => $pb_set
+				),
+			),
+		),
+		'reports' => array(
+			'name'   => __( 'Weekly reports', 'wp-cerber' ),
+			'fields' => array(
+				'enable-report' => array(
+					'title' => __( 'Enable reporting', 'wp-cerber' ),
+					'type'  => 'checkbox'
+				),
+				'wreports'      => array(
+					'title' => __( 'Send reports on', 'wp-cerber' ),
+					'type'  => 'reptime',
+				),
+				'email-report'  => array(
+					'title'       => __( 'Email Address', 'wp-cerber' ),
+					'label'       => __( 'if empty, email from notification settings will be used', 'wp-cerber' ),
+					'placeholder' => __( 'Use comma to specify multiple values', 'wp-cerber' ),
+					'delimiter'   => ',',
+					'list'        => true,
+					'maxlength'   => 1000,
+				),
+			),
+		),
+
+		'tmain'  => array(
+			'name'   => __( 'Traffic Inspection', 'wp-cerber' ),
+			'fields' => array(
+				'tienabled' => array(
+					'title' => __( 'Enable traffic inspection', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array(
+						__( 'Disabled', 'wp-cerber' ),
+						__( 'Maximum compatibility', 'wp-cerber' ),
+						__( 'Maximum security', 'wp-cerber' )
+					),
+				),
+				'tiipwhite' => array(
+					'title' => __( 'Use White IP Access List', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'tiwhite'   => array(
+					'title'     => __( 'Request whitelist', 'wp-cerber' ),
+					'type'      => 'textarea',
+					'delimiter' => "\n",
+					'list'      => true,
+					'label'     => __( 'Enter a request URI to exclude the request from inspection. One item per line.', 'wp-cerber' ) . ' ' . __( 'To specify a REGEX pattern, enclose a whole line in two braces.', 'wp-cerber' ) . ' <a target="_blank" href="https://wpcerber.com/wordpress-probing-for-vulnerable-php-code/">Know more</a>',
+				),
+			),
+		),
+		'tierrs' => array(
+			'name'   => __( 'Erroneous Request Shielding', 'wp-cerber' ),
+			'fields' => array(
+				'tierrmon'    => array(
+					'title' => __( 'Enable error shielding', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array(
+						__( 'Disabled', 'wp-cerber' ),
+						__( 'Maximum compatibility', 'wp-cerber' ),
+						__( 'Maximum security', 'wp-cerber' )
+					)
+				),
+				'tierrnoauth' => array(
+					'title' => __( 'Ignore logged in users', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+			),
+		),
+		'tlog'   => array(
+			'name'   => __( 'Logging', 'wp-cerber' ),
+			'fields' => array(
+				'timode'      => array(
+					'title' => __( 'Logging mode', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array(
+						__( 'Logging disabled', 'wp-cerber' ),
+						__( 'Smart', 'wp-cerber' ),
+						__( 'All traffic', 'wp-cerber' )
+					),
+				),
+				'tinocrabs'   => array(
+					'title' => __( 'Ignore crawlers', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'tifields'    => array(
+					'title' => __( 'Save request fields', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'timask'      => array(
+					'title'       => __( 'Mask these form fields', 'wp-cerber' ),
+					'maxlength'   => 1000,
+					'placeholder' => __( 'Use comma to specify multiple values', 'wp-cerber' ),
+					'delimiter'   => ',',
+					'list'        => true,
+				),
+				'tihdrs'      => array(
+					'title' => __( 'Save request headers', 'wp-cerber' ),
+					'label' => __( '', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'tisenv'      => array(
+					'title' => __( 'Save $_SERVER', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'ticandy'     => array(
+					'title' => __( 'Save request cookies', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'tiphperr'    => array(
+					'title' => __( 'Save software errors', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'tithreshold' => array(
+					'title' => __( 'Page generation time threshold', 'wp-cerber' ),
+					'label' => __( 'milliseconds', 'wp-cerber' ),
+					'size'  => 4,
+				),
+				'tikeeprec'   => array(
+					'title' => __( 'Keep records for', 'wp-cerber' ),
+					'label' => __( 'days', 'wp-cerber' ),
+					'size'  => 4,
+				),
+			),
+		),
+
+		'smain' => array(
+			'name'   => __( 'Scanner settings', 'wp-cerber' ),
+			'fields' => array(
+				'scan_cpt' => array(
+					'title' => __( 'Custom signatures', 'wp-cerber' ),
+					'type'  => 'textarea',
+					'delimiter'   => "\n",
+					'list'        => true,
+					'label' => __( 'Specify custom PHP code signatures. One item per line. To specify a REGEX pattern, enclose a whole line in two braces.', 'wp-cerber' ) . ' <a target="_blank" href="https://wpcerber.com/malware-scanner-settings/">Read more</a>'
+				),
+				'scan_uext' => array(
+					'title' => __( 'Unwanted file extensions', 'wp-cerber' ),
+					'type'   => 'textarea',
+					'delimiter'   => ",",
+					'list'        => true,
+					'label' => __( 'Specify file extensions to search for. Full scan only. Use comma to separate items.', 'wp-cerber' )
+				),
+				'scan_exclude' => array(
+					'title' => __( 'Directories to exclude', 'wp-cerber' ),
+					'type'   => 'textarea',
+					'delimiter'   => "\n",
+					'list'        => true,
+					'label' => __( 'Specify directories to exclude from scanning. Use absolute paths. One item per line.', 'wp-cerber' )
+				),
+				'scan_inew' => array(
+					'title' => __( 'Monitor new files', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_imod' => array(
+					'title' => __( 'Monitor modified files', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_tmp' => array(
+					'title' => __( 'Scan temporary directory', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_sess' => array(
+					'title' => __( 'Scan session directory', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_debug' => array(
+					'title' => __( 'Enable diagnostic logging', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_qcleanup' => array(
+					'title' => __( 'Delete quarantined files after', 'wp-cerber' ),
+					'type'    => 'text',
+					'label'   => __( 'days', 'wp-cerber' ),
+					'size'    => 3
+				),
+
+			),
+		),
+
+		's1' => array(
+			'name'   => __( 'Automated recurring scan schedule', 'wp-cerber' ),
+			'fields' => array(
+				'scan_aquick' => array(
+					'title' => __( 'Launch Quick Scan', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => cerber_get_qs(),
+				),
+				'scan_afull'  => array(
+					'title'   => __( 'Launch Full Scan', 'wp-cerber' ),
+					'type'    => 'timepicker',
+					'enabled' => 'once a day at',
+				),
+			),
+		),
+		's2' => array(
+			'name'   => __( 'Scan results reporting', 'wp-cerber' ),
+			'desc'   => 'Configure what issues to include in email reports and the condition for sending the report.' . ' <a href="https://wpcerber.com/automated-recurring-malware-scans/" target="_blank">' . __( 'Know more', 'wp-cerber' ) . '</a>',
+			'fields' => array(
+				'scan_reinc'   => array(
+					'title' => __( 'Report an issue if any of the following is true', 'wp-cerber' ),
+					'type'  => 'checkbox_set',
+					'set'   => array(
+						           1 => __( 'Low severity', 'wp-cerber' ),
+						           2 => __( 'Medium severity', 'wp-cerber' ),
+						           3 => __( 'High severity', 'wp-cerber' )
+					           ) + cerber_get_issue_label( array( CERBER_IMD, CERBER_UXT, 50, 51, CERBER_VULN ) ),
+				),
+				'scan_relimit' => array(
+					'title' => __( 'Send email report', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array(
+						1 => __( 'After every scan', 'wp-cerber' ),
+						3 => __( 'If any changes in scan results occurred', 'wp-cerber' ),
+						5 => __( 'If new issues found', 'wp-cerber' ),
+					)
+				),
+				'scan_isize'   => array(
+					'title' => __( 'Include file sizes', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_ierrors' => array(
+					'title' => __( 'Include scan errors', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'email-scan'   => array(
+					'title'       => __( 'Email Address', 'wp-cerber' ),
+					'label'       => __( 'if empty, email from notification settings will be used', 'wp-cerber' ),
+					'placeholder' => __( 'Use comma to specify multiple values', 'wp-cerber' ),
+					'delimiter'   => ',',
+					'list'        => true,
+					'maxlength'   => 1000,
+				),
+			),
+		),
+
+		'scanpls'     => array(
+			'name'   => __( 'Automatic cleanup of malware and suspicious files', 'wp-cerber' ),
+			'desc'   => 'These policies are automatically enforced at the end of every scheduled scan based on its results. All affected files are moved to the quarantine.',
+			'fields' => array(
+				'scan_delunatt'  => array(
+					'title' => __( 'Delete unattended files', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_delupl'    => array(
+					'title' => __( 'Files in the uploads folder', 'wp-cerber' ),
+					'type'  => 'checkbox_set',
+					'set'   => array(
+						1 => __( 'Low severity', 'wp-cerber' ),
+						2 => __( 'Medium severity', 'wp-cerber' ),
+						3 => __( 'High severity', 'wp-cerber' )
+					),
+				),
+				'scan_delunwant' => array(
+					'title' => __( 'Files with unwanted extensions', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+			),
+		),
+		'scanrecover' => array(
+			'name'   => __( 'Automatic recovery of modified and infected files', 'wp-cerber' ),
+			'fields' => array(
+				'scan_recover_wp' => array(
+					'title' => __( 'Recover WordPress files', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_recover_pl' => array(
+					'title' => __( 'Recover plugins files', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+			),
+		),
+		'scanexcl'    => array(
+			'name'   => __( 'Exclusions', 'wp-cerber' ),
+			'desc'   => __( 'These files will never be deleted during automatic cleanup.', 'wp-cerber' ),
+			'fields' => array(
+				'scan_nodeltemp' => array(
+					'title' => __( 'Files in the temporary directory', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_nodelsess' => array(
+					'title' => __( 'Files in the sessions directory', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'scan_delexdir'  => array(
+					'title'     => __( 'Files in these directories', 'wp-cerber' ),
+					'type'      => 'textarea',
+					'delimiter' => "\n",
+					'list'      => true,
+					'label'     => __( 'Use absolute paths. One item per line.', 'wp-cerber' )
+				),
+				'scan_delexext'  => array(
+					'title'     => __( 'Files with these extensions', 'wp-cerber' ),
+					'type'      => 'textarea',
+					'delimiter' => ",",
+					'list'      => true,
+					'label'     => __( 'Use comma to separate items.', 'wp-cerber' )
+				),
+			),
+		),
+
+
+		'antibot'      => array(
 			'name'   => __( 'Cerber antispam engine', 'wp-cerber' ),
 			'fields' => array(
-				'botscomm'      => array(
-					'title'   => __( 'Comment form', 'wp-cerber' ),
-					'label'   => __( 'Protect comment form with bot detection engine', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'botscomm' => array(
+					'title' => __( 'Comment form', 'wp-cerber' ),
+					'label' => __( 'Protect comment form with bot detection engine', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'botsreg'      => array(
-					'title'   => __( 'Registration form', 'wp-cerber' ),
-					'label'   => __( 'Protect registration form with bot detection engine', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'botsreg'  => array(
+					'title' => __( 'Registration form', 'wp-cerber' ),
+					'label' => __( 'Protect registration form with bot detection engine', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'botsany'      => array(
-					'title'   => __( 'Other forms', 'wp-cerber' ),
-					'label'   => __( 'Protect all forms on the website with bot detection engine', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'botsany'  => array(
+					'title' => __( 'Other forms', 'wp-cerber' ),
+					'label' => __( 'Protect all forms on the website with bot detection engine', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
 			)
 		),
-		'antibot_more'    => array(
+		'antibot_more' => array(
 			'name'   => __( 'Adjust antispam engine', 'wp-cerber' ),
 			'fields' => array(
-				'botssafe'      => array(
-					'title'   => __( 'Safe mode', 'wp-cerber' ),
-					'label'   => __( 'Use less restrictive policies (allow AJAX)', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'botssafe'   => array(
+					'title' => __( 'Safe mode', 'wp-cerber' ),
+					'label' => __( 'Use less restrictive policies (allow AJAX)', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'botsnoauth'      => array(
-					'title'   => __( 'Logged in users', 'wp-cerber' ),
-					'label'   => __( 'Disable bot detection engine for logged in users', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'botsnoauth' => array(
+					'title' => __( 'Logged in users', 'wp-cerber' ),
+					'label' => __( 'Disable bot detection engine for logged in users', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'botswhite'      => array(
-					'title'   => __( 'Query whitelist', 'wp-cerber' ),
-					'label'   => __( 'Enter a part of query string or query path to exclude a request from inspection by the engine. One item per line.', 'wp-cerber' ),
-					'type'    => 'textarea',
+				'botswhite'  => array(
+					'title'     => __( 'Query whitelist', 'wp-cerber' ),
+					'label'     => __( 'Enter a part of query string or query path to exclude a request from inspection by the engine. One item per line.', 'wp-cerber' ),
+					'type'      => 'textarea',
 					'delimiter' => "\n",
 					'list'      => true,
 				),
 			)
 		),
-		'commproc'    => array(
+		'commproc'     => array(
 			'name'   => __( 'Comment processing', 'wp-cerber' ),
 			'fields' => array(
-				'spamcomm'      => array(
-					'title'   => __( 'If a spam comment detected', 'wp-cerber' ),
-					'type'    => 'select',
-					'set'     => array( __( 'Deny it completely', 'wp-cerber' ), __( 'Mark it as spam', 'wp-cerber' ) )
+				'spamcomm'   => array(
+					'title' => __( 'If a spam comment detected', 'wp-cerber' ),
+					'type'  => 'select',
+					'set'   => array( __( 'Deny it completely', 'wp-cerber' ), __( 'Mark it as spam', 'wp-cerber' ) )
 				),
-				'trashafter'      => array(
+				'trashafter' => array(
 					'title'   => __( 'Trash spam comments', 'wp-cerber' ),
 					'type'    => 'text',
 					'enabled' => __( 'Move spam comments to trash after' ),
@@ -233,66 +882,67 @@ function cerber_settings_config( $args = array() ) {
 			)
 		),
 
-		'recap'    => array(
-			'name'   => __( 'reCAPTCHA settings', 'wp-cerber' ),
+		'recap' => array(
+			'name' => __( 'reCAPTCHA settings', 'wp-cerber' ),
+			'desc' => __( 'Before you can start using reCAPTCHA, you have to obtain Site key and Secret key on the Google website', 'wp-cerber' ) . ' <a href="https://wpcerber.com/how-to-setup-recaptcha/">' . __( 'Know more', 'wp-cerber' ) . '</a>',
 			'fields' => array(
-				'sitekey'      => array(
-					'title'   => __( 'Site key', 'wp-cerber' ),
-					'type'    => 'text',
+				'sitekey'       => array(
+					'title' => __( 'Site key', 'wp-cerber' ),
+					'type'  => 'text',
 				),
-				'secretkey'      => array(
-					'title'   => __( 'Secret key', 'wp-cerber' ),
-					'type'    => 'text',
+				'secretkey'     => array(
+					'title' => __( 'Secret key', 'wp-cerber' ),
+					'type'  => 'text',
 				),
-				'invirecap'      => array(
-					'title'   => __( 'Invisible reCAPTCHA', 'wp-cerber' ),
-					'label'   => __( 'Enable invisible reCAPTCHA', 'wp-cerber' ) . ' ' . __( '(do not enable it unless you get and enter the Site and Secret keys for the invisible version)', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'invirecap'     => array(
+					'title' => __( 'Invisible reCAPTCHA', 'wp-cerber' ),
+					'label' => __( 'Enable invisible reCAPTCHA', 'wp-cerber' ) . ' ' . __( '(do not enable it unless you get and enter the Site and Secret keys for the invisible version)', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
 				'recapreg'      => array(
-					'title'   => __( 'Registration form', 'wp-cerber' ),
-					'label'   => __( 'Enable reCAPTCHA for WordPress registration form', 'wp-cerber' ),
-					'type'    => 'checkbox',
+					'title' => __( 'Registration form', 'wp-cerber' ),
+					'label' => __( 'Enable reCAPTCHA for WordPress registration form', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'recapwooreg'      => array(
-					'title'   => '',
-					'label'   => __( 'Enable reCAPTCHA for WooCommerce registration form', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'recapwooreg'   => array(
+					'title' => '',
+					'label' => __( 'Enable reCAPTCHA for WooCommerce registration form', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'recaplost'      => array(
-					'title'   => __( 'Lost password form', 'wp-cerber' ),
-					'label'   => __( 'Enable reCAPTCHA for WordPress lost password form', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'recaplost'     => array(
+					'title' => __( 'Lost password form', 'wp-cerber' ),
+					'label' => __( 'Enable reCAPTCHA for WordPress lost password form', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'recapwoolost'      => array(
-					'title'   => '',
-					'label'   => __( 'Enable reCAPTCHA for WooCommerce lost password form', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'recapwoolost'  => array(
+					'title' => '',
+					'label' => __( 'Enable reCAPTCHA for WooCommerce lost password form', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'recaplogin'      => array(
-					'title'   => __( 'Login form', 'wp-cerber' ),
-					'label'   => __( 'Enable reCAPTCHA for WordPress login form', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'recaplogin'    => array(
+					'title' => __( 'Login form', 'wp-cerber' ),
+					'label' => __( 'Enable reCAPTCHA for WordPress login form', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'recapwoologin'      => array(
-					'title'   => '',
-					'label'   => __( 'Enable reCAPTCHA for WooCommerce login form', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'recapwoologin' => array(
+					'title' => '',
+					'label' => __( 'Enable reCAPTCHA for WooCommerce login form', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
 				'recapcom'      => array(
-					'title'   => __( 'Antispam', 'wp-cerber' ),
-					'label'   => __( 'Enable reCAPTCHA for WordPress comment form', 'wp-cerber' ),
-					'type'    => 'checkbox',
+					'title' => __( 'Antispam', 'wp-cerber' ),
+					'label' => __( 'Enable reCAPTCHA for WordPress comment form', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'recapcomauth'      => array(
-					'title'   => '',
-					'label'   => __( 'Disable reCAPTCHA for logged in users', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'recapcomauth'  => array(
+					'title' => '',
+					'label' => __( 'Disable reCAPTCHA for logged in users', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'recaplimit'      => array(
-					'title'   => __( 'Limit attempts', 'wp-cerber' ),
-					'label'   => __( 'Lock out IP address for %s minutes after %s failed attempts within %s minutes', 'wp-cerber' ),
-					'type'    => 'limitz',
+				'recaplimit'    => array(
+					'title' => __( 'Limit attempts', 'wp-cerber' ),
+					'label' => __( 'Lock out IP address for %s minutes after %s failed attempts within %s minutes', 'wp-cerber' ),
+					'type'  => 'limitz',
 				),
 			)
 		),
@@ -306,29 +956,33 @@ function cerber_settings_config( $args = array() ) {
 					'type'  => 'text',
 				),*/
 				'master_tolist'  => array(
-					'title'   => __( 'Return to the website list', 'wp-cerber' ),
-					'type'    => 'checkbox',
+					'title' => __( 'Return to the website list', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
 				'master_swshow'  => array(
-					'title'   => __( 'Show "Switched to" notification', 'wp-cerber' ),
-					'type'    => 'checkbox',
+					'title' => __( 'Show "Switched to" notification', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				'master_at_site'  => array(
-					'title'   => __( 'Add @ site to the page title', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'master_at_site' => array(
+					'title' => __( 'Add @ site to the page title', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
-				// TODO
-				/*'master_locale'  => array(
-					'title'   => __( 'Use Master Language', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'master_locale'  => array(
+					'title' => __( 'Use master language', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				/*
+				'master_dt'      => array(
+					'title' => __( 'Use master datetime format', 'wp-cerber' ),
+					'type'  => 'checkbox',
+				),
+				'master_tz'      => array(
+					'title' => __( 'Use master timezone', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),*/
-				/*'master_time'  => array(
-					'title'   => __( 'Use Master Timezone', 'wp-cerber' ),
-					'type'    => 'checkbox',
-				),*/
-				'master_diag'  => array(
-					'title'   => __( 'Enable diagnostic logging', 'wp-cerber' ),
-					'type'    => 'checkbox',
+				'master_diag'    => array(
+					'title' => __( 'Enable diagnostic logging', 'wp-cerber' ),
+					'type'  => 'checkbox',
 				),
 			)
 		),
@@ -336,22 +990,22 @@ function cerber_settings_config( $args = array() ) {
 			'name'   => '',
 			//'info'   => __( 'User related settings', 'wp-cerber' ),
 			'fields' => array(
-				'slave_ips' => array(
+				'slave_ips'    => array(
 					'title' => __( 'Limit access by IP address', 'wp-cerber' ),
 					//'placeholder' => 'The IP address of the master',
 					'type'  => 'text',
 					//'pro'   => 1
 				),
 				'slave_access' => array(
-					'title'   => __( 'Access to this website', 'wp-cerber' ),
-					'type'    => 'select',
-					'set'     => array(
+					'title'     => __( 'Access to this website', 'wp-cerber' ),
+					'type'      => 'select',
+					'set'       => array(
 						2 => __( 'Full access mode', 'wp-cerber' ),
 						4 => __( 'Read-only mode', 'wp-cerber' ),
 						8 => __( 'Disabled', 'wp-cerber' )
 					),
-					//'label_position' => 'below',
-					'default' => 2,
+					'label_pos' => 'below',
+					'default'   => 2,
 				),
 				'slave_diag'   => array(
 					'title'   => __( 'Enable diagnostic logging', 'wp-cerber' ),
@@ -402,8 +1056,16 @@ function cerber_wp_settings_setup( $screen_id, $sections = array() ) {
 	}
 	$option = 'cerber-' . $screen_id;
 	register_setting( 'cerberus-' . $screen_id, $option );
-	foreach ( $sections as $section => $section_config ) {
-		add_settings_section( $section, $section_config['name'], 'cerber_sapi_section', $option );
+	global $tmp;
+	foreach ( $sections as $section_id => $section_config ) {
+		//add_settings_section( $section, $section_config['name'], 'cerber_sapi_section', $option );
+		$tmp[ $section_id ] = crb_array_get( $section_config, 'desc' );
+		add_settings_section( $section_id, crb_array_get( $section_config, 'name', '' ), function ( $sec ) {
+			global $tmp;
+			if ( $tmp[ $sec['id'] ] ) {
+				echo $tmp[ $sec['id'] ];
+			}
+		}, $option );
 		foreach ( $section_config['fields'] as $field => $config ) {
 			if ( isset( $config['pro'] ) && !lab_lab() ) {
 				continue;
@@ -442,7 +1104,7 @@ function cerber_wp_settings_setup( $screen_id, $sections = array() ) {
 				$config['class'] .= ' crb-disable-this';
 			}
 
-			add_settings_field( $field, $config['title'], 'cerber_field_show', $option, $section, $config );
+			add_settings_field( $field, $config['title'], 'cerber_field_show', $option, $section_id, $config );
 		}
 	}
 }
@@ -454,7 +1116,7 @@ function cerber_wp_settings_setup( $screen_id, $sections = array() ) {
  */
 
 function cerber_get_setting_list() {
-	return array( CERBER_OPT, CERBER_OPT_H, CERBER_OPT_U, CERBER_OPT_A, CERBER_OPT_C, CERBER_OPT_N, CERBER_OPT_T, CERBER_OPT_S, CERBER_OPT_E, CERBER_OPT_P, CERBER_OPT_SL, CERBER_OPT_MA );
+	return array( CERBER_SETTINGS, CERBER_OPT, CERBER_OPT_H, CERBER_OPT_U, CERBER_OPT_A, CERBER_OPT_C, CERBER_OPT_N, CERBER_OPT_T, CERBER_OPT_S, CERBER_OPT_E, CERBER_OPT_P, CERBER_OPT_SL, CERBER_OPT_MA );
 }
 
 /*
@@ -463,7 +1125,7 @@ function cerber_get_setting_list() {
 add_action( 'admin_init', 'cerber_admin_init' );
 function cerber_admin_init() {
 	global $crb_assets_url, $crb_ajax_loader;
-	$crb_assets_url = cerber_plugin_dir_url() . 'assets/';
+	$crb_assets_url  = cerber_plugin_dir_url() . 'assets/';
 	$crb_ajax_loader = $crb_assets_url . 'ajax-loader.gif';
 
 	if ( ! cerber_is_admin_page()
@@ -474,722 +1136,10 @@ function cerber_admin_init() {
 
 	cerber_wp_settings_setup( cerber_get_setting_id() );
 
-	// Main Settings tab ---------------------------------------------------------------------
-
-	$tab = 'main'; // 'cerber-main' settings
-	register_setting( 'cerberus-' . $tab, CERBER_OPT );
-
-	add_settings_section( 'boot', __( 'Plugin initialization', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT );
-	add_settings_field( 'boot-mode', __( 'Load security engine', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'boot',
-		array(
-			'group'   => $tab,
-			'setting' => 'boot-mode',
-			'type'    => 'select',
-			'set'     => array(
-				__( 'Legacy mode', 'wp-cerber' ),
-				__( 'Standard mode', 'wp-cerber' )
-			)
-		) );
-
-	add_settings_section( 'liloa', __( 'Limit login attempts', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT );
-	add_settings_field( 'attempts', __( 'Attempts', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'liloa',
-		array(
-			'group'   => $tab,
-			'setting' => 'attempts',
-			'type'    => 'attempts'
-		) );
-	add_settings_field( 'lockout', __( 'Lockout duration', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'liloa',
-		array(
-			'group'   => $tab,
-			'setting' => 'lockout',
-			'type'    => 'text',
-			'label'   => __( 'minutes', 'wp-cerber' ),
-			'size'    => 3
-		) );
-	add_settings_field( 'aggressive', __( 'Aggressive lockout', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'liloa',
-		array(
-			'group'   => $tab,
-			'setting' => 'aggressive',
-			'type'    => 'aggressive'
-		) );
-	add_settings_field( 'limitwhite', __( 'Use White IP Access List', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'liloa',
-		array(
-			'group'   => $tab,
-			'setting' => 'limitwhite',
-			'type'    => 'checkbox',
-			'label'   => __( 'Apply limit login rules to IP addresses in the White IP Access List', 'wp-cerber' )
-		) );
-	add_settings_field( 'notify', __( 'Notifications', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'liloa',
-		array(
-			'group'   => $tab,
-			'setting' => 'notify',
-            'type'    => 'notify'
-		) );
-	add_settings_field( 'proxy', __( 'Site connection', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'liloa',
-		array(
-			'group'   => $tab,
-			'setting' => 'proxy',
-			'type'    => 'checkbox',
-			'label'   => __( 'My site is behind a reverse proxy', 'wp-cerber' )
-		) );
-
-	add_settings_section( 'proactive', __( 'Proactive security rules', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT );
-	add_settings_field( 'subnet', __( 'Block subnet', 'wp-cerber' ), 'cerber_field_show', 'cerber-' . $tab, 'proactive', array(
-		'group'  => $tab,
-		'setting' => 'subnet',
-		'type'   => 'checkbox',
-		'label'  => __( 'Always block entire subnet Class C of intruders IP', 'wp-cerber' )
-	) );
-	add_settings_field( 'nonusers', __( 'Non-existent users', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'proactive', array(
-		'group'  => $tab,
-		'setting' => 'nonusers',
-		'type'   => 'checkbox',
-		'label'  => __( 'Immediately block IP when attempting to login with a non-existent username', 'wp-cerber' )
-	) );
-	add_settings_field( 'noredirect', __( 'Disable dashboard redirection', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'proactive', array(
-		'group'  => $tab,
-		'setting' => 'noredirect',
-		'type'   => 'checkbox',
-		'label'  => __( 'Disable automatic redirection to the login page when /wp-admin/ is requested by an unauthorized request', 'wp-cerber' )
-	) );
-	add_settings_field( 'wplogin', __( 'Request wp-login.php', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'proactive', array(
-		'group'  => $tab,
-		'setting' => 'wplogin',
-		'type'   => 'checkbox',
-		'label'  => __( 'Immediately block IP after any request to wp-login.php', 'wp-cerber' )
-	) );
-	add_settings_field( 'page404', __( 'Display 404 page', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'proactive', array(
-		'group'  => $tab,
-		'setting' => 'page404',
-		'type'   => 'select',
-		'set'    => array(
-			__( 'Use 404 template from the active theme', 'wp-cerber' ),
-			__( 'Display simple 404 page', 'wp-cerber' )
-		)
-	) );
-
-	add_settings_section( 'custom', __( 'Custom login page', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT );
-	add_settings_field( 'loginpath', __( 'Custom login URL', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'custom',
-		array(
-			'group'   => $tab,
-			'setting' => 'loginpath',
-			'size'    => 30,
-			'type'    => 'text',
-			'pattern' => '[a-zA-Z0-9\-_]{1,100}',
-			'title'   => __( 'Custom login URL may contain only letters, numbers, dashes and underscores', 'wp-cerber' ),
-			'label'   => __( 'must not overlap with the existing pages or posts slug', 'wp-cerber' )
-		) );
-	add_settings_field( 'loginnowp', __( 'Disable wp-login.php', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'custom',
-		array(
-			'group'  => $tab,
-			'setting' => 'loginnowp',
-			'type'   => 'checkbox',
-			'label'  => __( 'Block direct access to wp-login.php and return HTTP 404 Not Found Error', 'wp-cerber' )
-		) );
-
-	add_settings_section( 'citadel', __( 'Citadel mode', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT );
-	add_settings_field( 'citadel', __( 'Threshold', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'citadel',
-		array(
-			'group'  => $tab,
-			'setting' => 'citadel',
-			'type'   => 'citadel'
-		) );
-	add_settings_field( 'ciduration', __( 'Duration', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'citadel',
-		array(
-			'group'  => $tab,
-			'setting' => 'ciduration',
-			'type'   => 'text',
-			'label'  => __( 'minutes', 'wp-cerber' ),
-			'size'   => 3
-		) );
-	add_settings_field( 'cinotify', __( 'Notifications', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'citadel',
-		array(
-			'group'   => $tab,
-			'setting' => 'cinotify',
-			'type'    => 'checkbox',
-			'label' => __( 'Send notification to admin email', 'wp-cerber' ) .
-			           ' [ <a href="' . cerber_admin_link( crb_admin_get_tab(), array(
-					'page'             => crb_admin_get_page(),
-					'cerber_admin_do'  => 'testnotify',
-					'type'             => 'citadel',
-				), true ) . '">' . __( 'Click to send test', 'wp-cerber' ) . '</a> ]'
-		) );
-
-	add_settings_section( 'activity', __( 'Activity', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT );
-	add_settings_field( 'keeplog', __( 'Keep records for', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'activity', array(
-		'group'  => $tab,
-		'setting' => 'keeplog',
-		'type'   => 'text',
-		'label'  => __( 'days', 'wp-cerber' ),
-		'size'   => 3
-	) );
-	add_settings_field( 'cerberlab', __( 'Cerber Lab connection', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'activity', array(
-		'group'  => $tab,
-		'setting' => 'cerberlab',
-		'type'   => 'checkbox',
-		'label'  => __( 'Send malicious IP addresses to the Cerber Lab', 'wp-cerber' ) . ' <a target="_blank" href="http://wpcerber.com/cerber-laboratory/">Know more</a>'
-	) );
-	add_settings_field( 'cerberproto', __( 'Cerber Lab protocol', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'activity', array(
-		'group'  => $tab,
-		'setting' => 'cerberproto',
-		'type'   => 'select',
-		'set'    => array(
-			'HTTP',
-			'HTTPS'
-		)
-	) );
-	add_settings_field( 'usefile', __( 'Use file', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'activity', array(
-		'group'  => $tab,
-		'setting' => 'usefile',
-		'type'   => 'checkbox',
-		'label'  => __( 'Write failed login attempts to the file', 'wp-cerber' )
-	) );
-
-	add_settings_section( 'prefs', __( 'Preferences', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT );
-	add_settings_field( 'ip_extra', __( 'Drill down IP', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'prefs', array(
-		'group'  => $tab,
-		'setting' => 'ip_extra',
-		'type'   => 'checkbox',
-		'label'  => __( 'Retrieve extra WHOIS information for IP', 'wp-cerber' ) . ' <a href="' . cerber_admin_link( 'help' ) . '">Know more</a>'
-	) );
-	add_settings_field( 'dateformat', __( 'Date format', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'prefs', array(
-		'group'   => $tab,
-		'setting' => 'dateformat',
-		'type'    => 'text',
-		'size'    => 16,
-		'label'   => sprintf( __( 'if empty, the default format %s will be used', 'wp-cerber' ), '<b>' . cerber_date( time() ) . '</b>' ) . ' <a target="_blank" href="http://wpcerber.com/date-format-setting/">Know more</a>'
-	) );
-	add_settings_field( 'admin_lang', __( 'Use English for admin interface', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT, 'prefs', array(
-		'group'  => $tab,
-		'setting' => 'admin_lang',
-		'type'   => 'checkbox'
-	) );
-
-	// Hardening tab --------------------------------------------------------------------------
-
-	$tab = 'hardening'; // 'cerber-hardening' settings
-	register_setting( 'cerberus-' . $tab, CERBER_OPT_H );
-
-	add_settings_section( 'hwp', __( 'Hardening WordPress', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_H );
-	add_settings_field( 'stopenum', __( 'Stop user enumeration', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'hwp',
-		array(
-			'group'   => $tab,
-			'setting' => 'stopenum',
-			'type'    => 'checkbox',
-			'label'   => __( 'Block access to user pages like /?author=n', 'wp-cerber' )
-		) );
-	add_settings_field( 'adminphp', __( 'Protect admin scripts', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'hwp',
-		array(
-			'group'   => $tab,
-			'setting' => 'adminphp',
-			'type'    => 'checkbox',
-			'label'   => __( 'Block unauthorized access to load-scripts.php and load-styles.php', 'wp-cerber' )
-		) );
-	add_settings_field( 'phpnoupl', __( 'Disable PHP in uploads', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'hwp',
-		array(
-			'group'   => $tab,
-			'setting' => 'phpnoupl',
-			'type'    => 'checkbox',
-			'label'   => __( 'Disable execution of PHP scripts in the WordPress media folder', 'wp-cerber' )
-		) );
-	add_settings_field( 'nophperr', __( 'Disable PHP error displaying', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'hwp',
-		array(
-			'group'   => $tab,
-			'setting' => 'nophperr',
-			'type'    => 'checkbox'
-		) );
-	add_settings_field( 'xmlrpc', __( 'Disable XML-RPC', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'hwp',
-		array(
-			'group'  => $tab,
-			'setting' => 'xmlrpc',
-			'type'   => 'checkbox',
-			'label'  => __( 'Block access to the XML-RPC server (including Pingbacks and Trackbacks)', 'wp-cerber' )
-		) );
-	add_settings_field( 'nofeeds', __( 'Disable feeds', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'hwp',
-		array(
-			'group'  => $tab,
-			'setting' => 'nofeeds',
-			'type'   => 'checkbox',
-			'label'  => __( 'Block access to the RSS, Atom and RDF feeds', 'wp-cerber' )
-		) );
-
-
-	add_settings_section( 'rapi', __( 'Access to WordPress REST API', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_H );
-	add_settings_field( 'norestuser', __( 'Stop user enumeration', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'rapi',
-		array(
-			'group'   => $tab,
-			'setting' => 'norestuser',
-			'type'    => 'checkbox',
-			'label'   => __( 'Block access to user data via REST API', 'wp-cerber' )
-		) );
-
-	add_settings_field( 'norest', __( 'Disable REST API', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'rapi',
-		array(
-			'group'   => $tab,
-			'setting' => 'norest',
-			'type'    => 'checkbox',
-			'label'   => __( 'Block access to WordPress REST API except any of the following', 'wp-cerber' )
-		) );
-	add_settings_field( 'restauth', __( 'Logged in users', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'rapi',
-		array(
-			'group'   => $tab,
-			'setting' => 'restauth',
-			'type'    => 'checkbox',
-			'label'   => __( 'Allow REST API for logged in users', 'wp-cerber' )
-		) );
-	add_settings_field( 'restroles', __( 'Allow REST API for these roles', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'rapi',
-		array(
-			'group'   => $tab,
-			'setting' => 'restroles',
-			'type'    => 'role_select',
-		) );
-	add_settings_field( 'restwhite', __( 'Allow these namespaces', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_H, 'rapi',
-		array(
-			'group'     => $tab,
-			'setting'   => 'restwhite',
-			'type'      => 'textarea',
-			'delimiter' => "\n",
-			'list'      => true,
-			'label'     => __( 'Specify REST API namespaces to be allowed if REST API is disabled. One string per line.', 'wp-cerber' ) . ' <a target="_blank" href="https://wpcerber.com/restrict-access-to-wordpress-rest-api/">Read more</a>',
-		) );
 	//add_settings_field('hashauthor',__('Hide author usernames','wp-cerber'),'cerberus_field_show',CERBER_OPT_H,'hwp',array('group'=>$tab,'option'=>'hashauthor','type'=>'checkbox','label'=>__('Replace author username with hash for author pages and URLs','wp-cerber')));
 	//add_settings_field('cleanhead',__('Clean up HEAD','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'hwp',array('group'=>$tab,'option'=>'cleanhead','type'=>'checkbox','label'=>__('Remove generator and version tags from HEAD section','wp-cerber')));
 	//add_settings_field('ping',__('Disable Pingback','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'hwp',array('group'=>$tab,'option'=>'ping','type'=>'checkbox','label'=>__('Block access to ping functional','wp-cerber')));
 
-	// Users tab -----------------------------------------------------------------------------
-    /*
-	$tab = 'users'; // 'cerber-users' settings
-	register_setting( 'cerberus-' . $tab, CERBER_OPT_U );
-    */
-	// Antibot & reCAPTCHA -----------------------------------------------------------------------------
-
-	/*$tab = 'antispam';  // 'cerber-recaptcha' settings
-	register_setting( 'cerberus-' . $tab, CERBER_OPT_A );
-
-	$tab = 'recaptcha';  // 'cerber-recaptcha' settings
-	register_setting( 'cerberus-' . $tab, CERBER_OPT_C );
-	*/
-
-	// Notifications -----------------------------------------------------------------------------
-
-	$group = 'notifications'; // 'cerber-notifications' settings
-	register_setting( 'cerberus-'.$group, CERBER_OPT_N);
-	add_settings_section('notify', __('Email notifications','wp-cerber'), 'cerber_sapi_section', CERBER_OPT_N);
-
-	$def_email = '<b>'.get_site_option('admin_email').'</b>';
-	add_settings_field( 'email', __( 'Email Address', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_N, 'notify',
-		array( 'group'       => $group,
-		       'setting'     => 'email',
-		       'type'        => 'text',
-		       'placeholder' => __( 'Use comma to specify multiple values', 'wp-cerber' ),
-		       'delimiter'   => ',',
-		       'list'        => true,
-		       'maxlength'   => 1000,
-		       'label'       => sprintf( __( 'if empty, the admin email %s will be used', 'wp-cerber' ), $def_email )
-		) );
-
-	add_settings_field('emailrate',__('Notification limit','wp-cerber'),'cerber_field_show',CERBER_OPT_N,'notify',array('group'=>$group,'setting'=>'emailrate','type'=>'text','label'=>__('notification letters allowed per hour (0 means unlimited)','wp-cerber'),'size'=>3));
-	add_settings_field( 'notify-new-ver', __( 'New version is available', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_N, 'notify', array( 'group'   => $group,
-	                                                                                                                                              'setting' => 'notify-new-ver',
-	                                                                                                                                              'type'    => 'checkbox'
-	) );
-
-	add_settings_section('pushit', __('Push notifications','wp-cerber'), 'cerber_sapi_section', CERBER_OPT_N);
-	add_settings_field('pbtoken','Pushbullet access token','cerber_field_show',CERBER_OPT_N,'pushit',array('group'=>$group,'setting'=>'pbtoken','type'=>'text'));
-
-	$set = array();
-	if ( cerber_is_admin_page( false, array( 'tab' => 'notifications' ) ) ) {
-		$set = cerber_pb_get_devices();
-		if ( is_array( $set ) ) {
-			if ( ! empty( $set ) ) {
-				$set = array( 'all' => __( 'All connected devices', 'wp-cerber' ) ) + $set;
-			}
-			else {
-				$set = array( 'N' => __( 'No devices found', 'wp-cerber' ) );
-			}
-		}
-		else {
-			$set = array( 'N' => __( 'Not available', 'wp-cerber' ) );
-		}
-	}
-	add_settings_field('pbdevice','Pushbullet device','cerber_field_show',CERBER_OPT_N,'pushit',array('group'=>$group,'setting'=>'pbdevice','type'=>'select','set'=>$set));
-
-	add_settings_section('reports', __('Weekly reports','wp-cerber'), 'cerber_sapi_section', CERBER_OPT_N);
-	add_settings_field('enable-report',__('Enable reporting','wp-cerber'),'cerber_field_show',CERBER_OPT_N,'reports',array('group'=>$group,'setting'=>'enable-report','type'=>'checkbox'));
-	add_settings_field('wreports',__('Send reports on','wp-cerber'),'cerber_field_show',CERBER_OPT_N,'reports',array('group'=>$group,'setting'=>'wreports','type'=>'reptime'));
-	add_settings_field( 'email-report', __( 'Email Address', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_N, 'reports',
-		array(
-			'group'       => $group,
-			'setting'     => 'email-report',
-			'type'        => 'text',
-			'placeholder' => __( 'Use comma to specify multiple values', 'wp-cerber' ),
-			'delimiter'      => ',',
-			'list'      => true,
-			'maxlength'   => 1000,
-			'label'       => __( 'if empty, email from notification settings will be used', 'wp-cerber' )
-		) );
-
-	// Traffic Inspector -----------------------------------------------------------------------------
-
-	$group = 'traffic'; // 'cerber-traffic' settings
-	register_setting( 'cerberus-' . $group, CERBER_OPT_T );
-
-	add_settings_section( 'tmain', __( 'Traffic Inspection', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_T );
-	add_settings_field( 'tienabled', __( 'Enable traffic inspection', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tmain',
-		array(
-			'group'   => $group,
-			'setting' => 'tienabled',
-			'type'    => 'select',
-			'set'     => array(
-				__( 'Disabled', 'wp-cerber' ),
-				__( 'Maximum compatibility', 'wp-cerber' ),
-				__( 'Maximum security', 'wp-cerber' )
-			)
-		) );
-	add_settings_field( 'tiipwhite', __( 'Use White IP Access List', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tmain',
-		array( 'group'  => $group,
-		       'setting' => 'tiipwhite',
-		       'type'   => 'checkbox',
-		) );
-	add_settings_field( 'tiwhite', __( 'Request whitelist', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tmain',
-		array( 'group'  => $group,
-		       'setting' => 'tiwhite',
-		       'type'   => 'textarea',
-		       'delimiter'   => "\n",
-		       'list'        => true,
-		       'label' => __( 'Enter a request URI to exclude the request from inspection. One item per line.', 'wp-cerber' ) . ' ' . __( 'To specify a REGEX pattern, enclose a whole line in two braces.', 'wp-cerber' ) . ' <a target="_blank" href="https://wpcerber.com/wordpress-probing-for-vulnerable-php-code/">Know more</a>',
-		) );
-
-	add_settings_section( 'tierrs', __( 'Erroneous Request Shielding', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_T );
-	add_settings_field( 'tierrmon', __( 'Enable error shielding', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tierrs',
-		array(
-			'group'   => $group,
-			'setting' => 'tierrmon',
-			'type'    => 'select',
-			'set'     => array(
-				__( 'Disabled', 'wp-cerber' ),
-				__( 'Maximum compatibility', 'wp-cerber' ),
-				__( 'Maximum security', 'wp-cerber' )
-			)
-		) );
-	add_settings_field( 'tierrnoauth', __( 'Ignore logged in users', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tierrs',
-		array(
-			'group'   => $group,
-			'setting' => 'tierrnoauth',
-			'type'    => 'checkbox',
-		) );
-
-	add_settings_section( 'tlog', __( 'Logging', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_T );
-	add_settings_field( 'timode', __( 'Logging mode', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array(
-			'group'   => $group,
-			'setting' => 'timode',
-			'type'    => 'select',
-			'set'     => array(
-				__( 'Logging disabled', 'wp-cerber' ),
-				__( 'Smart', 'wp-cerber' ),
-				__( 'All traffic', 'wp-cerber' )
-			)
-		) );
-
-	add_settings_field( 'tinocrabs', __( 'Ignore crawlers', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array( 'group'  => $group,
-		       'setting' => 'tinocrabs',
-		       'type'   => 'checkbox',
-		) );
-	add_settings_field( 'tifields', __( 'Save request fields', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array( 'group'  => $group,
-		       'setting' => 'tifields',
-		       'type'   => 'checkbox',
-		) );
-	add_settings_field( 'timask', __( 'Mask these form fields', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array(
-			'group'       => $group,
-			'setting'     => 'timask',
-			'type'        => 'text',
-			'maxlength'   => 1000,
-			'placeholder' => __( 'Use comma to specify multiple values', 'wp-cerber' ),
-			'delimiter'   => ',',
-			'list'        => true,
-		) );
-
-	add_settings_field( 'tihdrs', __( 'Save request headers', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array(
-			'group'   => $group,
-			'setting' => 'tihdrs',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'tisenv', __( 'Save $_SERVER', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array(
-			'group'   => $group,
-			'setting' => 'tisenv',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'ticandy', __( 'Save request cookies', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array(
-			'group'   => $group,
-			'setting' => 'ticandy',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'tiphperr', __( 'Save software errors', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array(
-			'group'   => $group,
-			'setting' => 'tiphperr',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'tithreshold', __( 'Page generation time threshold', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array(
-			'group'   => $group,
-			'setting' => 'tithreshold',
-			'type'    => 'text',
-			'label'   => __( 'milliseconds', 'wp-cerber' ),
-			'size'    => 4
-		) );
-	add_settings_field( 'tikeeprec', __( 'Keep records for', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_T, 'tlog',
-		array( 'group'  => $group,
-		       'setting' => 'tikeeprec',
-		       'type'   => 'text',
-		       'label'  => __( 'days', 'wp-cerber' ),
-		       'size'   => 4
-		) );
-
-	// Security Scanner -----------------------------------------------------------------------------
-
-	$group = 'scanner'; // 'cerber-scanner' settings
-	register_setting( 'cerberus-' . $group, CERBER_OPT_S );
-
-	add_settings_section( 'smain', __( 'Scanner settings', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_S );
-	add_settings_field( 'scan_cpt', __( 'Custom signatures', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array( 'group'  => $group,
-		       'setting' => 'scan_cpt',
-		       'type'   => 'textarea',
-		       'delimiter'   => "\n",
-		       'list'        => true,
-		       'label' => __( 'Specify custom PHP code signatures. One item per line. To specify a REGEX pattern, enclose a whole line in two braces.', 'wp-cerber' ) . ' <a target="_blank" href="https://wpcerber.com/malware-scanner-settings/">Read more</a>'
-		) );
-	add_settings_field( 'scan_uext', __( 'Unwanted file extensions', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array( 'group'  => $group,
-		       'setting' => 'scan_uext',
-		       'type'   => 'textarea',
-		       'delimiter'   => ",",
-		       'list'        => true,
-		       'label' => __( 'Specify file extensions to search for. Full scan only. Use comma to separate items.', 'wp-cerber' )
-		) );
-	add_settings_field( 'scan_exclude', __( 'Directories to exclude', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array( 'group'  => $group,
-		       'setting' => 'scan_exclude',
-		       'type'   => 'textarea',
-		       'delimiter'   => "\n",
-		       'list'        => true,
-		       'label' => __( 'Specify directories to exclude from scanning. Use absolute paths. One item per line.', 'wp-cerber' )
-		) );
-	add_settings_field( 'scan_inew', __( 'Monitor new files', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_inew',
-			'type'    => 'checkbox',
-		) );
-
-	add_settings_field( 'scan_imod', __( 'Monitor modified files', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_imod',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'scan_tmp', __( 'Scan temporary directory', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_tmp',
-			'type'    => 'checkbox',
-		) );
-
-	add_settings_field( 'scan_sess', __( 'Scan session directory', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_sess',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'scan_debug', __( 'Enable diagnostic logging', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_debug',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'scan_qcleanup', __( 'Delete quarantined files after', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_S, 'smain',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_qcleanup',
-			'type'    => 'text',
-			'label'   => __( 'days', 'wp-cerber' ),
-			'size'    => 3
-		) );
-
-	// Scanner Schedule -----------------------------------------------------------------------------
-
-	$group = 'schedule'; // 'cerber-scanner' settings
-	register_setting( 'cerberus-' . $group, CERBER_OPT_E );
-
-	add_settings_section( 's1', __( 'Automated recurring scan schedule', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_E );
-	add_settings_field( 'scan_aquick', __( 'Launch Quick Scan', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_E, 's1',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_aquick',
-			'type'    => 'select',
-			'set'     => cerber_get_qs(),
-		) );
-	add_settings_field( 'scan_afull', __( 'Launch Full Scan', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_E, 's1',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_afull',
-			'type'    => 'timepicker',
-			'enabled' => 'once a day at'
-		) );
-
-	add_settings_section( 's2', __( 'Scan results reporting', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_E );
-
-	$list = array( 1 => __('Low severity','wp-cerber'), 2 => __('Medium severity','wp-cerber'), 3 => __('High severity','wp-cerber')) + cerber_get_issue_label( array( CERBER_IMD, CERBER_UXT, 50, 51, CERBER_VULN ) );
-	add_settings_field( 'scan_reinc', __( 'Report an issue if any of the following is true', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_E, 's2',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_reinc',
-			'type'    => 'checkbox_set',
-			'set'     => $list,
-		) );
-
-	add_settings_field( 'scan_relimit', __( 'Send email report', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_E, 's2',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_relimit',
-			'type'    => 'select',
-			'set'     => array(
-				1  => __( 'After every scan', 'wp-cerber' ),
-				3  => __( 'If any changes in scan results occurred', 'wp-cerber' ),
-				5  => __( 'If new issues found', 'wp-cerber' ),
-			)
-		) );
-
-	add_settings_field( 'scan_isize', __( 'Include file sizes', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_E, 's2',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_isize',
-			'type'    => 'checkbox',
-		) );
-
-	add_settings_field( 'scan_ierrors', __( 'Include scan errors', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_E, 's2',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_ierrors',
-			'type'    => 'checkbox',
-		) );
-
-	add_settings_field( 'email-scan', __( 'Email Address', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_E, 's2',
-		array( 'group'       => $group,
-		       'setting'     => 'email-scan',
-		       'type'        => 'text',
-		       'placeholder' => __( 'Use comma to specify multiple values', 'wp-cerber' ),
-		       'delimiter'   => ',',
-		       'list'        => true,
-		       'maxlength'   => 1000,
-		       'label'       => sprintf( __( 'if empty, email from notification settings will be used', 'wp-cerber' ), $def_email )
-		) );
-
-	// Scanner Policies -----------------------------------------------------------------------------
-
-	$group = 'policies'; // 'cerber-scanner' settings
-	register_setting( 'cerberus-' . $group, CERBER_OPT_P );
-
-	add_settings_section( 'scanpls', __( 'Automatic cleanup of malware and suspicious files', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_P );
-
-	add_settings_field( 'scan_delunatt', __( 'Unattended files', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_P, 'scanpls',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_delunatt',
-			'type'    => 'checkbox',
-		) );
-	$list = array( 1 => __('Low severity','wp-cerber'), 2 => __('Medium severity','wp-cerber'), 3 => __('High severity','wp-cerber'));
-	add_settings_field( 'scan_delupl', __( 'Files in the uploads folder', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_P, 'scanpls',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_delupl',
-			'type'    => 'checkbox_set',
-			'set'     => $list,
-		) );
-	add_settings_field( 'scan_delunwant', __( 'Files with unwanted extensions', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_P, 'scanpls',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_delunwant',
-			'type'    => 'checkbox',
-		) );
-
-	add_settings_section( 'scanexcl', __( 'Exclusions', 'wp-cerber' ), 'cerber_sapi_section', CERBER_OPT_P );
-	add_settings_field( 'scan_nodeltemp', __( 'Files in the temporary directory', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_P, 'scanexcl',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_nodeltemp',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'scan_nodelsess', __( 'Files in the sessions directory', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_P, 'scanexcl',
-		array(
-			'group'   => $group,
-			'setting' => 'scan_nodelsess',
-			'type'    => 'checkbox',
-		) );
-	add_settings_field( 'scan_delexdir', __( 'Files in these directories', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_P, 'scanexcl',
-		array( 'group'  => $group,
-		       'setting' => 'scan_delexdir',
-		       'type'   => 'textarea',
-		       'delimiter'   => "\n",
-		       'list'        => true,
-		       'label' => __( 'Use absolute paths. One item per line.', 'wp-cerber' )
-		) );
-	add_settings_field( 'scan_delexext', __( 'Files with these extensions', 'wp-cerber' ), 'cerber_field_show', CERBER_OPT_P, 'scanexcl',
-		array( 'group'  => $group,
-		       'setting' => 'scan_delexext',
-		       'type'   => 'textarea',
-		       'delimiter'   => ",",
-		       'list'        => true,
-		       'label' => __( 'Use comma to separate items.', 'wp-cerber' )
-		) );
-
-}
-
-/*
-	Generate HTML for each sections on a settings page
-*/
-function cerber_sapi_section( $args ) {
-	switch ( $args['id'] ) { // a section id
-		case 'proactive':
-			_e( 'Make your protection smarter!', 'wp-cerber' );
-			break;
-		case 'custom':
-			if ( ! cerber_is_permalink_enabled() ) {
-				echo '<span style="color:#DF0000;">' . __( 'Please enable Permalinks to use this feature. Set Permalink Settings to something other than Default.', 'wp-cerber' ) . '</span>';
-			}
-			else {
-				echo __( 'Be careful about enabling these options.', 'wp-cerber' ) . ' ' . __( 'If you forget your Custom login URL, you will be unable to log in.', 'wp-cerber' );
-			}
-			break;
-		case 'citadel':
-			_e( 'In the Citadel mode nobody is able to log in except IPs from the White IP Access List. Active user sessions will not be affected.', 'wp-cerber' );
-			break;
-		case 'hwp':
-		case 'rapi':
-			echo __( 'These restrictions do not apply to IP addresses in the White IP Access List', 'wp-cerber' );
-			break;
-		case 'recap':
-			_e( 'Before you can start using reCAPTCHA, you have to obtain Site key and Secret key on the Google website', 'wp-cerber' );
-			echo ' <a href="https://wpcerber.com/how-to-setup-recaptcha/">' . __( 'Know more', 'wp-cerber' ) . '</a>';
-			break;
-		case 's2':
-			echo 'Configure what issues to include in a email report and the condition for sending the report.' . ' <a href="https://wpcerber.com/automated-recurring-malware-scans/" target="_blank">' . __( 'Know more', 'wp-cerber' ) . '</a>';
-			break;
-		case 'scanexcl':
-			echo 'These files will never be deleted during automatic cleanup.';
-			break;
-		case 'scanpls':
-			echo 'These policies will be automatically enforced at the end of every scheduled scan based on its results. Malicious and suspicious files will be moved to the quarantine.';
-			break;
-	}
 }
 
 /*
@@ -1351,9 +1301,9 @@ function cerber_field_show( $args ) {
 			        . __( 'Notify admin if the number of active lockouts above', 'wp-cerber' ) .
 			        ' <input type="text" id="above" name="cerber-' . $args['group'] . '[above]" value="' . $settings['above'] . '" size="3" maxlength="3" />' .
 			        ' [  <a href="' . cerber_admin_link( crb_admin_get_tab(), array(
-					'page'             => crb_admin_get_page(),
-					'cerber_admin_do'  => 'testnotify',
-					'type'             => 'lockout',
+					'page'            => crb_admin_get_page(),
+					'cerber_admin_do' => 'testnotify',
+					'type'            => 'lockout',
 				), true ) . '">' . __( 'Click to send test', 'wp-cerber' ) . '</a> ]';
 			break;
 		case 'citadel':
@@ -1362,11 +1312,11 @@ function cerber_field_show( $args ) {
 				'<input type="text" id="ciperiod" name="cerber-' . $args['group'] . '[ciperiod]" value="' . $settings['ciperiod'] . '" size="3" maxlength="3" />' );
 			break;
 		case 'checkbox':
-			$html = '<label class="crb-switch"><input class="screen-reader-text" type="checkbox" id="' . $id . '" name="' . $name . '" value="1" ' . checked( 1, $value, false ) . $atts . ' /><span class="crb-slider round"></span></label>';
-			$html .= '<label for="' . $args['setting'] . '">' . $label . '</label><i '.$data.'></i>';
+			$html = '<div style="display: table-cell;"><label class="crb-switch"><input class="screen-reader-text" type="checkbox" id="' . $id . '" name="' . $name . '" value="1" ' . checked( 1, $value, false ) . $atts . ' /><span class="crb-slider round"></span></label></div>';
+			$html .= '<div style="display: table-cell;"><label for="' . $args['setting'] . '">' . $label . '</label></div><i ' . $data . '></i>';
 			break;
 		case 'textarea':
-			$html = '<textarea class="large-text code" id="' . $id . '" name="' . $name . '" ' . $atts . $data.'>' . $value . '</textarea>';
+			$html = '<textarea class="large-text code" id="' . $id . '" name="' . $name . '" ' . $atts . $data . '>' . $value . '</textarea>';
 			$html .= '<br/><label class="crb-below" for="' . $args['setting'] . '">' . $label . '</label>';
 			break;
 		case 'select':
@@ -1375,7 +1325,7 @@ function cerber_field_show( $args ) {
 			$html .= '<br/><label class="crb-below">' . $label . '</label>';
 			break;
 		case 'role_select':
-			$html = cerber_role_select( $name.'[]', $value, '', true, '', '100%' );
+			$html = cerber_role_select( $name . '[]', $value, '', true, '', '100%' );
 			break;
 		case 'checkbox_set':
 			$html = '<div class="crb-checkbox_set" style="line-height: 2em;">';
@@ -1397,10 +1347,16 @@ function cerber_field_show( $args ) {
 			break;
 		case 'text':
 		default:
-		    $type = 'text';
-            if ( in_array( $args['type'], array( 'url' ) ) ) {
-                $type = $args['type'];
-            }
+			/*$type = 'text';
+			if ( in_array( $args['type'], array( 'url' ) ) ) {
+				$type = $args['type'];
+			}*/
+
+			$type = crb_array_get( $args, 'type', 'text' );
+			if ( ! in_array( $type, array( 'url', 'number' ) ) ) {
+				$type = 'text';
+			}
+
 			$size      = '';
 			$maxlength = '';
 			$class     = 'crb-wide';
@@ -1419,18 +1375,27 @@ function cerber_field_show( $args ) {
 			if ( isset( $args['pattern'] ) ) {
 				$atts .= ' pattern="' . $args['pattern'] . '"';
 			}
-			if ( isset( $args['title'] ) ) {
-				$atts .= ' title="' . $args['title'] . '"';
-			}
 
-			$html = $pre . '<input type="'.$type.'" id="' . $args['setting'] . '" name="' . $name . '" value="' . $value . '"' . $atts . ' class="' . $class . '" ' . $size . $maxlength . $atts . $data . ' />';
-
-			if ( $size ) {
-				$label = ' <label for="' . $args['setting'] . '">' . $label . '</label>';
+			if ( isset( $args['attr'] ) ) {
+				foreach ( $args['attr'] as $at_name => $at_value ) {
+					$atts .= ' ' . $at_name . ' ="' . $at_value . '" ';
+				}
 			}
 			else {
+				if ( isset( $args['title'] ) ) {
+					$atts .= ' title="' . $args['title'] . '"';
+				}
+			}
+
+			$html = $pre . '<input type="' . $type . '" id="' . $args['setting'] . '" name="' . $name . '" value="' . $value . '"' . $atts . ' class="' . $class . '" ' . $size . $maxlength . $atts . $data . ' />';
+
+			if ( ! $size || crb_array_get( $args, 'label_pos' ) == 'below' ) {
 				$label = '<br/><label class="crb-below" for="' . $args['setting'] . '">' . $label . '</label>';
 			}
+			else {
+				$label = ' <label for="' . $args['setting'] . '">' . $label . '</label>';
+			}
+
 			$html .= $label;
 			break;
 	}
@@ -1448,6 +1413,15 @@ function cerber_field_show( $args ) {
 	echo $html . "\n";
 }
 
+function cerber_checkbox( $name, $value, $label = '', $id = '', $atts = '' ) {
+	if ( ! $id ) {
+		$id = 'crb-input-' . $name;
+	}
+
+	return '<div style="display: table-cell;"><label class="crb-switch"><input class="screen-reader-text" type="checkbox" id="' . $id . '" name="' . $name . '" value="1" ' . checked( 1, $value, false ) . $atts . ' /><span class="crb-slider round"></span></label></div>
+	<div style="display: table-cell;"><label for="' . $id . '">' . $label . '</label></div>';
+}
+
 /**
  * @param $name string HTML input name
  * @param $list array   List of elements
@@ -1458,7 +1432,7 @@ function cerber_field_show( $args ) {
  *
  * @return string
  */
-function cerber_select( $name, $list, $selected = null, $class = '', $id = '', $multiple = '', $placeholder = '', $data = array() ) {
+function cerber_select( $name, $list, $selected = null, $class = '', $id = '', $multiple = '', $placeholder = '', $data = array(), $atts = '' ) {
 	$options = array();
 	foreach ( $list as $key => $value ) {
 		$s         = ( $selected == (string) $key ) ? 'selected' : '';
@@ -1474,7 +1448,7 @@ function cerber_select( $name, $list, $selected = null, $class = '', $id = '', $
 		}
 	}
 
-	return ' <select name="' . $name . '" '.$the_id.' class="crb-select ' . $class . '" ' . $m . $p . $d . '>' . implode( "\n", $options ) . '</select>';
+	return ' <select name="' . $name . '" ' . $the_id . ' class="crb-select ' . $class . '" ' . $m . $p . $d . ' ' . $atts . '>' . implode( "\n", $options ) . '</select>';
 }
 
 function cerber_role_select( $name = 'cerber-roles', $selected = array(), $class = '', $multiple = '', $placeholder = '', $width = '100%' ) {
@@ -1611,6 +1585,7 @@ add_filter( 'pre_update_option_'.CERBER_OPT, function ($new, $old, $option) {
 add_filter( 'pre_update_option_'.CERBER_OPT_U, function ($new, $old, $option) {
 
 	$new['prohibited'] = cerber_text2array($new['prohibited'], ',', 'strtolower');
+	$new['emlist'] = cerber_text2array($new['emlist'], ',', 'strtolower');
 
 	$new['authonlymsg'] = strip_tags( $new['authonlymsg'] );
 
@@ -2005,10 +1980,9 @@ function cerber_get_defaults() {
 			'aglocks'    => 2,
 			'aglast'     => 4,
 			'limitwhite' => 0,
-			'notify'     => 1,
-			'above'      => 3,
 
 			'proxy' => 0,
+			'cookiepref' => '',
 
 			'subnet'     => 0,
 			'nonusers'   => 0,
@@ -2055,6 +2029,8 @@ function cerber_get_defaults() {
 			'authonlyredir' => '',
 			'reglimit_num'  => 3,
 			'reglimit_min'  => 60,
+			'emrule'        => 0,
+			'emlist'        => array(),
 			'prohibited'    => array(),
 			'auth_expire'   => '',
 			'usersort'      => '',
@@ -2088,15 +2064,17 @@ function cerber_get_defaults() {
 			'recaptcha-within' => 30,
 		),
 		CERBER_OPT_N => array(
+			'notify'         => 1,
+			'above'          => 3,
 			'email'          => '',
 			'emailrate'      => 12,
 			'notify-new-ver' => '1',
 			'pbtoken'        => '',
 			'pbdevice'       => '',
-			'wreports-day'   => '1', // workaround, see cerber_upgrade_options()
+			'wreports-day'   => '1', // workaround, see cerber_upgrade_settings()
 			'wreports-time'  => 9,
 			'email-report'   => '',
-			'enable-report'  => '1',  // workaround, see cerber_upgrade_options()
+			'enable-report'  => '1',  // workaround, see cerber_upgrade_settings()
 		),
 		CERBER_OPT_T => array(
 			'tienabled'   => '1',
@@ -2136,11 +2114,25 @@ function cerber_get_defaults() {
 			'scan_ierrors'       => 0,
 			'email-scan'         => ''
 		),
+		CERBER_OPT_P => array(
+			'scan_delunatt'   => 0,
+			'scan_delupl'     => array(),
+			'scan_delunwant'  => 0,
+			'scan_recover_wp' => 0,
+			'scan_recover_pl' => 0,
+
+			'scan_nodeltemp' => 0,
+			'scan_nodelsess' => 0,
+			'scan_delexdir'  => array(),
+			'scan_delexext'  => array(),
+		),
 		CERBER_OPT_MA => array(
 			'master_tolist'  => 1,
 			'master_swshow'  => 1,
 			'master_at_site' => 1,
 			'master_locale'  => 0,
+			'master_dt'      => 0,
+			'master_tz'      => 0,
 			'master_diag'    => 0,
 		),
 		CERBER_OPT_SL => array(
@@ -2181,6 +2173,11 @@ function cerber_upgrade_settings() {
 		'spamcomm',
 		'trashafter'
 	) );
+	// @since 8.2
+	crb_move_fields( CERBER_OPT, CERBER_OPT_N, array(
+		'notify',
+		'above',
+	) );
 	// @since 5.7
     // Upgrade plugin settings
 	foreach ( cerber_get_defaults() as $option_name => $def_fields ) {
@@ -2210,26 +2207,43 @@ function cerber_upgrade_settings() {
 			update_site_option( CERBER_OPT_H, $h );
 		}
 	}
+
+	if ( ! $key = get_site_option( '_cerberkey_' ) ) {
+		$key = cerber_get_site_option( '_cerberkey_' );
+	}
+	if ( $key ) {
+		if ( cerber_update_set( '_cerberkey_', $key ) ) {
+			delete_site_option( '_cerberkey_' );
+		}
+	}
 }
 
 /**
  * @param string $from
  * @param string $to
  * @param array $fields
+ *
+ * @return bool
  */
 function crb_move_fields( $from, $to, $fields ) {
-	if ( ! get_site_option( $to ) ) {
-		$old = get_site_option( $from );
-		$new = array();
-		foreach ( $fields as $key ) {
-			if ( isset( $old[ $key ] ) ) {
-				$new[ $key ] = $old[ $key ]; // move old values
-				unset( $old[ $key ] ); // clean up old values
-			}
-		}
-		update_site_option( $to, $new );
-		update_site_option( $from, $old );
+	if ( ! $old = get_site_option( $from ) ) {
+		return false;
 	}
+	$new = get_site_option( $to );
+	if ( ! $new || ! is_array( $new ) ) {
+		$new = array();
+	}
+	foreach ( $fields as $key ) {
+		if ( isset( $old[ $key ] )
+		     && ! isset( $new[ $key ] ) ) {
+			$new[ $key ] = $old[ $key ]; // move old values
+			unset( $old[ $key ] ); // clean up old values
+		}
+	}
+	update_site_option( $from, $old );
+	update_site_option( $to, $new );
+
+	return true;
 }
 
 /*
@@ -2254,7 +2268,8 @@ function cerber_save_settings( $options ) {
 
 /**
  *
- * @deprecated since 4.0 use $wp_cerber->getSettings() instead.
+ * @deprecated since 4.0 Use crb_get_settings() instead.
+ *
  * @param string $option
  *
  * @return array|bool|mixed
@@ -2303,19 +2318,17 @@ function crb_get_settings( $option = '' ) {
 	if ( ! isset( $united ) ) {
 
 		$options = cerber_get_setting_list();
-		$in      = 'IN ("' . implode( '","', $options ) . '")';
+		$in      = '("' . implode( '","', $options ) . '")';
 		$united  = array();
 
 	    if ( is_multisite() ) {
-		    //$set = $wpdb->get_col( 'SELECT meta_value FROM ' . $wpdb->sitemeta . ' WHERE meta_key ' . $in );
-		    // since 7.1.6
-		    $set = cerber_db_get_col( 'SELECT meta_value FROM ' . $wpdb->sitemeta . ' WHERE meta_key ' . $in );
+		    $sql = 'SELECT meta_value FROM ' . $wpdb->sitemeta . ' WHERE meta_key IN ' . $in;
 	    }
 	    else {
-		    //$set = $wpdb->get_col( 'SELECT option_value FROM ' . $wpdb->options . ' WHERE option_name ' . $in );
-            // since 7.1.6
-		    $set = cerber_db_get_col( 'SELECT option_value FROM ' . $wpdb->options . ' WHERE option_name ' . $in );
+		    $sql = 'SELECT option_value FROM ' . $wpdb->options . ' WHERE option_name IN ' . $in;
 	    }
+
+		$set = cerber_db_get_col( $sql );
 
 		if ( ! $set || ! is_array( $set ) ) {
 			return false;
@@ -2412,9 +2425,8 @@ function cerber_load_defaults() {
 			$save[ $field_name ] = $def;
 		}
 	}
-	$old = cerber_get_options();
-	if ( ! empty( $old['loginpath'] ) ) {
-		$save['loginpath'] = $old['loginpath'];
+	if ( $path = crb_get_settings( 'loginpath' ) ) {
+		$save['loginpath'] = $path;
 	}
 	cerber_save_settings( $save );
 }
@@ -2436,7 +2448,7 @@ function cerber_get_email( $type = '', $array = false ) {
 		$email = crb_get_settings( 'email' );
 	}
 
-	if ( ! $array && is_array( $email ) ) {  // @since 4.9
+	if ( ! $array && is_array( $email ) ) {
 		$email = implode( ', ', $email );
 	}
 
@@ -2521,4 +2533,54 @@ function cerber_is_cloud_enabled( $what = '' ) {
 	}
 
 	return false;
+}
+
+function cerber_get_role_policies( $role ) {
+	if ( $conf = crb_get_settings( 'crb_role_policies' ) ) {
+		return crb_array_get( $conf, $role );
+	}
+
+	return true;
+}
+
+/**
+ * @param $policy string
+ * @param $user integer | WP_User
+ *
+ * @return bool|string
+ */
+function cerber_get_user_policy( $policy, $user = null ) {
+
+	if ( ! ( $user instanceof WP_User ) ) {
+		if ( is_numeric( $user ) ) {
+			$user = get_user_by( 'id', $user );
+		}
+		else {
+			$user = wp_get_current_user();
+		}
+	}
+
+	if ( ! $user ) {
+		return false;
+	}
+
+	$ret = false;
+
+	foreach ( $user->roles as $role ) {
+		$policies = cerber_get_role_policies( $role );
+		if ( ! empty( $policies[ $policy ] ) ) {
+			$ret = $policies[ $policy ];
+		}
+	}
+
+	return $ret;
+}
+
+function crb_admin_cool_features() {
+	return
+		'<div class="crb-pro-req">' .
+		__( 'These features are available in a professional version of the plugin.', 'wp-cerber' ) .
+		'<br/><br/>' . __( 'Know more about all advantages at', 'wp-cerber' ) .
+		' <a href="https://wpcerber.com/pro/" target="_blank">https://wpcerber.com/pro/</a>
+        </div>';
 }

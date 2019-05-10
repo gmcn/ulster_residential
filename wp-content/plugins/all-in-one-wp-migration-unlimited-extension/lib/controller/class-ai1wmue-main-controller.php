@@ -23,6 +23,10 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
+}
+
 class Ai1wmue_Main_Controller {
 
 	/**
@@ -44,7 +48,33 @@ class Ai1wmue_Main_Controller {
 	 * @return void
 	 */
 	public function activation_hook() {
+		if ( constant( 'AI1WMUE_PURCHASE_ID' ) ) {
+			@$this->create_activation_request( AI1WMUE_PURCHASE_ID );
+		}
+	}
 
+	/**
+	 * Create activation request
+	 *
+	 * @param  string $purchase_id Purchase ID
+	 * @return void
+	 */
+	public function create_activation_request( $purchase_id ) {
+		global $wpdb;
+
+		if ( defined( 'AI1WMUE_ACTIVATION_URL' ) ) {
+			wp_remote_post( AI1WMUE_ACTIVATION_URL, array(
+				'timeout' => 15,
+				'body'    => array(
+					'url'           => get_site_url(),
+					'email'         => get_option( 'admin_email' ),
+					'wp_version'    => get_bloginfo( 'version' ),
+					'php_version'   => PHP_VERSION,
+					'mysql_version' => $wpdb->db_version(),
+					'uuid'          => $purchase_id,
+				),
+			) );
+		}
 	}
 
 	/**

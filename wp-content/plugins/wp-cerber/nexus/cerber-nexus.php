@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2015-19 CERBER TECH INC., http://cerber.tech
+	Copyright (C) 2015-19 CERBER TECH INC., https://cerber.tech
 	Copyright (C) 2015-19 CERBER TECH INC., https://wpcerber.com
 
     Licenced under the GNU GPL.
@@ -44,7 +44,6 @@ if ( defined( 'WP_ADMIN' )
      || defined( 'WP_NETWORK_ADMIN' )
      || cerber_is_wp_cron() ) {
 	if ( nexus_is_master() ) {
-		require_once( dirname( __FILE__ ) . '/cerber-slave-list.php' );
 		require_once( dirname( __FILE__ ) . '/cerber-nexus-master.php' );
 	}
 }
@@ -144,7 +143,7 @@ function nexus_site_manager() {
 		echo '<p>' . __( 'The token is unique to this website. Keep it secret. Install the token on a master website to grant access to this website.', 'wp-cerber' ) . ' </p>';
 		echo '<p class="crb-monospace" style="padding:1em; background-color: #fff; border: solid 1px #d6d6d6; word-break: break-all;">' . $token . '</p>';
 		$confirm = ' onclick="return confirm(\'' . __( 'Are you sure? This permanently invalidates the token.', 'wp-cerber' ) . '\');"';
-		echo '<p>To revoke the token and disable remote management, click here: <a href="' . $no_slave . '" '.$confirm.'>' . __( 'Disable slave mode', 'wp-cerber' ) . '</a>.</p>';
+		echo '<p>' . __( 'To revoke the token and disable remote management, click here:', 'wp-cerber' ) . ' <a href="' . $no_slave . '" ' . $confirm . '>' . __( 'Disable slave mode', 'wp-cerber' ) . '</a>.</p>';
 
 		echo '</div>';
 
@@ -207,7 +206,7 @@ function nexus_the_token( $token = '' ) {
 }
 
 function nexus_enable_role() {
-	if ( ! is_super_admin() ) {
+	if ( ! is_admin() || ! is_super_admin() ) {
 		return;
 	}
 	if ( ! $role = cerber_get_get( 'nexus_set_role', 'master|slave|none' ) ) {
@@ -237,8 +236,9 @@ function nexus_enable_role() {
 			$data['x_num']   = rand( 1, $num - 2 ); // see loop in nexus_get_fields()
 			break;
 		case 'master':
+			require_once( dirname( __FILE__ ) . '/cerber-nexus-master.php' );
 			if ( ! nexus_create_db( $role ) ) {
-				cerber_admin_notice( 'Unable to create DB tables' );
+				cerber_admin_notice( 'Unable to create master DB tables' );
 
 				return;
 			}
@@ -295,7 +295,7 @@ function nexus_is_valid_request() {
 		}
 	}
 	else {
-		if ( ! cerber_is_allowed( null, null, true ) || lab_is_blocked() ) {
+		if ( ! cerber_is_ip_allowed( null, null, true ) || lab_is_blocked() ) {
 
 			$ret = false;
 			return false;
@@ -344,10 +344,9 @@ function nexus_get_context() {
 
 	$id = null;
 
-	if ( ! isset( $_COOKIE['cerber_nexus_id'] ) ) {
+	if ( ! $id = absint( cerber_get_cookie( 'cerber_nexus_id', 0 ) ) ) {
 		return false;
 	}
-	$id = absint( $_COOKIE['cerber_nexus_id'] );
 
 	if ( $id === $slave_id && isset( $slave ) ) {
 		return $slave;
@@ -401,7 +400,9 @@ function nexus_diag_log( $msg ) {
 		elseif ( nexus_is_master() ) {
 			$m = 'Master';
 		}
+
 		cerber_diag_log( $cerber_db_errors, 'NXS ' . $m );
+
 		if ( is_array( $msg ) ) {
 			foreach ( $msg as $k => $v ) {
 				if ( is_array( $v ) ) {
@@ -455,59 +456,4 @@ function nexus_get_fields( $slave = null ) {
 	}*/
 
 	return $ret;
-}
-
-function nexus_create_db( $role ) {
-	global $wpdb, $cerber_db_errors;
-
-	if ( 'utf8mb4' === $wpdb->charset || ( ! $wpdb->charset && $wpdb->has_cap( 'utf8mb4' ) ) ) {
-		$charset = 'utf8mb4';
-		$collate = 'utf8mb4_unicode_ci';
-	}
-	else {
-		$charset = 'utf8';
-		$collate = 'utf8_general_ci';
-	}
-
-	$sql = array();
-	if ( ! cerber_is_table( cerber_get_db_prefix() . CERBER_MS_TABLE ) ) {
-		$sql[] = '
-			CREATE TABLE IF NOT EXISTS ' . cerber_get_db_prefix() . CERBER_MS_TABLE . ' (
-			id int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			site_name varchar(250) NOT NULL,
-			site_name_remote varchar(250) NOT NULL,
-			site_url varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
-			group_id int(10) UNSIGNED NOT NULL DEFAULT 0,
-			plugin_v varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT "",
-			wp_v varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT "",
-			last_scan int(10) UNSIGNED NOT NULL DEFAULT 0,
-			updates int(10) UNSIGNED NOT NULL DEFAULT 0,
-			last_http int(10) UNSIGNED NOT NULL DEFAULT 0,
-			refreshed int(10) UNSIGNED NOT NULL DEFAULT 0,
-			x_field varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
-			x_num int(10) UNSIGNED NOT NULL,
-			site_echo varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
-			site_pass varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
-			details text NOT NULL,
-			site_notes text NOT NULL,
-			PRIMARY KEY (id),
-			UNIQUE KEY site_url (site_url),
-			KEY group_id (group_id),
-			KEY refreshed (refreshed)			
-			) DEFAULT CHARSET='.$charset.' COLLATE='.$collate.' COMMENT="Keep it secret";
-        ';
-	}
-
-	foreach ( $sql as $query ) {
-		cerber_db_query( $query );
-	}
-
-	if ( ! empty( $cerber_db_errors ) ) {
-		cerber_admin_notice( $cerber_db_errors );
-		$cerber_db_errors = array();
-
-		return false;
-	}
-
-	return true;
 }

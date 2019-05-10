@@ -23,10 +23,14 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
+}
+
 // ==================
 // = Plugin Version =
 // ==================
-define( 'AI1WMUE_VERSION', '2.25' );
+define( 'AI1WMUE_VERSION', '2.29' );
 
 // ===============
 // = Plugin Name =
@@ -52,6 +56,11 @@ define( 'AI1WMUE_TEMPLATES_PATH', AI1WMUE_LIB_PATH . DIRECTORY_SEPARATOR . 'view
 // = Vendor Path =
 // ===============
 define( 'AI1WMUE_VENDOR_PATH', AI1WMUE_LIB_PATH . DIRECTORY_SEPARATOR . 'vendor' );
+
+// ===========================
+// = ServMask Activation URL =
+// ===========================
+define( 'AI1WMUE_ACTIVATION_URL', 'https://servmask.com/purchase/activations' );
 
 // =================
 // = Max File Size =

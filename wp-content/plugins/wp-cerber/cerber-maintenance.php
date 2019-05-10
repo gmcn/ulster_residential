@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2015-19 CERBER TECH INC., http://cerber.tech
+	Copyright (C) 2015-19 CERBER TECH INC., https://cerber.tech
 	Copyright (C) 2015-19 CERBER TECH INC., https://wpcerber.com
 
     Licenced under the GNU GPL.
@@ -29,8 +29,6 @@
 *========================================================================*
 
 */
-
-define( 'CERBER_PLUGIN_ID', 'wp-cerber/wp-cerber.php' );
 
 if ( ! class_exists( 'Plugin_Upgrader' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );

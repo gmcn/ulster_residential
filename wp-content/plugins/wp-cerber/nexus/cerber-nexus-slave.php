@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2015-19 CERBER TECH INC., http://cerber.tech
+	Copyright (C) 2015-19 CERBER TECH INC., https://cerber.tech
 	Copyright (C) 2015-19 CERBER TECH INC., https://wpcerber.com
 
     Licenced under the GNU GPL.
@@ -60,6 +60,7 @@ class CRB_Master {
 	public $action;
 	public $screen;
 	public $at_site;
+	public $locale;
 	public $error;
 
 	final function __construct() {
@@ -90,6 +91,12 @@ class CRB_Master {
 		$this->at_site    = crb_array_get( $request, 'at_site' );
 		$this->screen     = crb_array_get( $request, 'screen' );
 		$this->is_post    = ( ! empty( $request['is_post'] ) ) ? true : false;
+
+		if ( ! $this->locale = crb_array_get( $request, 'master_locale' ) ) {
+			if ( ! $this->locale = get_site_option( 'WPLANG' ) ) {
+				$this->locale = 'en_US';
+			}
+		}
 
 		$crb_assets_url   = $request['assets'];
 		$crb_ajax_loader = $crb_assets_url . 'ajax-loader.gif';
@@ -148,19 +155,6 @@ function nexus_slave_process() {
 	@ignore_user_abort( true );
 	cerber_update_set( 'processing_master_request', 1, 0, false, time() + 120 );
 
-	add_filter( 'plugin_locale', function () {
-		//return 'de_DE';
-		if ( ! $locale = get_site_option( 'WPLANG' ) ) {
-			$locale = 'en_US';
-		}
-
-		return $locale;
-	}, 9999 );
-	$r = load_plugin_textdomain( 'wp-cerber', false, basename( dirname( cerber_plugin_file() ) ) . '/languages' );
-	if ( ! $r ) {
-		//nexus_diag_log( 'Unable to load plugin localization files' );
-	}
-
 	/*
 	if ( function_exists( 'cerber_mode' ) ) {
 		nexus_diag_log( '+++++++++++++++++++++++++++++++++++++' );
@@ -186,6 +180,27 @@ function nexus_slave_process() {
 	}
 
 	nexus_diag_log( 'Request is parsed, generating response...' );
+
+	add_filter( 'plugin_locale', function () {
+		return nexus_request_data()->locale;
+	}, 9999 );
+
+	$use_eng = false;
+	if ( nexus_request_data()->locale == 'en_US' ) {
+		$use_eng = true;
+		// We do not load any translation files
+		add_filter( 'override_load_textdomain', function ( $val, $domain, $mofile ) {
+			return true;
+		}, 9999, 3 );
+	}
+
+	if ( ! $use_eng ) {
+		$r = load_plugin_textdomain( 'wp-cerber', false, 'wp-cerber/languages' );
+
+		/*if ( ! $r ) {
+			nexus_diag_log( 'Unable to load plugin localization files ' . (string) nexus_request_data()->locale );
+		}*/
+	}
 
 	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 	require_once( ABSPATH . 'wp-admin/includes/template.php' );
@@ -282,7 +297,11 @@ function nexus_prepare_responce() {
 
 	switch ( $master->type ) {
 		case 'get_page':
-			return nexus_render_admin_page( $master->page, $master->tab );
+			return array(
+				'html' => nexus_render_admin_page( $master->page, $master->tab ),
+				//'o'    => get_option( 'gmt_offset' ),
+				//'z'    => get_option( 'timezone_string' ),
+			);
 			break;
 		case 'submit':
 			if ( $master->get_post_fields( 'option_page' ) ) { // True WP setting page
@@ -435,7 +454,7 @@ function nexus_net_send_responce( $payload ) {
 	$ret  = true;
 	$role = nexus_get_role_data();
 	if ( is_array( $payload ) ) {
-		$p = serialize( $payload );
+		$p = json_encode( $payload, JSON_UNESCAPED_UNICODE ); // 8.0.5
 	}
 	elseif ( is_scalar( $payload ) ) {
 		$p = (string) $payload;
@@ -449,16 +468,17 @@ function nexus_net_send_responce( $payload ) {
 
 	$hash     = hash( 'sha512', $role['slave']['nx_echo'] . sha1( $p ) );
 	$response = json_encode( array(
-		'payload' => $payload,
-		'extra'   => array(
-			'versions'=>array( CERBER_VER, cerber_get_wp_version(), PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION, PHP_OS )
+		'payload'  => $payload,
+		'extra'    => array(
+			'versions' => array( CERBER_VER, cerber_get_wp_version(), PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION, PHP_OS )
 		),
-		'echo'   => $hash,
-		'p_time' => $processing,
+		'echo'     => $hash,
+		'p_time'   => $processing,
+		'scheme' => 2 // 8.0.5
 	), JSON_UNESCAPED_UNICODE );
 
 	if ( JSON_ERROR_NONE != json_last_error() ) {
-		$response = 'JSON ERROR';
+		$response = 'Unable to encode payload. JSON error.';
 		$ret      = new WP_Error( 'json_error', 'Unable to encode JSON: ' . json_last_error_msg() );
 	}
 
@@ -508,7 +528,8 @@ function nexus_is_granted( $type = null ) {
 			return true;
 		}
 		if ( $action == 'cerber_ajax' ) {
-			if ( ! crb_array_get( crb_get_request_fields(), 'acl_delete' ) ) {
+			$fields = crb_get_request_fields();
+			if ( ! empty( $fields['acl_delete'] ) ) {
 				return true;
 			}
 		}
@@ -518,26 +539,28 @@ function nexus_is_granted( $type = null ) {
 }
 
 function nexus_get_numbers() {
-	// see wp_get_update_data();
-	$counts  = array( 'plugins' => 0, 'themes' => 0, 'wp' => 0, 'translations' => 0 );
+	$numbers = array();
+	$active_plugins = get_option( 'active_plugins' );
 
-	$updates = get_site_transient( 'update_plugins' );
-	if ( ! $updates || ( $updates->last_checked < ( time() - 7200 ) ) ) {
+	// see wp_get_update_data();
+	$updates  = array( 'plugins' => 0, 'themes' => 0, 'wp' => 0, 'translations' => 0 );
+
+	$pl_updates = get_site_transient( 'update_plugins' );
+	if ( ! $pl_updates || ( $pl_updates->last_checked < ( time() - 7200 ) ) ) {
 		delete_site_transient( 'update_plugins' );
 		wp_update_plugins();
+		$pl_updates = get_site_transient( 'update_plugins' );
 	}
 
-	if ( ! empty( $updates->response ) ) {
-		$active = get_option( 'active_plugins' );
-		$counts['plugins'] = count( array_intersect( $active, array_keys( $updates->response ) ) );
-		//$counts['plugins'] = count( $updates->response );
+	if ( ! empty( $pl_updates->response ) ) {
+		$updates['plugins'] = count( array_intersect( $active_plugins, array_keys( $pl_updates->response ) ) );
 	}
 
 	include_once( ABSPATH . 'wp-admin/includes/update.php' );
 	if ( function_exists( 'get_core_updates' ) ) {
 		$wp = get_core_updates( array( 'dismissed' => false ) );
 		if ( ! empty( $wp ) ) {
-			$counts['wp'] = 1;
+			$updates['wp'] = 1;
 		}
 	}
 
@@ -547,7 +570,33 @@ function nexus_get_numbers() {
 		$scan['numbers']  = $last_scan['numbers'];
 	}
 
-	return array( 'updates' => $counts, 'scan' => $scan );
+	$numbers['updates'] = $updates;
+	$numbers['scan']    = $scan;
+
+	// New
+
+	$list = array();
+	if ( ! empty( $pl_updates->response ) ) {
+		$list = array_map( function ( $e ) {
+			//$ret = (array) $e;
+			$ret = array_map( function ( $e ) {
+				return ( is_object( $e ) ) ? (array) $e : $e;
+			}, (array) $e );
+
+			return $ret;
+		}, $pl_updates->response );
+	}
+
+	$numbers['pl_updates'] = $list;
+	$numbers['active']     = $active_plugins;
+	$numbers['plugins']    = get_plugins();
+	$numbers['themes']     = crb_get_themes();
+	$numbers['gmt']        = get_option( 'gmt_offset' );
+	$numbers['tz']         = get_option( 'timezone_string' );
+	$numbers['pro']        = lab_lab( true );
+
+	return $numbers;
+	//return array( 'updates' => $updates, 'scan' => $scan );
 }
 
 // We have to use our own "user id"

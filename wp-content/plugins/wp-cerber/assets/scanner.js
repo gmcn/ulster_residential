@@ -429,7 +429,10 @@ jQuery(document).ready(function ($) {
             ret = '<a href="#" ' + attr + '>' + ret + '</a>';
         }
 
-        if (issue[3]) {
+        if (typeof issue.data.prced !== "undefined") {
+            ret += '<p>' + crb_scan_msg_issues[issue.data.prced] + '</p>';
+        }
+        else if (issue[3]) {
             ret += '<p>' + crb_scan_msg_issues[issue[3]] + '</p>';
         }
 

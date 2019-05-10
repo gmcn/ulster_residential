@@ -169,10 +169,14 @@ jQuery(document).ready(function ($) {
         $(this).find('a.crb-traffic-more').hide();
     });
 
+    $('#traffic-search-btn').click(function (event) {
+        $('#crb-traffic-search').slideToggle(500);
+    });
+
     /* Enabling conditional input setting fields */
 
     var setting_form = $('.crb-settings');
-    setting_form.find('input').change(function () {
+    setting_form.find('input,select').change(function () {
         var enabler_id = $(this).attr('id');
         var enabler_val;
         if ('checkbox' === $(this).attr('type')) {
@@ -190,7 +194,7 @@ jQuery(document).ready(function ($) {
             var input_data = $(this).data();
             var method;
             if (typeof input_data['enabler_value'] !== "undefined") {
-                if (enabler_val === input_data['enabler_value']) {
+                if (String(enabler_val) === String(input_data['enabler_value'])) {
                     method = 'show';
                 }
                 else {
@@ -207,8 +211,62 @@ jQuery(document).ready(function ($) {
             }
 
             var element = $(this).closest('tr');
-            element[method]();
+            if (method === 'show') {
+                element.fadeIn(500);
+            }
+            else if (method === 'hide') {
+                element.fadeOut();
+            }
+            //element[method]();
         });
     });
+
+    // Add UTM
+
+    $('div#crb-admin').on('click', 'a', function (event) {
+        var link = $(this).attr('href');
+        if (link.startsWith('https://wpcerber.com')) {
+            $(this).attr('href', link + '?utm_source=wp_plugin');
+        }
+    });
+
+    /* Nexus Master's code */
+
+    $('#crb-nexus-sites .crb-slave-site .column-updates a').click(function (event) {
+        var slave_id = $(this).closest('tr').data('slave-id');
+        var slave_name = $(this).closest('tr').data('slave-name');
+
+        $.magnificPopup.open({
+            items: {
+                src: ajaxurl + '?slave_id=' + slave_id + '&action=cerber_master_ajax&crb_ajax_do=nexus_view_updates&ajax_nonce=' + crb_ajax_nonce,
+            },
+            type: 'ajax',
+            callbacks: {
+                parseAjax: function (server_response) {
+                    var the_response = $.parseJSON(server_response.data);
+                    // Note: All html MUST BE inside of "crb-popup-wrap"
+                    server_response.data = '<div id="crb-popup-wrap"><div id="crb-outer"><div id="crb-inner"><h3>' + the_response['header'] + ' ' + slave_name + '</h3>' + the_response['html'] + '</div></div><p class="crb-popup-controls"><input type="button" value="OK" class="crb-mpopup-close button button-primary"></p></div>';
+                },
+                ajaxContentAdded: function() {
+                    var popup_width =  window.innerWidth * ((window.innerWidth < 800) ? 0.7 : 0.6);
+                    $('.crb-admin-mpopup .mfp-content').css('width', popup_width + 'px');
+                    var popup_height = window.innerHeight * ((window.innerHeight < 800) ? 0.7 : 0.6);
+                    $('.crb-admin-mpopup #crb-inner').css('max-height', popup_height + 'px');
+                }
+            },
+            overflowY: 'scroll', // main browser scrollbar
+            mainClass: 'crb-admin-mpopup',
+            closeOnContentClick: false,
+            //preloader: true,
+        });
+
+        event.preventDefault();
+    });
+
+    $(document.body).on('click', '.crb-mpopup-close', function (event) {
+        $.magnificPopup.close();
+        event.preventDefault();
+    });
+
 
 });

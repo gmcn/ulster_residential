@@ -3,9 +3,11 @@
 final class CRB_Request {
 	private static $remote_ip = null;
 	private static $clean_uri = null; // No trailing slash, GET parameters and other junk symbols
+	private static $request_uri = null; // Undecoded $_SERVER['REQUEST_URI']
 	private static $uri_script = null; // With path and the starting slash (if script)
 	private static $site_root = null; // Without trailing slash and path (site domain or IP address)
 	private static $sub_folder = null; // Without trailing slash and site domain
+	private static $the_path = null;
 
 	static function URI() {
 		if ( isset( self::$clean_uri ) ) {
@@ -15,8 +17,13 @@ final class CRB_Request {
 		return self::purify();
 	}
 
-	// Clean up the requested URI from GET parameters and extra slashes
-	// @since 7.9.2
+	/**
+	 * Cleans up and normalizes the requested URI.
+	 * Removes GET parameters and extra slashes, normalizes malformed URI.
+	 *
+	 * @since 7.9.2
+	 * @return string
+	 */
 	static function purify() {
 		$uri = $_SERVER['REQUEST_URI'];
 
@@ -25,10 +32,11 @@ final class CRB_Request {
 		}
 
 		if ( $pos = strpos( $uri, '#' ) ) {
-			$uri = substr( $uri, 0, $pos );
+			$uri = substr( $uri, 0, $pos ); // malformed
 		}
 
-		$uri             = rtrim( $uri, '/' );
+		$uri = rtrim( urldecode( $uri ), '/' );
+
 		self::$clean_uri = preg_replace( '/\/+/', '/', $uri );
 
 		return self::$clean_uri;
@@ -76,7 +84,7 @@ final class CRB_Request {
 	}
 
 	/**
-	 * Does requested URL start with a given string
+	 * Does requested URL start with a given string?
 	 *
 	 * @return string
 	 */
@@ -113,30 +121,30 @@ final class CRB_Request {
 	}
 
 	static function script() {
-
-		if ( isset( self::$uri_script ) ) {
-			return self::$uri_script;
-		}
-
-		if ( cerber_detect_exec_extension( self::URI() ) ) {
-			self::$uri_script = strtolower( self::URI() );
-		}
-		else {
-			self::$uri_script = false;
+		if ( ! isset( self::$uri_script ) ) {
+			if ( cerber_detect_exec_extension( self::URI() ) ) {
+				self::$uri_script = strtolower( self::URI() );
+			}
+			else {
+				self::$uri_script = false;
+			}
 		}
 
 		return self::$uri_script;
 	}
 
 	// @since 7.9.2
-	static function is_script( $val ) {
+	static function is_script( $val, $multiview = false ) {
 		if ( ! self::script() ) {
 			return false;
 		}
-		$uri_script = self::$uri_script;
+		//$uri_script = self::$uri_script;
 		self::parse_site_url();
 		if ( self::$sub_folder ) {
 			$uri_script = substr( self::$uri_script, strlen( self::$sub_folder ) );
+		}
+		else {
+			$uri_script = self::$uri_script;
 		}
 
 		if ( is_array( $val ) ) {
@@ -150,4 +158,29 @@ final class CRB_Request {
 
 		return false;
 	}
-}
+
+	static function get_request_path() {
+		if ( ! isset( self::$the_path ) ) {
+			if ( ! $path = crb_array_get( $_SERVER, 'PATH_INFO' ) ) { // Like /index.php/path-to-some-page/ or rest route
+				$path = $_SERVER['REQUEST_URI'];
+			}
+			self::$the_path = '/' . trim( urldecode( $path ), '/' ) . '/';
+		}
+
+		return self::$the_path;
+	}
+
+	/**
+	 * Return decoded $_SERVER['REQUEST_URI']
+	 *
+	 * @return string
+	 */
+	static function get_request_URI() {
+		if ( ! isset( self::$request_uri ) ) {
+			self::$request_uri = trim( urldecode( $_SERVER['REQUEST_URI'] ) );
+		}
+
+		return self::$request_uri;
+	}
+
+	}

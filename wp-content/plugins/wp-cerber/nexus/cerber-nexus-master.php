@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2015-19 CERBER TECH INC., http://cerber.tech
+	Copyright (C) 2015-19 CERBER TECH INC., https://cerber.tech
 	Copyright (C) 2015-19 CERBER TECH INC., https://wpcerber.com
 
     Licenced under the GNU GPL.
@@ -34,6 +34,8 @@
 
 if ( ! defined( 'WPINC' ) ) { exit; }
 
+require_once( dirname( __FILE__ ) . '/cerber-slave-list.php' );
+
 define( 'CRB_ADD_SLAVE_LNK', '#TB_inline?width=450&height=350&inlineId=crb-popup-add-slave' );
 
 function nexus_show_slaves() {
@@ -61,22 +63,25 @@ function nexus_show_slave_form( $site_id ) {
 
 	// We utilize WP settings API routines just to render the edit form
 
+	$edit_fields = nexus_slave_form_fields();
+
 	$edit_fields = array(
 		'main'    => array(
 			'name' => __( 'Website Properties', 'wp-cerber'),
 			//'info'   => __( 'User related settings', 'wp-cerber' ),
 			'fields' => array(
-				'site_id'   => array(
-					'value' => $site->id,
-					'type'  => 'hidden',
-					'title' => '',
+				'site_id'    => array(
+					'value'    => $site->id,
+					'db_field' => 'id',
+					'type'     => 'hidden',
+					'title'    => '',
 				),
-				'site_url'  => array(
+				'site_url'   => array(
 					'title'    => __( 'Website URL', 'wp-cerber' ),
 					'value'    => $site->site_url,
 					'disabled' => true,
 				),
-				'site_name' => array(
+				'site_name'  => array(
 					'title'     => __( 'Display as', 'wp-cerber' ),
 					'label'     => 'Original website name: ' . $site->site_name_remote,
 					'value'     => $site->site_name,
@@ -89,6 +94,7 @@ function nexus_show_slave_form( $site_id ) {
 					'title'       => __( 'Group', 'wp-cerber' ),
 					'set'         => nexus_get_groups(),
 					'value'       => $site->group_id,
+					'db_field'    => 'group_id',
 					'type'        => 'select',
 					'label'       => $p,
 					'placeholder' => $p
@@ -141,6 +147,9 @@ function nexus_show_slave_form( $site_id ) {
 	cerber_show_settings_form( 'slave-edit-form' );
 }
 
+function nexus_slave_form_fields() {     // TODO implement this
+}
+
 function nexus_get_groups( $clean_up = false ) {
 	if ( ! $groups = cerber_get_set( 'nexus_groups' ) ) {
 		$groups = array( 'Default' );
@@ -180,7 +189,7 @@ add_action( 'admin_init', function () {
 		return;
 	}
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( cerber_is_wp_ajax() ) {
 		nexus_ajax_router();
 	}
 
@@ -212,6 +221,13 @@ add_action( 'admin_init', function () {
 				}
 			}
 		}
+
+		array_walk( $value, function ( &$val, $key ) {
+			// $edit_fields = nexus_slave_form_fields();
+			if ( in_array( $key, array( 'first_name', 'last_name', 'owner_email', 'owner_phone', 'owner_biz', 'owner_address' ) ) ) {
+			    $val = strip_tags( $val );
+			}
+		} );
 
 		$value['group_id'] = $group_id;
 		nexus_update_slave( $value['site_id'], $value );
@@ -288,7 +304,8 @@ function nexus_add_slave( $token ) {
 			cerber_admin_notice( __( 'Keep in mind: You have added the website that does not support SSL encryption. This may lead to data leakage.', 'wp-cerber' ) );
 		}
 
-		cerber_bg_task_add( array( 'func' => 'nexus_send', 'args' => array( array( 'type' => 'hello' ), $site_id ) ), true );
+		//cerber_bg_task_add( array( 'func' => 'nexus_send', 'args' => array( array( 'type' => 'hello' ), $site_id ) ), true );
+		nexus_add_bg_refresh( $site_id );
 	}
 
 }
@@ -312,6 +329,7 @@ function nexus_update_slave( $id, $data ) {
 	if ( ! is_array( $old->details ) ) {
 		$old->details = array();
 	}
+	// $edit_fields = nexus_slave_form_fields();
 	$details_fields   = array( 'first_name', 'last_name', 'owner_email', 'owner_phone', 'owner_biz', 'owner_address' );
 	$data['details'] = serialize( array_replace( $old->details, array_intersect_key( $data, array_flip( $details_fields ) ) ) );
 
@@ -405,6 +423,9 @@ function nexus_delete_slave( $ids ) {
 	if ( $ret ) {
 		$num = cerber_db_get_var( 'SELECT ROW_COUNT()' );
 		cerber_admin_message( sprintf( _n( 'Website has been deleted', '%s websites have been deleted', $num, 'wp-cerber' ), $num ) );
+		foreach ( $ids as $id ) {
+			nexus_delete_list( $id );
+		}
 		return true;
 	}
 	else {
@@ -460,7 +481,12 @@ function nexus_show_remote_page() {
 		'type' => 'get_page'
 	) );
 
-	echo $response;
+	if ( is_array( $response ) ) {
+		echo $response['html'];
+	}
+	else {
+		echo $response;
+	}
 }
 
 function nexus_send_admin_request() {
@@ -546,7 +572,7 @@ function nexus_send( $request, $slave_id = null ) {
 
 		$response = $network['payload'];
 
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( cerber_is_wp_ajax() ) {
 			return $response;
 		}
 
@@ -718,17 +744,81 @@ function nexus_process_extra( $data, $slave ) {
 			$update['last_scan'] = $nums['scan']['finished'];
 
 			if ( $nb = crb_array_get( $nums['scan'], 'numbers' ) ) {
-				// TODO move to separate meta table
+				// TODO move to separate meta table?
 				cerber_update_set( '_nexus_tmp_' . $slave->id, $nb );
 			}
+		}
+
+		// Plugins
+
+        if ( $plugins = crb_array_get( $nums, 'plugins' ) ) {
+			$installed = array();
+
+			if ( ! empty( $nums['pro'] ) ) {
+				//$plugins[ CERBER_PLUGIN_ID ]['Version'] = $plugins[ CERBER_PLUGIN_ID ]['Version'] . ' PRO';
+			}
+
+			$active = array_flip( crb_array_get( $nums, 'active', array() ) );
+
+	        foreach ( $plugins as $plugin => $data ) {
+
+	            $key = 'nexus_p_' . sha1( $plugin . $data['Version'] );
+
+		        $installed[] = array(
+			        $key,
+			        $data['Version'],
+			        (string) ( isset( $active[ $plugin ] ) ) ? '1' : '0'
+		        );
+
+		        // Plugin data for common usage
+
+		        if ( ! cerber_get_set( $key, null, false ) ) {
+			        $data['plugin_slug'] = $plugin;
+			        $data['plugin_key']  = sha1( $plugin );
+			        cerber_update_set( $key, $data );
+		        }
+	        }
+
+			nexus_update_list( $slave->id, 'plugins', $installed );
+		}
+
+		// Updates
+
+		if ( $pl_updates = crb_array_get( $nums, 'pl_updates' ) ) {
+			nexus_update_updates( $pl_updates );
 		}
 
 	}
 
 	if ( $update ) {
-		$result = nexus_update_slave( $slave->id, $update );
+		nexus_update_slave( $slave->id, $update );
+		if ( ! $nums ) {
+			nexus_add_bg_refresh( $slave->id );
+		}
 	}
 
+}
+
+function nexus_update_updates( $pl_updates ) {
+	foreach ( $pl_updates as $plugin => $data ) {
+
+		$key = 'nexus_upd_' . sha1( $plugin );
+		$go  = true;
+
+		if ( ( $pup = cerber_get_set( $key ) )
+		     && ( $data['new_version'] == $pup['new_version'] ) ) {
+			$go = false;
+		}
+		if ( $go ) {
+			cerber_update_set( $key, $data );
+		}
+	}
+}
+
+function nexus_get_update( $plugin ) {
+	$key = 'nexus_upd_' . sha1( $plugin );
+
+	return cerber_get_set( $key );
 }
 
 /**
@@ -766,7 +856,11 @@ function nexus_net_send_request( $payload, $slave ) {
 	$data['payload'] = $payload;
 	$data[ rand() ]  = rand(); // random checksum for identical requests
 
-	if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+	if ( crb_get_settings( 'master_locale' ) ) {
+		$data['master_locale'] = ( crb_get_settings( 'admin_lang' ) ) ? 'en_US' : get_user_locale();
+	}
+
+	if ( ! cerber_is_wp_ajax()
 	     && ! cerber_is_wp_cron() ) {
 		$data['page']    = crb_admin_get_page();
 		$data['tab']     = crb_admin_get_tab();
@@ -851,7 +945,12 @@ function nexus_net_send_request( $payload, $slave ) {
 	}
 
 	if ( is_array( $ret['payload'] ) ) {
-		$sha = sha1( serialize( $ret['payload'] ) );
+		if ( isset( $ret['scheme'] ) ) { // @since 8.0.5
+			$sha = sha1( json_encode( $ret['payload'], JSON_UNESCAPED_UNICODE ) );
+		}
+		else {
+			$sha = sha1( serialize( $ret['payload'] ) ); // 8.0
+		}
 	}
 	else {
 		$sha = sha1( $ret['payload'] );
@@ -861,23 +960,21 @@ function nexus_net_send_request( $payload, $slave ) {
 		return new WP_Error( 'checksum_error', 'Checksum mismatch: the slave response has been altered or security tokens mismatch.' );
 	}
 
-	nexus_diag_log( 'Slave ' . $slave->site_name . ' generated response ' . $ret['p_time'] );
+	nexus_diag_log( 'Slave ' . $slave->site_name . ' has generated response for ' . $ret['p_time'] );
 
 	nexus_diag_log( '=== NETWORK HAS FINISHED OK ===' );
 
     return $ret;
 }
 
-function nexus_set_context( $slave_id = null ) {
+function nexus_set_context() {
 	if ( 'nexus_switch' != cerber_get_get( 'cerber_admin_do' )
 	     || ! wp_verify_nonce( cerber_get_get( 'cerber_nonce' ), 'control' )
 	     || ! is_super_admin() ) {
 		return;
 	}
 
-	if ( $slave_id === null ) {
-		$id = cerber_get_get( 'nexus_site_id' );
-	}
+	$id = absint( cerber_get_get( 'nexus_site_id' ) );
 
 	if ( $slave = nexus_get_slave_data( $id ) ) {
 		if ( crb_get_settings( 'master_swshow' ) ) {
@@ -891,7 +988,7 @@ function nexus_set_context( $slave_id = null ) {
 		$id = 0;
 	}
 
-	setcookie( 'cerber_nexus_id', $id, $expire, '/' );
+	cerber_set_cookie( 'cerber_nexus_id', $id, $expire, '/' );
 
 	if ( $id ) {
 		if ( crb_admin_get_page() == 'cerber-nexus' ) {
@@ -978,12 +1075,12 @@ function nexus_bg_upgrade( $ids, $plugins ) {
 	cerber_admin_message( 'A background upgrade task has been launched' );
 }
 
-function nexus_do_upgrade( $slave, $plugins, $display_errors = false ) {
+function nexus_do_upgrade( $slave_id, $plugins, $display_errors = false ) {
 	$response = nexus_send( array(
 		'type'    => 'sw_upgrade',
 		'sw_type' => 'plugins',
 		'list'    => $plugins
-	), $slave );
+	), $slave_id );
 
 	if ( ! empty( $response['results'] ) ) {
 		nexus_diag_log( cerber_flat_results( $response['results'], $display_errors ) );
@@ -995,6 +1092,8 @@ function nexus_do_upgrade( $slave, $plugins, $display_errors = false ) {
 	}
 
 	if ( empty( $response ) || ! empty( $response['completed'] ) ) {
+		nexus_add_bg_refresh( $slave_id );
+
 		return 'stop';
 	}
 
@@ -1004,21 +1103,49 @@ function nexus_do_upgrade( $slave, $plugins, $display_errors = false ) {
 }
 
 function nexus_schedule_refresh() {
-    // ORDER BY id DESC ?
-	if ( $sites = cerber_db_get_col( 'SELECT id FROM ' . cerber_get_db_prefix() . CERBER_MS_TABLE . ' WHERE refreshed < ' . ( time() - 3600 ) . ' AND last_http <= 200 LIMIT 50' ) ) {
+	// ORDER BY id DESC ?
+	$t = time() - ( is_super_admin() ? 1800 : 3600 );
+	if ( $sites = cerber_db_get_col( 'SELECT id FROM ' . cerber_get_db_prefix() . CERBER_MS_TABLE . ' WHERE refreshed < ' . $t . ' AND last_http <= 200 LIMIT 50' ) ) {
+
 		foreach ( $sites as $id ) {
 
 			// Protective interval
-			// TODO move to separate meta table
-			$key = 'nexus_scheduled_' . $id;
-			if ( cerber_get_set( $key, 0, false ) ) {
+			$key  = 'nexus_schedule';
+			$last = cerber_get_set( $key, $id, false );
+			if ( $last && ( $last > ( time() - 600 ) ) ) {
 				continue;
 			}
-			cerber_update_set( $key, 1, 0, false, time() + 60 );
+			
+			cerber_update_set( $key, time(), $id, false, time() + 3600 );
 
-			cerber_bg_task_add( array( 'func' => 'nexus_send', 'args' => array( array( 'type' => 'hello' ), $id ) ) );
+			/*
+			$key = 'nexus_refresh';
+			$log = array();
+			if ( $log = cerber_get_set( $key, $id ) ) {
+				if ( ! is_array( $log ) ) {
+					$log = array();
+				}
+				elseif ( ! empty( $log ) ) {
+					$delay = 300 * count( $log );
+					if ( reset( $log ) > ( time() - $delay ) ) {
+						continue;
+					}
+				}
+			}
+
+			array_shift( $log );
+			$log[] = time();
+			cerber_update_set( $key, $log, $id, false, time() + 60 );
+			*/
+
+			//cerber_bg_task_add( array( 'func' => 'nexus_send', 'args' => array( array( 'type' => 'hello' ), $id ) ) );
+			nexus_add_bg_refresh( $id );
 		}
 	}
+}
+
+function nexus_add_bg_refresh( $slave_id ) {
+	return cerber_bg_task_add( array( 'func' => 'nexus_send', 'args' => array( array( 'type' => 'hello' ), $slave_id ) ) );
 }
 
 add_action( 'wp_before_admin_bar_render', function () {
@@ -1219,7 +1346,7 @@ add_action( 'admin_head', function () {
 
         /* Site List */
 
-        #crb-nexus-sites select option:last-child{
+        #crb-nexus-sites .bulkactions select option:last-child{
             color: #777;
         }
 
@@ -1260,4 +1387,286 @@ add_action( 'admin_head', function () {
 	<?php
 });
 
+add_action( 'wp_ajax_cerber_master_ajax', function () {
+	global $crb_assets_url;
+	check_ajax_referer( 'crb-ajax-admin', 'ajax_nonce' );
+	if ( ! is_super_admin() ) {
+		wp_die( 'Oops! Access denied.' );
+	}
 
+	$response = array();
+
+	switch ( crb_array_get( $_REQUEST, 'crb_ajax_do' ) ) {
+		case 'nexus_view_updates':
+			$slave_id = absint( $_REQUEST['slave_id'] );
+			//$slave = nexus_get_slave_data( $slave_id );
+			if ( $list = nexus_get_slave_plugins( $slave_id ) ) {
+				$tbody = '';
+
+				foreach ( $list as $item ) {
+					$data = $item['data'];
+
+					$data = array_map( function ( $e ) {
+						return strip_tags( $e );
+					}, $data );
+
+					$c   = '';
+					$upd = '';
+
+					if ( $update = crb_array_get( $item, 'update' ) ) {
+						$c = 'crb-slave-update';
+						array_walk_recursive( $update, function ( &$e ) {
+							$e = strip_tags( $e );
+						} );
+
+						//	dashicons-info
+						$upd = '<span style="color: green;"><i class="dashicons dashicons-info"></i> ' . __( 'A newer version is available', 'wp-cerber' ) . ' (' . $update['new_version'] . ')</span>';
+                        // $upd = '<span style="color: red;"><i class="dashicons dashicons-warning"></i> There is a newer version available' . ' (' . $update['new_version'] . ')</span>';
+						//$upd = '<span style="color: red;"><i style="font-size: 100%;" class="crb-icon crb-icon-bxs-bell"></i> There is a newer version available' . ' (' . $update['new_version'] . ')</span>';
+					}
+
+					$tbody .= '<tr class="' . $c . '" data-plugin-slug="' . $data['plugin_slug'] . '"><td><p style="font-size: 1.09em;"><b>' . $data['Name'] . ' ' . $data['Version'] . '</b> ' . $upd . '</p><p>'.$data['Description'].'</p></td></tr>';
+
+				}
+
+				/*$heading = array(
+					__( 'Plugin', 'wp-cerber' ),
+				);
+				$titles = '<tr><th>' . implode( '</th><th>', $heading ) . '</th></tr>';
+				$html = '<table id="" class="widefat crb-table cerber-margin"><thead>' . $titles . '</thead><tfoot>' . $titles . '</tfoot><tbody>' . $tbody . '</tbody></table>';
+				*/
+
+                $html = '<table id="" class="widefat crb-table cerber-margin"><tbody>' . $tbody . '</tbody></table>';
+
+				//$html .= '<pre style=" white-space: pre-wrap;">';
+				//$html .= print_r( $list,1 );
+				//$html .= '</pre>';
+				$response = array( 'html' => $html, 'header' => __( 'Active plugins and updates on', 'wp-cerber' ) );
+			}
+			else {
+				// TODO remove in production
+				//cerber_bg_task_add( array( 'func' => 'nexus_send', 'args' => array( array( 'type' => 'hello' ), $slave_id ) ) );
+
+				$slave = nexus_get_slave_data( $slave_id );
+				$response = array( 'html'   => 'No information available. Refreshed: ' . cerber_auto_date( $slave->refreshed ),
+				                   'header' => __( 'Active plugins and updates on', 'wp-cerber' )
+				);
+            }
+			break;
+	}
+
+	echo json_encode( $response );
+	exit;
+} );
+
+
+function nexus_get_slave_plugins( $slave_id, $active_only = true, $inc_updates = true ) {
+	$slave_id = absint( $slave_id );
+	$ac = ( $active_only ) ? ' AND status = "1"' : '';
+	$plugins = cerber_db_get_results( 'SELECT * FROM ' . cerber_get_db_prefix() . CERBER_MS_LIST_TABLE . ' lst JOIN ' . cerber_get_db_prefix() . CERBER_SETS_TABLE . ' sts ON (lst.list_item = sts.the_key) WHERE lst.list_key = "plugins" AND lst.site_id = ' . $slave_id . ' ' . $ac );
+	$ret     = array();
+	if ( $plugins ) {
+		foreach ( $plugins as $plugin ) {
+			$p           = array();
+			$p['extra']  = $plugin['extra'];
+			$p['status'] = $plugin['status'];
+			$data        = unserialize( $plugin['the_value'] );
+			$p['data']   = $data;
+			if ( $inc_updates ) {
+				$p['update'] = cerber_get_set( 'nexus_upd_' . $data['plugin_key'] );
+			}
+			$ret[] = $p;
+		}
+	}
+
+	return $ret;
+}
+
+function nexus_update_list( $site_id, $key, $items = array() ) {
+	global $cerber_db_errors;
+
+	list( $site_id, $key ) = nexus_sanitize( $site_id, $key );
+
+	if ( empty( $site_id ) || empty( $key )  ) {
+		return false;
+	}
+
+	if ( empty( $items ) ) {
+		return nexus_delete_list( $site_id, $key );
+	}
+
+	// Reduce DB overhead if no changes in the list
+    // Note: works only if values in $items are all strings
+    // Doesn't work of the DB returns $old with not the same order as in $items
+
+	if ( $old = nexus_get_list( $site_id, $key, array( 'list_item', 'extra', 'status' ), 0 ) ) {
+		if ( count( $old ) === count( $items ) ) {
+			if ( sha1( serialize( $old ) ) === sha1( serialize( $items ) ) ) {
+				return true;
+			}
+		}
+	}
+
+	// Insert a new list
+
+	$values = array();
+	foreach ( $items as $item ) {
+		if ( is_array( $item ) ) {
+			$list_item = cerber_real_escape( $item[0] );
+			$extra     = cerber_real_escape( crb_array_get( $item, 1, '' ) );
+			$status    = substr( crb_array_get( $item, 2, '' ), 0, 1 );
+		}
+		else {
+			$list_item = cerber_real_escape( $item );
+			$extra     = '';
+			$status    = '0';
+		}
+		$values[] = '(' . $site_id . ',"' . $key . '","' . $list_item . '","' . $extra . '", ' . $status . ')';
+	}
+
+	nexus_delete_list( $site_id, $key );
+
+	$query = 'INSERT INTO ' . cerber_get_db_prefix() . CERBER_MS_LIST_TABLE . ' (site_id, list_key, list_item, extra, status) VALUES ' . implode( ',', $values );
+
+	$ret = cerber_db_query( $query );
+
+	if ( $cerber_db_errors ) {
+		nexus_diag_log( $cerber_db_errors );
+	}
+
+	return $ret;
+}
+
+function nexus_get_list( $site_id, $key = '', $fields = array(), $type = MYSQLI_ASSOC ) {
+
+	list( $site_id, $key, $table_fields ) = nexus_sanitize( $site_id, $key, $fields );
+
+	if ( empty( $site_id ) || empty( $key ) ) {
+		return false;
+	}
+
+	$where = nexus_make_where( $site_id, $key );
+
+	$sql_fields = ( $table_fields ) ? implode( ',', $fields ) : '*';
+
+	return cerber_db_get_results( 'SELECT ' . $sql_fields . ' FROM ' . cerber_get_db_prefix() . CERBER_MS_LIST_TABLE . ' WHERE ' . $where, $type );
+}
+
+function nexus_delete_list( $site_id, $key = '' ) {
+
+	list( $site_id, $key ) = nexus_sanitize( $site_id, $key );
+
+	if ( empty( $site_id ) ) {
+		return false;
+	}
+
+	$where = nexus_make_where( $site_id, $key );
+
+	return cerber_db_query( 'DELETE FROM ' . cerber_get_db_prefix() . CERBER_MS_LIST_TABLE . ' WHERE ' . $where );
+}
+
+function nexus_make_where( $site_id, $key = '' ) {
+	$where = ' site_id = ' . $site_id;
+	if ( $key ) {
+		$where .= ' AND list_key = "' . $key . '" ';
+	}
+
+	return $where;
+}
+
+function nexus_sanitize( $site_id, $key = '', $fields = array() ) {
+	$ret = array( 0, '', array() );
+
+	if ( ! $ret[0] = absint( $site_id ) ) {
+		return $ret;
+	}
+
+	if ( $key ) {
+		if ( ! preg_match( '/^[\w\-]+$/', $key ) ) {
+			return $ret;
+		}
+		$ret[1] = $key;
+	}
+
+	if ( $fields ) {
+		$ret[2] = array_filter( $fields, function ( $val ) {
+			if ( preg_match( '/^[\w]+$/', $val ) ) {
+				return true;
+			}
+
+			return false;
+		} );
+	}
+
+	return $ret;
+}
+
+function nexus_create_db( $role ) {
+	global $wpdb, $cerber_db_errors;
+
+	if ( 'utf8mb4' === $wpdb->charset || ( ! $wpdb->charset && $wpdb->has_cap( 'utf8mb4' ) ) ) {
+		$charset = 'utf8mb4';
+		$collate = 'utf8mb4_unicode_ci';
+	}
+	else {
+		$charset = 'utf8';
+		$collate = 'utf8_general_ci';
+	}
+
+	$sql = array();
+	if ( ! cerber_is_table( cerber_get_db_prefix() . CERBER_MS_TABLE ) ) {
+		$sql[] = '
+			CREATE TABLE IF NOT EXISTS ' . cerber_get_db_prefix() . CERBER_MS_TABLE . ' (
+			id int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			site_name varchar(250) NOT NULL,
+			site_name_remote varchar(250) NOT NULL,
+			site_url varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+			group_id int(10) UNSIGNED NOT NULL DEFAULT 0,
+			plugin_v varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT "",
+			wp_v varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT "",
+			last_scan int(10) UNSIGNED NOT NULL DEFAULT 0,
+			updates int(10) UNSIGNED NOT NULL DEFAULT 0,
+			last_http int(10) UNSIGNED NOT NULL DEFAULT 0,
+			refreshed int(10) UNSIGNED NOT NULL DEFAULT 0,
+			x_field varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+			x_num int(10) UNSIGNED NOT NULL,
+			site_echo varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+			site_pass varchar(250) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+			details text NOT NULL,
+			site_notes text NOT NULL,
+			PRIMARY KEY (id),
+			UNIQUE KEY site_url (site_url),
+			KEY group_id (group_id),
+			KEY refreshed (refreshed)			
+			) DEFAULT CHARSET='.$charset.' COLLATE='.$collate.' COMMENT="Keep it secret";
+        ';
+	}
+
+	if ( ! cerber_is_table( cerber_get_db_prefix() . CERBER_MS_LIST_TABLE ) ) {
+		$sql[] = '
+			CREATE TABLE IF NOT EXISTS ' . cerber_get_db_prefix() . CERBER_MS_LIST_TABLE . ' (
+            site_id bigint(20) UNSIGNED NOT NULL,
+            list_key varchar(250) CHARACTER SET ascii NOT NULL,
+            list_item varchar(250) NOT NULL,
+            extra varchar(250) NOT NULL DEFAULT "",
+            status char(1) CHARACTER SET ascii NOT NULL DEFAULT "",
+            updated int(10) UNSIGNED NOT NULL DEFAULT 0,
+    		KEY site_id (site_id) USING HASH,
+			KEY the_key (list_key) USING BTREE
+			) DEFAULT CHARSET='.$charset.' COLLATE='.$collate.' COMMENT="";
+        ';
+	}
+
+	foreach ( $sql as $query ) {
+		cerber_db_query( $query );
+	}
+
+	if ( ! empty( $cerber_db_errors ) ) {
+		cerber_admin_notice( $cerber_db_errors );
+		$cerber_db_errors = array();
+
+		return false;
+	}
+
+	return true;
+}
