@@ -210,6 +210,12 @@ function cf_search_distinct( $where ) {
 }
 add_filter( 'posts_distinct', 'cf_search_distinct' );
 
+function cc_mime_types($mimes) {
+ $mimes['svg'] = 'image/svg+xml';
+ return $mimes;
+}
+add_filter('upload_mimes', 'cc_mime_types');
+
 /**
  * Code to add the custom login css file to the theme
  * - file is "/login/custom-login-styles.css"
@@ -218,6 +224,11 @@ function my_custom_login() {
 echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('stylesheet_directory') . '/login/custom-login-styles.css" />';
 }
 add_action('login_head', 'my_custom_login');
+
+//add sitewide ACF
+// if( function_exists('acf_add_options_page') ) {
+// 	acf_add_options_page();
+// }
 
 // Register Custom Post Type
 // function projects_post_type() {
