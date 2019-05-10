@@ -198,6 +198,19 @@ function cf_search_where( $where ) {
 add_filter( 'posts_where', 'cf_search_where' );
 
 /**
+ * Prevent duplicates
+ * http://codex.wordpress.org/Plugin_API/Filter_Reference/posts_distinct
+ */
+function cf_search_distinct( $where ) {
+    global $wpdb;
+    if ( is_search() ) {
+        return "DISTINCT";
+    }
+    return $where;
+}
+add_filter( 'posts_distinct', 'cf_search_distinct' );
+
+/**
  * Code to add the custom login css file to the theme
  * - file is "/login/custom-login-styles.css"
  */
