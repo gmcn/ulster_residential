@@ -30,6 +30,7 @@ body {
   line-height: $line-height-base;
   color: $text-color;
   background-color: $body-bg;
+  padding: 20px;
 }
 
 // Reset fonts for relevant elements
@@ -52,7 +53,6 @@ a {
   &:hover,
   &:focus {
     color: $link-hover-color;
-    text-decoration: $link-hover-decoration;
   }
 
   &:focus {

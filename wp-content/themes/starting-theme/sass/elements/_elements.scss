@@ -30,4 +30,16 @@ figure {
 	margin: 1em 0; /* Extra wide images within figure tags don't overflow the content area. */
 }
 
+.vert-align {
+	position: absolute;
+	text-align: center;
+	top: 50%;
+	width: calc(100%);
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
 @import "tables";

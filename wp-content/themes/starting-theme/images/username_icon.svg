@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="13.958" height="18" viewBox="0 0 13.958 18">
+  <g id="Group_1111" data-name="Group 1111" transform="translate(-1222.727 -606)">
+    <ellipse id="Ellipse_327" data-name="Ellipse 327" cx="5.706" cy="6.206" rx="5.706" ry="6.206" transform="translate(1224 611.588)" fill="#576066"/>
+    <ellipse id="Ellipse_328" data-name="Ellipse 328" cx="5.706" cy="5.336" rx="5.706" ry="5.336" transform="translate(1222.727 610.588)" fill="#576066"/>
+    <ellipse id="Ellipse_329" data-name="Ellipse 329" cx="5.706" cy="5.336" rx="5.706" ry="5.336" transform="translate(1225.273 610.588)" fill="#576066"/>
+    <g id="Ellipse_326" data-name="Ellipse 326" transform="translate(1226.235 606)" fill="#fff" stroke="#576066" stroke-width="1">
+      <circle cx="3.471" cy="3.471" r="3.471" stroke="none"/>
+      <circle cx="3.471" cy="3.471" r="2.971" fill="none"/>
+    </g>
+    <path id="Path_21618" data-name="Path 21618" d="M1227.942,613.19l1.074,1.374-.73,5.981s1.085,2.213,1.222,1.853,1.374-1.466,1.329-1.853-.836-5.981-.836-5.981l1.571-1.374a6.135,6.135,0,0,1-2.064.476A8.83,8.83,0,0,1,1227.942,613.19Z" fill="#fff"/>
+  </g>
+</svg>

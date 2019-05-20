@@ -45,6 +45,7 @@ function starting_theme_setup() {
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus( array(
 		'menu-1' => esc_html__( 'Primary', 'starting-theme' ),
+		'hidden-menu' => esc_html__( 'Slide In Menu', 'starting-theme' ),
 	) );
 
 	/*
@@ -150,12 +151,12 @@ require get_template_directory() . '/inc/jetpack.php';
 
 
 //add data-toggle class and dropdown-toggle to parent anchor link
-function addanchorlink_class($menu) {
-    $menu = preg_replace('/ href="#"/','/ href="#" class="dropdown-toggle" data-toggle="dropdown" /',$menu);
-    return $menu;
-}
-
-add_filter('wp_nav_menu','addanchorlink_class');
+// function addanchorlink_class($menu) {
+//     $menu = preg_replace('/ href="#"/','/ href="#" class="dropdown-toggle" data-toggle="dropdown" /',$menu);
+//     return $menu;
+// }
+//
+// add_filter('wp_nav_menu','addanchorlink_class');
 
 //replace child ul class
 function new_submenu_class($menu) {
