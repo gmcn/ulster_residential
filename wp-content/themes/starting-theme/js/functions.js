@@ -1,5 +1,20 @@
 ( function($) {
 
+  jQuery('button').click( function(e) {
+    jQuery('.collapse').collapse('hide');
+  });
+
+  $('.bxslider').bxSlider({
+   infiniteLoop: true,
+   minSlides: 1,
+   maxSlides: 1,
+   pager: true,
+   auto: true,
+   speed: 1500,
+   controls: false,
+   // pause: 5000,
+   });
+
   /**
    * Match Height (Including Safari onload fix)
    */
@@ -12,17 +27,21 @@
   		$(".fancybox").fancybox();
   	});
 
-    $('.accordion > li > a').click(function(){
-      if ($(this).attr('class') != 'active'){
-        $('.accordion li ul').slideUp();
-        $(this).next().slideToggle();
-        $('.accordion li a').removeClass('active');
-        $(this).addClass('active');
-      } else {
-        $('.accordion li ul').slideUp();
-        $('.accordion li a').removeClass('active');
-      }
-    });
+  $('.accordion > li > a').click(function(){
+    if ($(this).attr('class') != 'active'){
+      $('.accordion li ul').slideUp();
+      $(this).next().slideToggle();
+      $('.accordion li a').removeClass('active');
+      $(this).addClass('active');
+    } else {
+      $('.accordion li ul').slideUp();
+      $('.accordion li a').removeClass('active');
+    }
+  });
+
+  jQuery('button').click( function(e) {
+    jQuery('.collapse').collapse('hide');
+});
 
 } ) (jQuery);
 

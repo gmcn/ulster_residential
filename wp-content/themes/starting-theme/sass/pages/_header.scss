@@ -17,13 +17,15 @@ ul.nav li.menu-item-has-children:hover > ul.dropdown-menu {
 }
 
 body {
-  overflow: hidden;
-  background: #000;
+  overflow-x: hidden;
 }
 
 header {
   position: fixed;
-  width: calc(100% - 40px);
+  top: 0;
+  left: 35px;
+  z-index: 1;
+  width: calc(100% - 70px);
   margin-top: 40px;
   ul.nav {
     li {
@@ -135,17 +137,6 @@ header {
       background: rgba(0, 0, 0, .8);
       font-weight: 600;
     }
-    a.policy {
-      margin-top: 50px;
-      text-decoration: none;
-      color: rgba(88, 84, 77, .8);
-      font-size: 12px;
-      display: block;
-      transition: 0.3s;
-    }
-    a.policy:hover, a.policy:focus {
-      color: #000;
-    }
   }
   a {
     padding: 8px;
@@ -188,7 +179,7 @@ header {
   height: 100%; /* 100% Full-height */
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Stay on top */
+  z-index: 100 !important; /* Stay on top */
   top: 0; /* Stay at the top */
   right: 0;
   color: #fff;

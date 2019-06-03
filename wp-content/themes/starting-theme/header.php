@@ -27,7 +27,6 @@
 	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'starting-theme' ); ?></a>
 
 	<header>
-
 		<!-- Static navbar -->
 	      <nav class="navbar navbar-default">
 	        <div class="container-fluid">

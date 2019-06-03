@@ -1,0 +1,226 @@
+#bxslider {
+  height: calc(100vh - 15px);
+  margin: 0;
+  padding: 0;
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  .slide {
+    height: calc(100vh - 40px);
+    margin: 0;
+    padding: 0;
+    h1 {
+      color: #fff;
+      padding: 30px 20px;
+      display: inline-block;
+      font-family: $font-family-serif;
+      // line-height: 2em;
+      font-size: 32px;
+      font-weight: 400;
+      @include md {
+        font-size: 43px;
+        max-width: 45%;
+      }
+      @include lg {
+        font-size: 54px;
+      }
+    }
+    a {
+      display: inline-block;
+      background: #7B7B7B;
+      border-radius: 5px;
+      text-transform: uppercase;
+      padding: 15px;
+      font-size: 11px;
+      margin-top: 50px;
+      color: #fff;
+      font-weight: 600;
+    }
+    a:hover {
+      background: #000;
+    }
+  }
+  .bx-pager {
+    position: absolute;
+    top: 130px;
+    right: 135px;
+    a {
+      &.active {
+        background: #fff;
+      }
+    background: rgba(255,255,255,.4);
+    text-indent: -9999px;
+    display: block;
+    width: 11px;
+    height: 11px;
+    margin: 0 0 6px 0;
+    outline: 0;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    }
+  }
+}
+
+.scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  animation-duration: 2s !important;
+}
+
+.welcome_cta {
+  padding: 150px 0;
+  text-align: center;
+  margin-bottom: 15px;
+  h2 {
+    text-transform: lowercase;
+    color: #757890;
+    text-align: center;
+    font-family: $font-family-serif;
+    // line-height: 2em;
+    font-size: 32px;
+    font-weight: 300;
+    @include md {
+      font-size: 43px;
+    }
+    @include lg {
+      font-size: 54px;
+    }
+  }
+  p {
+    color: rgba(87,94,111,.5);
+    font-size: 17px;
+  }
+  p:first-of-type {
+    margin-bottom: 55px;
+  }
+  a {
+    border: 2px solid #575E6F;
+    background: none;
+    color: #fff;
+    padding: 10px;
+    color: #575E6F;
+    border-radius: 5px;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+    &:hover {
+      background: #575E6F;
+      border: 2px solid #575E6F;
+      color: #fff;
+      padding: 10px;
+    }
+  }
+  a:first-of-type {
+    background: #575E6F;
+    border: 2px solid #575E6F;
+    color: #fff;
+    padding: 10px;
+    &:hover {
+      background: none;
+      color: #575E6F;
+    }
+  }
+}
+
+.cta {
+  text-align: center;
+  margin-bottom: 15px;
+  h3 {
+    font-family: $font-family-serif;
+    padding: 15px;
+    background: #fff;
+    display: inline-block;
+    font-size: 30px;
+  }
+  .col1, .col2, .col3 {
+    position: relative;
+    height: 550px;
+    a {
+      display: inline-block;
+      padding: 10px;
+      border-radius: 5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 12px;
+      color: #fff;
+      margin-top: 30px;
+    }
+    a:hover {
+      background: #000 !important;
+    }
+  }
+  .col3 {
+    margin-right: 0;
+    padding-right: 0;
+    .col-md-12 {
+      &:first-of-type {
+        height: calc(50% - 20px);
+        margin-bottom: 20px;
+      }
+      height: 50%;
+    }
+  }
+}
+
+.newsletter {
+  padding: 100px 0;
+  margin-bottom: 15px;
+  background: #F8F8F8;
+  h2 {
+    color: $grey;
+    text-align: center;
+    letter-spacing: 3px;
+    font-family: $font-family-serif;
+    font-size: 25px;
+    margin: 0 0 50px 0;
+    span {
+      font-size: 18px;
+    }
+  }
+  .consent {
+    font-size: 12px;
+    text-align: left;
+    input[type="checkbox"] {
+      float: left;
+      @include md {
+        margin-left: -15px;
+      }
+    }
+    label {
+      font-weight: 400;
+    }
+  }
+  input[type="text"], input[type="email"], input[type="email"]:focus,  {
+    width: 100%;
+    color: #fff;
+    padding: 8px;
+    background: rgba(0, 0, 0, .45);
+  }
+  .email::-webkit-input-placeholder, .search-input-box::-webkit-input-placeholder {
+    color: #fff;
+  }
+  input[type="submit"], button {
+    color: #fff;
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 15px;
+    width: 100%;
+    background: rgba(0, 0, 0, .45);
+    font-weight: 600;
+    transition: .5s;
+  }
+  input[type="submit"]:hover, button:hover {
+    color: #fff;
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 15px;
+    background: rgba(0, 0, 0, .8);
+    font-weight: 600;
+  }
+}
