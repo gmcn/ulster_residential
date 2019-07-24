@@ -70,8 +70,8 @@
 				</p>
 			</div>
 			<div class="col-md-6 col-lg-4 links">
-				<a href="https://ulstercarpets.com/contract">Contact Site</a>
-				<a href="/contact">Contact Site</a>
+				<a href="https://ulstercarpets.com/contract">Contract Site</a>
+				<a href="/contact">Contact Us</a>
 				<div class="social">
 					<a href="https://www.instagram.com/ulstercarpets/" target="_blank"><img src="<?php echo get_template_directory_uri() ?>/images/instagram_icon.svg" alt="Instagram"></a>
 					<a href="https://www.facebook.com/UlsterCarpets" target="_blank"> <img src="<?php echo get_template_directory_uri() ?>/images/facebook_icon.svg" alt="Instagram"></a>
