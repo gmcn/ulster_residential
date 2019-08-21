@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP Cerber\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: Tue Sep 08 2015 21:38:11 GMT+0300\n"
-"POT-Revision-Date: Fri May 10 2019 15:11:27 GMT+0300 (Moscow Standard Time)\n"
+"POT-Revision-Date: Mon Jun 17 2019 13:37:16 GMT+0300 (Moscow Standard Time)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -28,8 +28,8 @@ msgstr ""
 msgid "Cerber Dashboard"
 msgstr ""
 
-#: ../dashboard.php:54 ../dashboard.php:1641 ../dashboard.php:2557 ../dashboard.
-#: php:4319
+#: ../dashboard.php:54 ../dashboard.php:1711 ../dashboard.php:2622 ../dashboard.
+#: php:4460
 msgid "Dashboard"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "Cerber Traffic Inspector"
 msgstr ""
 
-#: ../dashboard.php:56 ../dashboard.php:1611 ../dashboard.php:4378
+#: ../dashboard.php:56 ../dashboard.php:1681 ../dashboard.php:4526
 msgid "Traffic Inspector"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Cerber Security Rules"
 msgstr ""
 
-#: ../dashboard.php:60 ../dashboard.php:4414
+#: ../dashboard.php:60 ../dashboard.php:4562
 msgid "Security Rules"
 msgstr ""
 
@@ -53,11 +53,11 @@ msgstr ""
 msgid "Cerber User Security"
 msgstr ""
 
-#: ../dashboard.php:63 ../dashboard.php:4394
+#: ../dashboard.php:63 ../dashboard.php:4542
 msgid "User Policies"
 msgstr ""
 
-#: ../dashboard.php:66 ../dashboard.php:4429
+#: ../dashboard.php:66 ../dashboard.php:4577
 msgid "Site Integrity"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Cerber antispam settings"
 msgstr ""
 
-#: ../dashboard.php:70 ../cerber-load.php:4667 ../settings.php:933
+#: ../dashboard.php:70 ../cerber-load.php:4809 ../settings.php:933
 msgid "Antispam"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Cerber tools"
 msgstr ""
 
-#: ../dashboard.php:75 ../dashboard.php:4464
+#: ../dashboard.php:75 ../dashboard.php:4612
 msgid "Tools"
 msgstr ""
 
@@ -81,28 +81,28 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: ../dashboard.php:184 ../dashboard.php:1052 ../dashboard.php:3763 ../cerber-
-#: load.php:4370
+#: ../dashboard.php:184 ../cerber-load.php:4512
 msgid "IP"
 msgstr ""
 
-#: ../dashboard.php:185 ../dashboard.php:1053
+#: ../dashboard.php:185 ../dashboard.php:1072
 msgid "Hostname"
 msgstr ""
 
-#: ../dashboard.php:186 ../dashboard.php:1054
+#: ../dashboard.php:186 ../dashboard.php:1073
 msgid "Country"
 msgstr ""
 
-#: ../dashboard.php:187
+#: ../dashboard.php:187 ../cerber-users.php:755
 msgid "Expires"
 msgstr ""
 
-#: ../dashboard.php:188 ../cerber-load.php:3706
+#: ../dashboard.php:188 ../cerber-load.php:3848
 msgid "Reason"
 msgstr ""
 
-#: ../dashboard.php:189 ../cerber-scanner.php:5715 ../cerber-scanner.php:5855
+#: ../dashboard.php:189 ../cerber-users.php:758 ../cerber-scanner.php:5772 ..
+#: /cerber-scanner.php:5920
 msgid "Action"
 msgstr ""
 
@@ -123,8 +123,8 @@ msgstr ""
 msgid "No lockouts at the moment. The sky is clear."
 msgstr ""
 
-#: ../dashboard.php:234 ../dashboard.php:1022 ../dashboard.php:1266 ../dashboard.
-#: php:1606 ../dashboard.php:3555 ../cerber-load.php:4654
+#: ../dashboard.php:234 ../dashboard.php:1287 ../dashboard.php:1324 ../dashboard.
+#: php:1676 ../dashboard.php:3696 ../cerber-load.php:4796
 msgid "White IP Access List"
 msgstr ""
 
@@ -132,8 +132,8 @@ msgstr ""
 msgid "These IPs will never be locked out"
 msgstr ""
 
-#: ../dashboard.php:236 ../dashboard.php:1025 ../dashboard.php:1269 ../dashboard.
-#: php:1607 ../dashboard.php:3556
+#: ../dashboard.php:236 ../dashboard.php:1290 ../dashboard.php:1327 ../dashboard.
+#: php:1677 ../dashboard.php:3697
 msgid "Black IP Access List"
 msgstr ""
 
@@ -145,8 +145,8 @@ msgstr ""
 msgid "Your IP"
 msgstr ""
 
-#: ../dashboard.php:261 ../dashboard.php:1279 ../dashboard.php:1314 ../dashboard.
-#: php:1433
+#: ../dashboard.php:261 ../dashboard.php:1338 ../dashboard.php:1373 ../dashboard.
+#: php:1496
 msgid "Check for activities"
 msgstr ""
 
@@ -172,7 +172,7 @@ msgstr ""
 
 #: ../dashboard.php:301
 #, php-format
-msgid "Address %s was added to White IP Access List"
+msgid "IP address %s has been added to White IP Access List"
 msgstr ""
 
 #: ../dashboard.php:315
@@ -181,11 +181,11 @@ msgstr ""
 
 #: ../dashboard.php:323
 #, php-format
-msgid "Address %s was added to Black IP Access List"
+msgid "IP address %s has been added to Black IP Access List"
 msgstr ""
 
-#: ../dashboard.php:410 ../dashboard.php:3484 ../whois.php:222 ../whois.php:253 ..
-#: /common.php:1310 ../common.php:1721 ../nexus/cerber-slave-list.php:283
+#: ../dashboard.php:410 ../dashboard.php:3625 ../whois.php:222 ../whois.php:253 ..
+#: /common.php:1354 ../common.php:1805 ../nexus/cerber-slave-list.php:283
 msgid "Unknown"
 msgstr ""
 
@@ -206,594 +206,622 @@ msgstr ""
 msgid "Unable to send email to"
 msgstr ""
 
-#: ../dashboard.php:608
+#: ../dashboard.php:612
 msgid "Default settings have been loaded"
 msgstr ""
 
-#: ../dashboard.php:788 ../dashboard.php:3385
-msgid "IP address"
+#: ../dashboard.php:804 ../dashboard.php:1071 ../dashboard.php:3904 ../cerber-
+#: users.php:756
+msgid "IP Address"
 msgstr ""
 
-#: ../dashboard.php:789 ../dashboard.php:1055 ../dashboard.php:3386 ../dashboard.
-#: php:3761
+#: ../dashboard.php:805 ../dashboard.php:1074 ../dashboard.php:3527 ../dashboard.
+#: php:3902
 msgid "Date"
 msgstr ""
 
-#: ../dashboard.php:790 ../dashboard.php:1056
+#: ../dashboard.php:806 ../dashboard.php:1075
 msgid "Event"
 msgstr ""
 
-#: ../dashboard.php:791
+#: ../dashboard.php:807
 msgid "Additional Details"
 msgstr ""
 
-#: ../dashboard.php:792 ../dashboard.php:1057 ../dashboard.php:3766
+#: ../dashboard.php:808 ../dashboard.php:1076 ../dashboard.php:3907
 msgid "Local User"
 msgstr ""
 
-#: ../dashboard.php:793
+#: ../dashboard.php:809
 msgid "User login"
 msgstr ""
 
-#: ../dashboard.php:794 ../dashboard.php:3391
+#: ../dashboard.php:810 ../dashboard.php:3532
 msgid "User ID"
 msgstr ""
 
-#: ../dashboard.php:795 ../dashboard.php:1058 ../cerber-load.php:4378
-msgid "Username used"
+#: ../dashboard.php:811 ../dashboard.php:1077
+msgid "Username"
 msgstr ""
 
-#: ../dashboard.php:870 ../dashboard.php:2207
+#: ../dashboard.php:886 ../dashboard.php:2277
 msgid "View all"
 msgstr ""
 
-#: ../dashboard.php:881
+#: ../dashboard.php:897
 msgid "New users"
 msgstr ""
 
-#: ../dashboard.php:887 ../dashboard.php:3792
+#: ../dashboard.php:903 ../dashboard.php:3933
 msgid "Suspicious activity"
 msgstr ""
 
-#: ../dashboard.php:889 ../common.php:1194
+#: ../dashboard.php:905 ../common.php:1238
 msgid "IP blocked"
 msgstr ""
 
-#: ../dashboard.php:891 ../dashboard.php:3794 ../settings.php:386 ../settings.php:
-#: 854
+#: ../dashboard.php:907 ../dashboard.php:1674 ../dashboard.php:3935 ../settings.
+#: php:386 ../settings.php:854
 msgid "Logged in users"
 msgstr ""
 
-#: ../dashboard.php:892 ../dashboard.php:3795
+#: ../dashboard.php:908 ../dashboard.php:3936
 msgid "Not logged in visitors"
 msgstr ""
 
-#: ../dashboard.php:894
+#: ../dashboard.php:910
 msgid "My activity"
 msgstr ""
 
-#: ../dashboard.php:1030 ../dashboard.php:1272 ../dashboard.php:3560 ../common.
-#: php:1247
-msgid "Locked out"
-msgstr ""
-
-#: ../dashboard.php:1080 ../dashboard.php:3826
+#: ../dashboard.php:1099 ../dashboard.php:3967
 msgid "Export"
 msgstr ""
 
-#: ../dashboard.php:1085
+#: ../dashboard.php:1104
 msgid "No activity has been logged."
 msgstr ""
 
-#: ../dashboard.php:1092
+#: ../dashboard.php:1111
 msgid "All events"
 msgstr ""
 
-#: ../dashboard.php:1102
+#: ../dashboard.php:1121
 msgid "Filter by registered user"
 msgstr ""
 
-#: ../dashboard.php:1103
+#: ../dashboard.php:1122
 msgid "Search for IP or username"
 msgstr ""
 
-#: ../dashboard.php:1104
+#: ../dashboard.php:1123 ../dashboard.php:1125
 msgid "Filter"
 msgstr ""
 
-#: ../dashboard.php:1309
+#: ../dashboard.php:1295 ../dashboard.php:1331 ../dashboard.php:3701 ../common.
+#: php:1291
+msgid "Locked out"
+msgstr ""
+
+#: ../dashboard.php:1368
 msgid "Abuse email:"
 msgstr ""
 
-#: ../dashboard.php:1314
+#: ../dashboard.php:1373
 msgid "Network:"
 msgstr ""
 
-#: ../dashboard.php:1329
+#: ../dashboard.php:1388
 msgid "Add network to the Black List"
 msgstr ""
 
-#: ../dashboard.php:1334
+#: ../dashboard.php:1393
 msgid "Add IP to the Black List"
 msgstr ""
 
-#: ../dashboard.php:1396
+#: ../dashboard.php:1458
 msgid "Activated"
 msgstr ""
 
-#: ../dashboard.php:1417
+#: ../dashboard.php:1480
 msgid "Last seen"
 msgstr ""
 
-#: ../dashboard.php:1427 ../dashboard.php:1471
+#: ../dashboard.php:1490 ../dashboard.php:1534
 msgid "Registered"
 msgstr ""
 
-#: ../dashboard.php:1468
+#: ../dashboard.php:1531
 msgid "Comments"
 msgstr ""
 
-#: ../dashboard.php:1469
+#: ../dashboard.php:1532
 msgid "Last login"
 msgstr ""
 
-#: ../dashboard.php:1470
+#: ../dashboard.php:1533
 msgid "Failed login attempts"
 msgstr ""
 
-#: ../dashboard.php:1502 ../dashboard.php:1589 ../common.php:1450 ../nexus/cerber-
+#: ../dashboard.php:1565 ../dashboard.php:1656 ../common.php:1494 ../nexus/cerber-
 #: slave-list.php:297
 msgid "Never"
 msgstr ""
 
-#: ../dashboard.php:1541 ../cerber-users.php:51
+#: ../dashboard.php:1604 ../cerber-users.php:51 ../cerber-users.php:889
 msgid "You"
 msgstr ""
 
-#: ../dashboard.php:1559
+#: ../dashboard.php:1622
 msgid "Cerber Quick View"
 msgstr ""
 
-#: ../dashboard.php:1593 ../dashboard.php:1615
+#: ../dashboard.php:1660 ../dashboard.php:1685
 msgid "active"
 msgstr ""
 
-#: ../dashboard.php:1593
+#: ../dashboard.php:1660
 msgid "deactivate"
 msgstr ""
 
-#: ../dashboard.php:1595
+#: ../dashboard.php:1662
 msgid "not active"
 msgstr ""
 
-#: ../dashboard.php:1596 ../dashboard.php:1610
+#: ../dashboard.php:1663 ../dashboard.php:1680
 msgid "disabled"
 msgstr ""
 
-#: ../dashboard.php:1601
+#: ../dashboard.php:1668
 msgid "failed attempts"
 msgstr ""
 
-#: ../dashboard.php:1601 ../dashboard.php:1602
+#: ../dashboard.php:1668 ../dashboard.php:1669
 msgid "in 24 hours"
 msgstr ""
 
-#: ../dashboard.php:1601 ../dashboard.php:1602
+#: ../dashboard.php:1668 ../dashboard.php:1669
 msgid "view all"
 msgstr ""
 
-#: ../dashboard.php:1602
+#: ../dashboard.php:1669
 msgid "lockouts"
 msgstr ""
 
-#: ../dashboard.php:1604
+#: ../dashboard.php:1671
 msgid "Lockouts at the moment"
 msgstr ""
 
-#: ../dashboard.php:1605
+#: ../dashboard.php:1672
 msgid "Last lockout"
 msgstr ""
 
-#: ../dashboard.php:1606 ../dashboard.php:1607 ../dashboard.php:2539
+#: ../dashboard.php:1674
+msgid "user"
+msgid_plural "users"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../dashboard.php:1676 ../dashboard.php:1677 ../dashboard.php:2604
 msgid "entry"
 msgid_plural "entries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../dashboard.php:1608 ../settings.php:257
+#: ../dashboard.php:1678 ../settings.php:257
 msgid "Citadel mode"
 msgstr ""
 
-#: ../dashboard.php:1610
+#: ../dashboard.php:1680
 msgid "enabled"
 msgstr ""
 
-#: ../dashboard.php:1615
+#: ../dashboard.php:1685
 msgid "no connection"
 msgstr ""
 
-#: ../dashboard.php:1625
+#: ../dashboard.php:1695
 msgctxt "Example: Last malware scan: 23 Jan 2018"
 msgid "Last malware scan"
 msgstr ""
 
-#: ../dashboard.php:1628 ../dashboard.php:1630 ../cerber-users.php:20 ../cerber-
-#: users.php:436 ../settings.php:556 ../settings.php:581 ../settings.php:1005 ..
-#: /cerber-scanner.php:1623
+#: ../dashboard.php:1698 ../dashboard.php:1700 ../cerber-users.php:20 ../cerber-
+#: users.php:431 ../settings.php:556 ../settings.php:581 ../settings.php:1005 ..
+#: /cerber-scanner.php:1625
 msgid "Disabled"
 msgstr ""
 
-#: ../dashboard.php:1629 ../cerber-scanner.php:1065
+#: ../dashboard.php:1699 ../cerber-scanner.php:1066
 msgid "Quick Scan"
 msgstr ""
 
-#: ../dashboard.php:1631 ../cerber-scanner.php:1065
+#: ../dashboard.php:1701 ../cerber-scanner.php:1066
 msgid "Full Scan"
 msgstr ""
 
-#: ../dashboard.php:1642 ../dashboard.php:2193 ../dashboard.php:4320 ../cerber-
-#: load.php:4361 ../settings.php:282
+#: ../dashboard.php:1712 ../dashboard.php:2263 ../dashboard.php:4461 ../cerber-
+#: load.php:4503 ../cerber-users.php:922 ../settings.php:282
 msgid "Activity"
 msgstr ""
 
-#: ../dashboard.php:1643
+#: ../dashboard.php:1713 ../cerber-users.php:923
 msgid "Traffic"
 msgstr ""
 
-#: ../dashboard.php:1644
+#: ../dashboard.php:1714
 msgid "Integrity"
 msgstr ""
 
-#: ../dashboard.php:1647
+#: ../dashboard.php:1717
 msgid "A new version is available"
 msgstr ""
 
-#: ../dashboard.php:2010 ../settings.php:244
+#: ../dashboard.php:2080 ../settings.php:244
 msgid "My site is behind a reverse proxy"
 msgstr ""
 
-#: ../dashboard.php:2186
+#: ../dashboard.php:2256
 msgid "in the last 24 hours"
 msgstr ""
 
-#: ../dashboard.php:2210
+#: ../dashboard.php:2280
 msgid "Recently locked out IP addresses"
 msgstr ""
 
-#: ../dashboard.php:2234
+#: ../dashboard.php:2304
 msgid "Confused about some settings?"
 msgstr ""
 
-#: ../dashboard.php:2235
+#: ../dashboard.php:2305
 msgid "You can easily load default recommended settings using button below"
 msgstr ""
 
-#: ../dashboard.php:2237
+#: ../dashboard.php:2307
 msgid "Load default settings"
 msgstr ""
 
-#: ../dashboard.php:2239 ../cerber-tools.php:638 ../nexus/cerber-slave-list.php:
-#: 230 ../cerber-scanner.php:5689 ../cerber-scanner.php:5839
+#: ../dashboard.php:2309 ../cerber-users.php:945 ../cerber-tools.php:649 ..
+#: /nexus/cerber-slave-list.php:230 ../cerber-scanner.php:5746 ../cerber-scanner.
+#: php:5904
 msgid "Are you sure?"
 msgstr ""
 
-#: ../dashboard.php:2245
+#: ../dashboard.php:2315
 msgid "doesn't affect Custom login URL and Access Lists"
 msgstr ""
 
-#: ../dashboard.php:2246 ../cerber-load.php:3738 ../cerber-load.php:4656
+#: ../dashboard.php:2316 ../cerber-load.php:3880 ../cerber-load.php:4798
 msgid "Getting Started Guide"
 msgstr ""
 
-#: ../dashboard.php:2356
+#: ../dashboard.php:2421
 msgid "Attention! Citadel mode is now active. Nobody is able to log in."
 msgstr ""
 
-#: ../dashboard.php:2357
+#: ../dashboard.php:2422
 msgid "Deactivate"
 msgstr ""
 
-#: ../dashboard.php:2358 ../dashboard.php:2796
+#: ../dashboard.php:2423 ../dashboard.php:2861
 msgid "View Activity"
 msgstr ""
 
-#: ../dashboard.php:2373 ../nexus/cerber-nexus-slave.php:443
+#: ../dashboard.php:2438 ../nexus/cerber-nexus-slave.php:443
 msgid "Settings saved"
 msgstr ""
 
-#: ../dashboard.php:2444
+#: ../dashboard.php:2509
 msgid "Create Alert"
 msgstr ""
 
-#: ../dashboard.php:2448
+#: ../dashboard.php:2513
 msgid "Delete Alert"
 msgstr ""
 
-#: ../dashboard.php:2481
+#: ../dashboard.php:2546
 msgid "You've subscribed"
 msgstr ""
 
-#: ../dashboard.php:2482
+#: ../dashboard.php:2547
 msgid "The alert has been created"
 msgstr ""
 
-#: ../dashboard.php:2486
+#: ../dashboard.php:2551
 msgid "You've unsubscribed"
 msgstr ""
 
-#: ../dashboard.php:2487
+#: ../dashboard.php:2552
 msgid "The alert has been deleted"
 msgstr ""
 
-#: ../dashboard.php:2558
+#: ../dashboard.php:2623
 msgid "Main settings"
 msgstr ""
 
-#: ../dashboard.php:2664
+#: ../dashboard.php:2729
 msgid "Are you sure you want to delete selected files?"
 msgstr ""
 
-#: ../dashboard.php:2665
+#: ../dashboard.php:2730
 msgid "These files have been moved to the quarantine"
 msgstr ""
 
-#: ../dashboard.php:2668
+#: ../dashboard.php:2733
 msgid "Do you want to add selected files to the ignore list?"
 msgstr ""
 
-#: ../dashboard.php:2669
+#: ../dashboard.php:2734
 msgid "These files have been added to the ignore list"
 msgstr ""
 
-#: ../dashboard.php:2671
+#: ../dashboard.php:2736
 msgid "Some errors occurred"
 msgstr ""
 
-#: ../dashboard.php:2672
+#: ../dashboard.php:2737
 msgid "All files have been processed"
 msgstr ""
 
-#: ../dashboard.php:3055 ../common.php:875
+#: ../dashboard.php:3121 ../common.php:899
 msgid "Save Changes"
 msgstr ""
 
-#: ../dashboard.php:3126
+#: ../dashboard.php:3193
+msgid "Role-based rules are configured"
+msgstr ""
+
+#: ../dashboard.php:3243
+msgid "Start typing here to find a country"
+msgstr ""
+
+#: ../dashboard.php:3250
+msgid "Save all rules"
+msgstr ""
+
+#: ../dashboard.php:3263
 #, php-format
 msgid "Permitted for one country"
 msgid_plural "Permitted for %d countries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../dashboard.php:3129
+#: ../dashboard.php:3266
 #, php-format
 msgid "Not permitted for one country"
 msgid_plural "Not permitted for %d countries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../dashboard.php:3137
+#: ../dashboard.php:3274
 msgid "No rule"
 msgstr ""
 
-#: ../dashboard.php:3179
-msgid "Start typing here to find a country"
+#: ../dashboard.php:3275
+msgid "Any country is permitted"
 msgstr ""
 
-#: ../dashboard.php:3187
-msgid "Save all rules"
-msgstr ""
-
-#: ../dashboard.php:3242
+#: ../dashboard.php:3358
 msgid "Click on a country name to add it to the list of selected countries"
 msgstr ""
 
-#: ../dashboard.php:3246
+#: ../dashboard.php:3362
 #, php-format
 msgctxt "to is a marker of infinitive, e.g. \"to use it\""
 msgid "Selected countries are permitted to %s, other countries are not permitted to"
 msgstr ""
 
-#: ../dashboard.php:3249
+#: ../dashboard.php:3365
 #, php-format
 msgctxt "to is a marker of infinitive, e.g. \"to use it\""
 msgid "Selected countries are not permitted to %s, other countries are permitted to"
 msgstr ""
 
-#: ../dashboard.php:3266
+#: ../dashboard.php:3385
 msgid "Log in to the website"
 msgstr ""
 
-#: ../dashboard.php:3267
+#: ../dashboard.php:3387
+msgid "All Users"
+msgstr ""
+
+#: ../dashboard.php:3389
 msgid "Register on the website"
 msgstr ""
 
-#: ../dashboard.php:3268
+#: ../dashboard.php:3390
 msgid "Submit forms"
 msgstr ""
 
-#: ../dashboard.php:3269
+#: ../dashboard.php:3391
 msgid "Post comments"
 msgstr ""
 
-#: ../dashboard.php:3270
+#: ../dashboard.php:3392
 msgid "Use XML-RPC"
 msgstr ""
 
-#: ../dashboard.php:3271
+#: ../dashboard.php:3393
 msgid "Use REST API"
 msgstr ""
 
-#: ../dashboard.php:3319
+#: ../dashboard.php:3435
 msgid "Security rules have been updated"
 msgstr ""
 
-#: ../dashboard.php:3392
+#: ../dashboard.php:3526
+msgid "IP address"
+msgstr ""
+
+#: ../dashboard.php:3533
 msgid "Page generation time"
 msgstr ""
 
-#: ../dashboard.php:3762
+#: ../dashboard.php:3903
 msgid "Request"
 msgstr ""
 
-#: ../dashboard.php:3764
+#: ../dashboard.php:3905 ../cerber-users.php:757
 msgid "Host Info"
 msgstr ""
 
-#: ../dashboard.php:3765
+#: ../dashboard.php:3906
 msgid "User Agent"
 msgstr ""
 
-#: ../dashboard.php:3782
+#: ../dashboard.php:3923
 msgid "No requests have been logged."
 msgstr ""
 
-#: ../dashboard.php:3790
+#: ../dashboard.php:3931
 msgid "All requests"
 msgstr ""
 
-#: ../dashboard.php:3793
+#: ../dashboard.php:3934
 msgid "Errors"
 msgstr ""
 
-#: ../dashboard.php:3798
+#: ../dashboard.php:3939
 msgid "Form submissions"
 msgstr ""
 
-#: ../dashboard.php:3800
+#: ../dashboard.php:3941
 msgid "Page Not Found"
 msgstr ""
 
-#: ../dashboard.php:3809
+#: ../dashboard.php:3950
 msgid "Longer than"
 msgstr ""
 
-#: ../dashboard.php:3819
+#: ../dashboard.php:3960
 msgid "Advanced Search"
 msgstr ""
 
-#: ../dashboard.php:3832
+#: ../dashboard.php:3973
 msgid "Refresh"
 msgstr ""
 
-#: ../dashboard.php:4123
+#: ../dashboard.php:4264
 msgid "Any"
 msgstr ""
 
-#: ../dashboard.php:4321
+#: ../dashboard.php:4462
+msgid "Sessions"
+msgstr ""
+
+#: ../dashboard.php:4463
 msgid "Lockouts"
 msgstr ""
 
-#: ../dashboard.php:4322 ../cerber-load.php:4664
+#: ../dashboard.php:4464 ../cerber-load.php:4806
 msgid "Main Settings"
 msgstr ""
 
-#: ../dashboard.php:4323 ../cerber-load.php:4666 ../cerber-tools.php:38 ../cerber-
+#: ../dashboard.php:4465 ../cerber-load.php:4808 ../cerber-tools.php:38 ../cerber-
 #: tools.php:47 ../cerber-tools.php:139
 msgid "Access Lists"
 msgstr ""
 
-#: ../dashboard.php:4324 ../cerber-load.php:4668
+#: ../dashboard.php:4466 ../cerber-load.php:4810
 msgid "Hardening"
 msgstr ""
 
-#: ../dashboard.php:4326 ../cerber-load.php:4669 ../settings.php:270
+#: ../dashboard.php:4468 ../cerber-load.php:4811 ../settings.php:270
 msgid "Notifications"
 msgstr ""
 
-#: ../dashboard.php:4358
+#: ../dashboard.php:4506
 msgid "Antispam and bot detection settings"
 msgstr ""
 
-#: ../dashboard.php:4360
+#: ../dashboard.php:4508
 msgid "Antispam engine"
 msgstr ""
 
-#: ../dashboard.php:4380
+#: ../dashboard.php:4528
 msgid "Live Traffic"
 msgstr ""
 
-#: ../dashboard.php:4381 ../dashboard.php:4432 ../cerber-tools.php:37 ../cerber-
+#: ../dashboard.php:4529 ../dashboard.php:4580 ../cerber-tools.php:37 ../cerber-
 #: tools.php:46 ../nexus/cerber-nexus.php:90
 msgid "Settings"
 msgstr ""
 
-#: ../dashboard.php:4396
+#: ../dashboard.php:4544
 msgid "Role-based"
 msgstr ""
 
-#: ../dashboard.php:4397
+#: ../dashboard.php:4545
 msgid "Global"
 msgstr ""
 
-#: ../dashboard.php:4416
+#: ../dashboard.php:4564
 msgid "Countries"
 msgstr ""
 
-#: ../dashboard.php:4431 ../cerber-load.php:4665
+#: ../dashboard.php:4579 ../cerber-load.php:4807
 msgid "Security Scanner"
 msgstr ""
 
-#: ../dashboard.php:4433
+#: ../dashboard.php:4581
 msgid "Scheduling"
 msgstr ""
 
-#: ../dashboard.php:4434
+#: ../dashboard.php:4582
 msgid "Cleaning up"
 msgstr ""
 
-#: ../dashboard.php:4435
+#: ../dashboard.php:4583
 msgid "Ignore List"
 msgstr ""
 
-#: ../dashboard.php:4436
+#: ../dashboard.php:4584
 msgid "Quarantine"
 msgstr ""
 
-#: ../dashboard.php:4466
+#: ../dashboard.php:4614
 msgid "Export & Import"
 msgstr ""
 
-#: ../dashboard.php:4467
+#: ../dashboard.php:4615
 msgid "Diagnostic"
 msgstr ""
 
-#: ../dashboard.php:4468
+#: ../dashboard.php:4616
 msgid "Log"
 msgstr ""
 
-#: ../dashboard.php:4469
+#: ../dashboard.php:4617
 msgid "Changelog"
 msgstr ""
 
-#: ../dashboard.php:4470
+#: ../dashboard.php:4618
 msgid "License"
 msgstr ""
 
-#: ../dashboard.php:4566
+#: ../dashboard.php:4714
 msgid "Help"
 msgstr ""
 
-#: ../dashboard.php:4594
+#: ../dashboard.php:4742
 msgid "Log In"
 msgstr ""
 
-#: ../dashboard.php:4595
+#: ../dashboard.php:4743
 msgid "Log Out"
 msgstr ""
 
-#: ../dashboard.php:4596
+#: ../dashboard.php:4744
 msgid "Register"
 msgstr ""
 
-#: ../dashboard.php:4599
+#: ../dashboard.php:4747
 msgid "WooCommerce Log In"
 msgstr ""
 
-#: ../dashboard.php:4600
+#: ../dashboard.php:4748
 msgid "WooCommerce Log Out"
 msgstr ""
 
-#: ../dashboard.php:4639 ../dashboard.php:4640
+#: ../dashboard.php:4787 ../dashboard.php:4788
 msgid "Add to menu"
 msgstr ""
 
@@ -843,285 +871,285 @@ msgid "Lockouts occurred"
 msgstr ""
 
 #: ../common.php:323 ../common.php:395 ../common.php:400 ../common.php:406 ..
-#: /common.php:411 ../cerber-load.php:699 ../cerber-load.php:711 ../cerber-load.
-#: php:718 ../cerber-load.php:1034 ../cerber-load.php:1361 ../cerber-load.php:
-#: 1367 ../cerber-load.php:1372 ../cerber-load.php:1379 ../cerber-load.php:1386 ..
-#: /cerber-load.php:1392 ../cerber-load.php:1399 ../cerber-load.php:1550 ..
-#: /cerber-load.php:1687 ../settings.php:1531 ../settings.php:1617 ..
+#: /common.php:411 ../cerber-load.php:683 ../cerber-load.php:695 ../cerber-load.
+#: php:702 ../cerber-load.php:1024 ../cerber-load.php:1464 ../cerber-load.php:
+#: 1470 ../cerber-load.php:1475 ../cerber-load.php:1482 ../cerber-load.php:1489 ..
+#: /cerber-load.php:1495 ../cerber-load.php:1502 ../cerber-load.php:1653 ..
+#: /cerber-load.php:1790 ../settings.php:1531 ../settings.php:1617 ..
 #: /nexus/cerber-nexus-slave.php:215 ../nexus/cerber-nexus-slave.php:226 ..
-#: /cerber-scanner.php:5809
+#: /cerber-scanner.php:5874
 msgid "ERROR:"
 msgstr ""
 
-#: ../common.php:1187
+#: ../common.php:1231
 msgid "User created"
 msgstr ""
 
-#: ../common.php:1188
+#: ../common.php:1232
 msgid "User registered"
 msgstr ""
 
-#: ../common.php:1189
+#: ../common.php:1233
 msgid "Logged in"
 msgstr ""
 
-#: ../common.php:1190
+#: ../common.php:1234
 msgid "Logged out"
 msgstr ""
 
-#: ../common.php:1191
+#: ../common.php:1235
 msgid "Login failed"
 msgstr ""
 
-#: ../common.php:1195
+#: ../common.php:1239
 msgid "Subnet blocked"
 msgstr ""
 
-#: ../common.php:1197
+#: ../common.php:1241
 msgid "Citadel activated!"
 msgstr ""
 
-#: ../common.php:1198
+#: ../common.php:1242
 msgid "Spam comment denied"
 msgstr ""
 
-#: ../common.php:1199
+#: ../common.php:1243
 msgid "Spam form submission denied"
 msgstr ""
 
-#: ../common.php:1200
+#: ../common.php:1244
 msgid "Form submission denied"
 msgstr ""
 
-#: ../common.php:1201
+#: ../common.php:1245
 msgid "Comment denied"
 msgstr ""
 
-#: ../common.php:1212
+#: ../common.php:1256
 msgid "Password changed"
 msgstr ""
 
-#: ../common.php:1213
+#: ../common.php:1257
 msgid "Password reset requested"
 msgstr ""
 
-#: ../common.php:1215
+#: ../common.php:1259
 msgid "reCAPTCHA verification failed"
 msgstr ""
 
-#: ../common.php:1216
+#: ../common.php:1260
 msgid "reCAPTCHA settings are incorrect"
 msgstr ""
 
-#: ../common.php:1217
+#: ../common.php:1261
 msgid "Request to the Google reCAPTCHA service failed"
 msgstr ""
 
-#: ../common.php:1219 ../common.php:1314
+#: ../common.php:1263 ../common.php:1358
 msgid "Attempt to access prohibited URL"
 msgstr ""
 
-#: ../common.php:1220 ../common.php:1293
+#: ../common.php:1264 ../common.php:1337
 msgid "Attempt to log in with non-existing username"
 msgstr ""
 
-#: ../common.php:1221 ../common.php:1294
+#: ../common.php:1265 ../common.php:1338
 msgid "Attempt to log in with prohibited username"
 msgstr ""
 
-#: ../common.php:1223
+#: ../common.php:1267
 msgid "Attempt to log in denied"
 msgstr ""
 
-#: ../common.php:1224
+#: ../common.php:1268
 msgid "Attempt to register denied"
 msgstr ""
 
-#: ../common.php:1225 ../common.php:1298
+#: ../common.php:1269 ../common.php:1342
 msgid "Probing for vulnerable PHP code"
 msgstr ""
 
-#: ../common.php:1226
+#: ../common.php:1270
 msgid "Attempt to upload malicious file denied"
 msgstr ""
 
-#: ../common.php:1227
+#: ../common.php:1271
 msgid "File upload denied"
 msgstr ""
 
-#: ../common.php:1229
+#: ../common.php:1273
 msgid "Request to REST API denied"
 msgstr ""
 
-#: ../common.php:1230
+#: ../common.php:1274
 msgid "XML-RPC request denied"
 msgstr ""
 
-#: ../common.php:1232
+#: ../common.php:1276
 msgid "Malicious request denied"
 msgstr ""
 
-#: ../common.php:1236
+#: ../common.php:1280
 msgid "User activated"
 msgstr ""
 
-#: ../common.php:1239
+#: ../common.php:1283
 msgid "Invalid master credentials"
 msgstr ""
 
-#: ../common.php:1245
+#: ../common.php:1289
 msgid "Bot detected"
 msgstr ""
 
-#: ../common.php:1246
+#: ../common.php:1290
 msgid "Citadel mode is active"
 msgstr ""
 
-#: ../common.php:1248
+#: ../common.php:1292
 msgid "IP address is locked out"
 msgstr ""
 
-#: ../common.php:1249
+#: ../common.php:1293
 msgid "IP blacklisted"
 msgstr ""
 
-#: ../common.php:1251
+#: ../common.php:1295
 msgid "Malicious activity detected"
 msgstr ""
 
-#: ../common.php:1252
+#: ../common.php:1296
 msgid "Blocked by country rule"
 msgstr ""
 
-#: ../common.php:1253
+#: ../common.php:1297
 msgid "Limit reached"
 msgstr ""
 
-#: ../common.php:1254
+#: ../common.php:1298
 msgid "Multiple suspicious activities"
 msgstr ""
 
-#: ../common.php:1255
+#: ../common.php:1299
 msgid "Denied"
 msgstr ""
 
-#: ../common.php:1256
+#: ../common.php:1300
 msgid "Suspicious number of fields"
 msgstr ""
 
-#: ../common.php:1257
+#: ../common.php:1301
 msgid "Suspicious number of nested values"
 msgstr ""
 
-#: ../common.php:1258 ../common.php:1299
+#: ../common.php:1302 ../common.php:1343
 msgid "Malicious code detected"
 msgstr ""
 
-#: ../common.php:1259
+#: ../common.php:1303
 msgid "Suspicious SQL code detected"
 msgstr ""
 
-#: ../common.php:1260
+#: ../common.php:1304
 msgid "Suspicious JavaScript code detected"
 msgstr ""
 
-#: ../common.php:1261
+#: ../common.php:1305
 msgid "Blocked by administrator"
 msgstr ""
 
-#: ../common.php:1262
+#: ../common.php:1306
 msgid "Site policy enforcement"
 msgstr ""
 
-#: ../common.php:1263
+#: ../common.php:1307
 msgid "2FA code verified"
 msgstr ""
 
-#: ../common.php:1264
+#: ../common.php:1308
 msgid "Initiated by the user"
 msgstr ""
 
-#: ../common.php:1267
+#: ../common.php:1311
 msgid "Email address is not permitted"
 msgstr ""
 
-#: ../common.php:1291
+#: ../common.php:1335
 msgid "Limit on login attempts is reached"
 msgstr ""
 
-#: ../common.php:1292
+#: ../common.php:1336
 msgid "Attempt to access"
 msgstr ""
 
-#: ../common.php:1295
+#: ../common.php:1339
 msgid "Limit on failed reCAPTCHA verifications is reached"
 msgstr ""
 
-#: ../common.php:1296
+#: ../common.php:1340
 msgid "Bot activity is detected"
 msgstr ""
 
-#: ../common.php:1297
+#: ../common.php:1341
 msgid "Multiple suspicious activities were detected"
 msgstr ""
 
-#: ../common.php:1300
+#: ../common.php:1344
 msgid "Attempt to upload a file with malicious code"
 msgstr ""
 
-#: ../common.php:1302
+#: ../common.php:1346
 msgid "Multiple suspicious requests"
 msgstr ""
 
 #. translators: Time difference between two dates, in seconds (sec=second). 1: Number of seconds
-#: ../common.php:1438
+#: ../common.php:1482
 #, php-format
 msgid "%s sec"
 msgid_plural "%s secs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../common.php:1445
+#: ../common.php:1489
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: ../common.php:1445
+#: ../common.php:1489
 #, php-format
 msgctxt "preposition of a period of time like: in 6 hours"
 msgid "in %s"
 msgstr ""
 
-#: ../common.php:1531
+#: ../common.php:1575
 msgid "Bytes"
 msgstr ""
 
-#: ../common.php:1633
+#: ../common.php:1677
 #, php-format
 msgid "A new version of %s is available. Please install it."
 msgstr ""
 
-#: ../common.php:1652
+#: ../common.php:1697
 msgid "Not specified"
 msgstr ""
 
-#: ../common.php:2509
+#: ../common.php:2593
 msgid "Unable to create the directory"
 msgstr ""
 
-#: ../common.php:2514
+#: ../common.php:2598
 msgid "Destination folder access denied"
 msgstr ""
 
-#: ../common.php:2517
+#: ../common.php:2601
 msgid "File not found"
 msgstr ""
 
-#: ../common.php:2520
+#: ../common.php:2604
 msgid "Unable to copy the file"
 msgstr ""
 
-#: ../common.php:2526
+#: ../common.php:2610
 msgid "Unable to delete the file"
 msgstr ""
 
@@ -1132,7 +1160,7 @@ msgid ""
 "more: <a href=\"https://wpcerber.com\">wpcerber.com</a>."
 msgstr ""
 
-#: ../cerber-news.php:175
+#: ../cerber-news.php:145
 msgid "Awesome!"
 msgstr ""
 
@@ -1160,244 +1188,248 @@ msgstr ""
 msgid "Know more"
 msgstr ""
 
-#: ../cerber-load.php:391
+#: ../cerber-load.php:375
 msgid "You are not allowed to log in. Ask your administrator for assistance."
 msgstr ""
 
-#: ../cerber-load.php:397
+#: ../cerber-load.php:381
 #, php-format
 msgid ""
 "You have exceeded the number of allowed login attempts. Please try again in "
 "%d minutes."
 msgstr ""
 
-#: ../cerber-load.php:401
+#: ../cerber-load.php:385
 msgid "You are not allowed to log in"
 msgstr ""
 
-#: ../cerber-load.php:416
+#: ../cerber-load.php:400
 #, php-format
 msgid "You have only one attempt remaining."
 msgid_plural "You have %d attempts remaining."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../cerber-load.php:728
+#: ../cerber-load.php:712
 msgid ""
 "Human verification failed. Please click the square box in the reCAPTCHA "
 "block below."
 msgstr ""
 
-#: ../cerber-load.php:849
+#: ../cerber-load.php:833
 msgid ""
 "> > > Translator of WP Cerber? To get the PRO license for free, drop your "
 "contacts here: https://wpcerber.com/contact/"
 msgstr ""
 
-#: ../cerber-load.php:1045
+#: ../cerber-load.php:1035
 #, php-format
 msgid ""
 "<strong>ERROR</strong>: The password you entered for the username %s is "
 "incorrect."
 msgstr ""
 
-#: ../cerber-load.php:1362 ../cerber-load.php:1368 ../cerber-load.php:1393 ..
-#: /cerber-load.php:1400
+#: ../cerber-load.php:1465 ../cerber-load.php:1471 ../cerber-load.php:1496 ..
+#: /cerber-load.php:1503
 msgid "You are not allowed to register."
 msgstr ""
 
-#: ../cerber-load.php:1380
+#: ../cerber-load.php:1483
 msgid "Username is not allowed. Please choose another one."
 msgstr ""
 
-#: ../cerber-load.php:1387
+#: ../cerber-load.php:1490
 msgid "Email address is not permitted."
 msgstr ""
 
-#: ../cerber-load.php:1387
+#: ../cerber-load.php:1490
 msgid "Please choose another one."
 msgstr ""
 
-#: ../cerber-load.php:1687
+#: ../cerber-load.php:1790
 msgid "Sorry, human verification failed."
 msgstr ""
 
-#: ../cerber-load.php:3535
+#: ../cerber-load.php:3678
 msgid "We're sorry, you are not allowed to proceed"
 msgstr ""
 
-#: ../cerber-load.php:3647
+#: ../cerber-load.php:3789
 msgid "WP Cerber notify"
 msgstr ""
 
-#: ../cerber-load.php:3671
+#: ../cerber-load.php:3813
 msgid "Citadel mode is activated"
 msgstr ""
 
-#: ../cerber-load.php:3673
+#: ../cerber-load.php:3815
 #, php-format
 msgid "Citadel mode is activated after %d failed login attempts in %d minutes."
 msgstr ""
 
-#: ../cerber-load.php:3674
+#: ../cerber-load.php:3816
 #, php-format
 msgid "Last failed attempt was at %s from IP %s with user login: %s."
 msgstr ""
 
-#: ../cerber-load.php:3675 ../cerber-load.php:4402
+#: ../cerber-load.php:3817 ../cerber-load.php:4544
 msgid "View activity in dashboard"
 msgstr ""
 
-#: ../cerber-load.php:3699
+#: ../cerber-load.php:3841
 msgid "unspecified"
 msgstr ""
 
-#: ../cerber-load.php:3702
+#: ../cerber-load.php:3844
 msgid "Number of lockouts is increasing"
 msgstr ""
 
-#: ../cerber-load.php:3704
+#: ../cerber-load.php:3846
 msgid "Number of active lockouts"
 msgstr ""
 
-#: ../cerber-load.php:3705
+#: ../cerber-load.php:3847
 #, php-format
 msgid "Last lockout was added: %s for IP %s"
 msgstr ""
 
-#: ../cerber-load.php:3707
+#: ../cerber-load.php:3849
 msgid "View activity for this IP"
 msgstr ""
 
-#: ../cerber-load.php:3708
+#: ../cerber-load.php:3850
 msgid "View lockouts in dashboard"
 msgstr ""
 
-#: ../cerber-load.php:3711 ../cerber-load.php:3713
+#: ../cerber-load.php:3853 ../cerber-load.php:3855
 msgid "A new version of WP Cerber is available to install"
 msgstr ""
 
-#: ../cerber-load.php:3712
+#: ../cerber-load.php:3854
 msgid "Hi!"
 msgstr ""
 
-#: ../cerber-load.php:3715 ../cerber-load.php:3726 ../nexus/cerber-slave-list.php:
+#: ../cerber-load.php:3857 ../cerber-load.php:3868 ../nexus/cerber-slave-list.php:
 #: 45
 msgid "Website"
 msgstr ""
 
-#: ../cerber-load.php:3718 ../cerber-load.php:3719
+#: ../cerber-load.php:3860 ../cerber-load.php:3861
 msgid "The WP Cerber security plugin has been deactivated"
 msgstr ""
 
-#: ../cerber-load.php:3721
+#: ../cerber-load.php:3863
 msgid "Not logged in"
 msgstr ""
 
-#: ../cerber-load.php:3727
+#: ../cerber-load.php:3869
 msgid "By user"
 msgstr ""
 
-#: ../cerber-load.php:3728
+#: ../cerber-load.php:3870
 msgid "From IP address"
 msgstr ""
 
-#: ../cerber-load.php:3731
+#: ../cerber-load.php:3873
 msgid "From country"
 msgstr ""
 
-#: ../cerber-load.php:3735
+#: ../cerber-load.php:3877
 msgid "The WP Cerber security plugin is now active"
 msgstr ""
 
-#: ../cerber-load.php:3736 ../cerber-load.php:4653
+#: ../cerber-load.php:3878 ../cerber-load.php:4795
 msgid "WP Cerber is now active and has started protecting your site"
 msgstr ""
 
-#: ../cerber-load.php:3743
+#: ../cerber-load.php:3885
 msgid "New Custom login URL"
 msgstr ""
 
-#: ../cerber-load.php:3747 ../cerber-load.php:3748
+#: ../cerber-load.php:3889 ../cerber-load.php:3890
 msgid "A new activity has been recorded"
 msgstr ""
 
-#: ../cerber-load.php:3753
+#: ../cerber-load.php:3895
 msgid "Weekly report"
 msgstr ""
 
-#: ../cerber-load.php:3756 ../cerber-load.php:3766
+#: ../cerber-load.php:3898 ../cerber-load.php:3908
 msgid "To change reporting settings visit"
 msgstr ""
 
-#: ../cerber-load.php:3763
+#: ../cerber-load.php:3905
 msgid "Scanner Report"
 msgstr ""
 
-#: ../cerber-load.php:3789
+#: ../cerber-load.php:3931
 msgid "Your login page:"
 msgstr ""
 
-#: ../cerber-load.php:3793
+#: ../cerber-load.php:3935
 msgid "Your license is valid until"
 msgstr ""
 
-#: ../cerber-load.php:3796
+#: ../cerber-load.php:3938
 msgid "This message was sent by"
 msgstr ""
 
-#: ../cerber-load.php:3817
+#: ../cerber-load.php:3959
 #, php-format
 msgid "Your last sign-in was %s from %s"
 msgstr ""
 
-#: ../cerber-load.php:3887
+#: ../cerber-load.php:4029
 msgid "Weekly Report"
 msgstr ""
 
-#: ../cerber-load.php:3899
+#: ../cerber-load.php:4041
 msgid "Activity details"
 msgstr ""
 
-#: ../cerber-load.php:3913
+#: ../cerber-load.php:4055
 msgid "Attempts to log in with non-existing usernames"
 msgstr ""
 
-#: ../cerber-load.php:4374
+#: ../cerber-load.php:4516 ../cerber-users.php:752
 msgid "User"
 msgstr ""
 
-#: ../cerber-load.php:4382
+#: ../cerber-load.php:4520
+msgid "Username used"
+msgstr ""
+
+#: ../cerber-load.php:4524
 msgid "Search string"
 msgstr ""
 
-#: ../cerber-load.php:4403
+#: ../cerber-load.php:4545
 msgid "To delete the alert, click here"
 msgstr ""
 
-#: ../cerber-load.php:4619
+#: ../cerber-load.php:4761
 #, php-format
 msgid "The WP Cerber requires PHP %s or higher. You are running"
 msgstr ""
 
-#: ../cerber-load.php:4623
+#: ../cerber-load.php:4765
 #, php-format
 msgid "The WP Cerber requires WordPress %s or higher. You are running"
 msgstr ""
 
-#: ../cerber-load.php:4632
+#: ../cerber-load.php:4774
 msgid "Can't activate WP Cerber due to a database error."
 msgstr ""
 
-#: ../cerber-load.php:4654
+#: ../cerber-load.php:4796
 msgid "Your IP address is added to the"
 msgstr ""
 
-#: ../cerber-load.php:4670
+#: ../cerber-load.php:4812
 msgid "Import settings"
 msgstr ""
 
-#: ../cerber-users.php:10 ../cerber-users.php:429
+#: ../cerber-users.php:10 ../cerber-users.php:424
 msgid "Two-Factor Authentication"
 msgstr ""
 
@@ -1405,7 +1437,7 @@ msgstr ""
 msgid "Determined by user role policies"
 msgstr ""
 
-#: ../cerber-users.php:19 ../cerber-users.php:437
+#: ../cerber-users.php:19 ../cerber-users.php:432
 msgid "Always enabled"
 msgstr ""
 
@@ -1419,7 +1451,7 @@ msgstr ""
 
 #: ../cerber-users.php:57
 #, php-format
-msgctxt "e.g. by John at 11:00"
+msgctxt "e.g. blocked by John at 11:00"
 msgid "blocked by %s at %s"
 msgstr ""
 
@@ -1436,95 +1468,134 @@ msgid "2FA PIN Code"
 msgstr ""
 
 #: ../cerber-users.php:93
-msgid "Two-factor Authentication Email"
+msgid "Two-Factor Authentication Email"
 msgstr ""
 
-#: ../cerber-users.php:184
+#: ../cerber-users.php:173
 msgid "Blocked Users"
 msgstr ""
 
-#: ../cerber-users.php:216
+#: ../cerber-users.php:205
 msgid "Block"
 msgstr ""
 
-#: ../cerber-users.php:279
+#: ../cerber-users.php:274
 msgid "Save All Changes"
 msgstr ""
 
-#: ../cerber-users.php:391
+#: ../cerber-users.php:386
 msgid "Block access to WordPress Dashboard"
 msgstr ""
 
-#: ../cerber-users.php:396
+#: ../cerber-users.php:391
 msgid "Hide Toolbar when viewing site"
 msgstr ""
 
-#: ../cerber-users.php:402
+#: ../cerber-users.php:397
 msgid "Redirection rules"
 msgstr ""
 
-#: ../cerber-users.php:406
+#: ../cerber-users.php:401
 msgid "Redirect user after login"
 msgstr ""
 
-#: ../cerber-users.php:411
+#: ../cerber-users.php:406
 msgid "Redirect user after logout"
 msgstr ""
 
-#: ../cerber-users.php:422 ../settings.php:473
+#: ../cerber-users.php:417 ../settings.php:473
 msgid "User session expiration time"
 msgstr ""
 
-#: ../cerber-users.php:433
+#: ../cerber-users.php:428
 msgid "Two-factor authentication"
 msgstr ""
 
-#: ../cerber-users.php:438
+#: ../cerber-users.php:433
 msgid "Advanced mode"
 msgstr ""
 
-#: ../cerber-users.php:442
+#: ../cerber-users.php:437
 msgid "Enforce two-factor authentication if any of the following conditions is true"
 msgstr ""
 
-#: ../cerber-users.php:448
+#: ../cerber-users.php:443
 msgid "Login from a different country"
 msgstr ""
 
-#: ../cerber-users.php:454
+#: ../cerber-users.php:449
 msgid "Login from a different network Class C"
 msgstr ""
 
-#: ../cerber-users.php:460
+#: ../cerber-users.php:455
 msgid "Login from a different IP address"
 msgstr ""
 
-#: ../cerber-users.php:466
+#: ../cerber-users.php:461
 msgid "Using a different browser or device"
 msgstr ""
 
-#: ../cerber-users.php:472
+#: ../cerber-users.php:467
 msgid "Enforce two-factor authentication with fixed intervals"
 msgstr ""
 
-#: ../cerber-users.php:478
+#: ../cerber-users.php:473
 msgid "Regular time intervals (days)"
 msgstr ""
 
-#: ../cerber-users.php:480
+#: ../cerber-users.php:475
 msgid "days interval"
 msgstr ""
 
-#: ../cerber-users.php:485
+#: ../cerber-users.php:480
 msgid "Fixed number of logins"
 msgstr ""
 
-#: ../cerber-users.php:487
+#: ../cerber-users.php:482
 msgid "number of logins"
 msgstr ""
 
-#: ../cerber-users.php:529
+#: ../cerber-users.php:524
 msgid "Policies have been updated"
+msgstr ""
+
+#: ../cerber-users.php:598
+#, php-format
+msgid "Session has been terminated"
+msgid_plural "%s sessions have been terminated"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../cerber-users.php:754
+msgid "Created"
+msgstr ""
+
+#: ../cerber-users.php:775
+msgid "Terminate session"
+msgstr ""
+
+#: ../cerber-users.php:776
+msgid "Block user"
+msgstr ""
+
+#: ../cerber-users.php:844 ../nexus/cerber-slave-list.php:193
+msgid "Search results for:"
+msgstr ""
+
+#: ../cerber-users.php:886
+msgid "Profile"
+msgstr ""
+
+#: ../cerber-users.php:899
+msgid "All Logins"
+msgstr ""
+
+#: ../cerber-users.php:900
+msgid "User Activity"
+msgstr ""
+
+#: ../cerber-users.php:947
+msgid "Terminate"
 msgstr ""
 
 #: ../settings.php:127
@@ -1707,7 +1778,7 @@ msgstr ""
 msgid "Threshold"
 msgstr ""
 
-#: ../settings.php:265 ../cerber-scanner.php:3910
+#: ../settings.php:265 ../cerber-scanner.php:3948
 msgid "Duration"
 msgstr ""
 
@@ -1825,7 +1896,7 @@ msgid "Access to WordPress REST API"
 msgstr ""
 
 #: ../settings.php:377
-msgid "Block access to user data via REST API"
+msgid "Block access to users' data via REST API"
 msgstr ""
 
 #: ../settings.php:381
@@ -2558,65 +2629,70 @@ msgstr ""
 msgid "Know more about all advantages at"
 msgstr ""
 
-#: ../cerber-2fa.php:337
+#: ../cerber-2fa.php:352
 msgid ""
 "This verification PIN code is expired. We have just sent a new one to your "
 "email."
 msgstr ""
 
-#: ../cerber-2fa.php:340
+#: ../cerber-2fa.php:355
 msgid "You have entered an incorrect verification PIN code"
 msgstr ""
 
-#: ../cerber-2fa.php:387 ../cerber-2fa.php:471
+#: ../cerber-2fa.php:402 ../cerber-2fa.php:486
 msgid "Please verify that it’s you"
 msgstr ""
 
-#: ../cerber-2fa.php:474
+#: ../cerber-2fa.php:489
 msgid "Please use the following verification PIN code to confirm your identity"
 msgstr ""
 
-#: ../cerber-2fa.php:499
+#: ../cerber-2fa.php:489
+#, php-format
+msgid "The code is valid for %s minutes."
+msgstr ""
+
+#: ../cerber-2fa.php:514
 msgid "Here are the details of the sign-in attempt"
 msgstr ""
 
-#: ../cerber-2fa.php:548
+#: ../cerber-2fa.php:563
 msgid "expires"
 msgstr ""
 
-#: ../cerber-2fa.php:565
+#: ../cerber-2fa.php:580
 msgid "only digits are allowed"
 msgstr ""
 
-#: ../cerber-2fa.php:568
+#: ../cerber-2fa.php:583
 msgid "We've sent a verification PIN code to your email"
 msgstr ""
 
-#: ../cerber-2fa.php:569
+#: ../cerber-2fa.php:584
 msgid "Enter the code from the email in the field below."
 msgstr ""
 
-#: ../cerber-2fa.php:571
+#: ../cerber-2fa.php:586
 msgid "Try again"
 msgstr ""
 
-#: ../cerber-2fa.php:572
+#: ../cerber-2fa.php:587
 msgid "Cancel"
 msgstr ""
 
-#: ../cerber-2fa.php:573
+#: ../cerber-2fa.php:588
 msgid "Did not receive an email?"
 msgstr ""
 
-#: ../cerber-2fa.php:573
+#: ../cerber-2fa.php:588
 msgid "or"
 msgstr ""
 
-#: ../cerber-2fa.php:579
+#: ../cerber-2fa.php:594
 msgid "Verify it's you"
 msgstr ""
 
-#: ../cerber-2fa.php:584
+#: ../cerber-2fa.php:599
 msgid "Verify"
 msgstr ""
 
@@ -2652,7 +2728,7 @@ msgstr ""
 msgid "Select file to import."
 msgstr ""
 
-#: ../cerber-tools.php:43 ../cerber-scanner.php:4125
+#: ../cerber-tools.php:43 ../cerber-scanner.php:4163
 #, php-format
 msgid "Maximum upload file size: %s."
 msgstr ""
@@ -2661,7 +2737,7 @@ msgstr ""
 msgid "What do you want to import?"
 msgstr ""
 
-#: ../cerber-tools.php:48 ../cerber-scanner.php:4128
+#: ../cerber-tools.php:48 ../cerber-scanner.php:4166
 msgid "Upload file"
 msgstr ""
 
@@ -2729,10 +2805,6 @@ msgstr ""
 msgid "Add a slave website"
 msgstr ""
 
-#: ../nexus/cerber-slave-list.php:193
-msgid "Search results for:"
-msgstr ""
-
 #: ../nexus/cerber-slave-list.php:233
 msgid "Edit"
 msgstr ""
@@ -2741,7 +2813,7 @@ msgstr ""
 msgid "Switch to"
 msgstr ""
 
-#: ../nexus/cerber-slave-list.php:290 ../cerber-scanner.php:3926
+#: ../nexus/cerber-slave-list.php:290 ../cerber-scanner.php:3964
 msgid "Vulnerabilities"
 msgstr ""
 
@@ -2801,74 +2873,74 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:260
+#: ../nexus/cerber-nexus-master.php:261
 msgid "Security access token is invalid"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:290
+#: ../nexus/cerber-nexus-master.php:291
 msgid "The website you are trying to add is already in the list"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:299
+#: ../nexus/cerber-nexus-master.php:300
 msgid "The website has been added successfully"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:300
+#: ../nexus/cerber-nexus-master.php:301
 msgid "Click to edit"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:301
+#: ../nexus/cerber-nexus-master.php:302
 msgid "Switch to the Dashboard"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:304
+#: ../nexus/cerber-nexus-master.php:305
 msgid ""
 "Keep in mind: You have added the website that does not support SSL "
 "encryption. This may lead to data leakage."
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:425
+#: ../nexus/cerber-nexus-master.php:426
 #, php-format
 msgid "Website has been deleted"
 msgid_plural "%s websites have been deleted"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../nexus/cerber-nexus-master.php:656
+#: ../nexus/cerber-nexus-master.php:657
 msgid "Invalid response from the slave website"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:981
+#: ../nexus/cerber-nexus-master.php:982
 #, php-format
 msgid "You have switched to %s"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:986
+#: ../nexus/cerber-nexus-master.php:987
 msgid "You have switched back to the master website"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:1198
+#: ../nexus/cerber-nexus-master.php:1199
 msgid "You are here:"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:1201 ../nexus/cerber-nexus.php:89 ..
+#: ../nexus/cerber-nexus-master.php:1202 ../nexus/cerber-nexus.php:89 ..
 #: /nexus/cerber-nexus.php:99
 msgid "My Websites"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:1216
+#: ../nexus/cerber-nexus-master.php:1217
 msgid "Visit Site"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:1379
+#: ../nexus/cerber-nexus-master.php:1380
 msgid "Are you sure you want to delete selected websites?"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:1423
+#: ../nexus/cerber-nexus-master.php:1424
 msgid "A newer version is available"
 msgstr ""
 
-#: ../nexus/cerber-nexus-master.php:1444 ../nexus/cerber-nexus-master.php:1452
+#: ../nexus/cerber-nexus-master.php:1445 ../nexus/cerber-nexus-master.php:1453
 msgid "Active plugins and updates on"
 msgstr ""
 
@@ -2934,159 +3006,163 @@ msgstr ""
 msgid "Install the access token on the master website."
 msgstr ""
 
-#: ../cerber-scanner.php:93
+#: ../cerber-scanner.php:94
 msgid "Currently a scheduled scan in progress. Please wait until it is finished."
 msgstr ""
 
-#: ../cerber-scanner.php:97
+#: ../cerber-scanner.php:98
 #, php-format
 msgid "Previous scan started %s has not been completed. Continue scanning?"
 msgstr ""
 
-#: ../cerber-scanner.php:106
+#: ../cerber-scanner.php:107
 msgid ""
 "It seems this website has never been scanned. To start scanning click the "
 "button below."
 msgstr ""
 
-#: ../cerber-scanner.php:109
+#: ../cerber-scanner.php:110
 msgid "Start Quick Scan"
 msgstr ""
 
-#: ../cerber-scanner.php:110
+#: ../cerber-scanner.php:111
 msgid "Start Full Scan"
 msgstr ""
 
-#: ../cerber-scanner.php:111
+#: ../cerber-scanner.php:112
 msgid "Stop Scanning"
 msgstr ""
 
-#: ../cerber-scanner.php:112
+#: ../cerber-scanner.php:113
 msgid "Continue Scanning"
 msgstr ""
 
-#: ../cerber-scanner.php:148
+#: ../cerber-scanner.php:149
 msgid "Delete"
 msgstr ""
 
-#: ../cerber-scanner.php:151
+#: ../cerber-scanner.php:152
 msgid "Ignore"
 msgstr ""
 
-#: ../cerber-scanner.php:1570
+#: ../cerber-scanner.php:1571
 msgid "Verified"
 msgstr ""
 
-#: ../cerber-scanner.php:1576
+#: ../cerber-scanner.php:1577
 msgid "Vulnerability found"
 msgstr ""
 
-#: ../cerber-scanner.php:1577
+#: ../cerber-scanner.php:1578
 msgid "Integrity data not found"
 msgstr ""
 
-#: ../cerber-scanner.php:1578
+#: ../cerber-scanner.php:1579
 msgid "Unable to check the integrity of the plugin due to a network error"
 msgstr ""
 
-#: ../cerber-scanner.php:1579
+#: ../cerber-scanner.php:1580
 msgid "Unable to check the integrity of WordPress files due to a network error"
 msgstr ""
 
-#: ../cerber-scanner.php:1580
+#: ../cerber-scanner.php:1581
 msgid "Unable to check the integrity of the theme due to a network error"
 msgstr ""
 
-#: ../cerber-scanner.php:1581
+#: ../cerber-scanner.php:1582
 msgid "Unable to check the integrity due to a DB error"
 msgstr ""
 
-#: ../cerber-scanner.php:1583
+#: ../cerber-scanner.php:1584
 msgid "Local file doesn't exist"
 msgstr ""
 
-#: ../cerber-scanner.php:1585
+#: ../cerber-scanner.php:1586
 msgid "Unable to process file"
 msgstr ""
 
-#: ../cerber-scanner.php:1586 ../cerber-scanner.php:5047
+#: ../cerber-scanner.php:1587 ../cerber-scanner.php:5104
 msgid "Unable to open file"
 msgstr ""
 
-#: ../cerber-scanner.php:1588
+#: ../cerber-scanner.php:1589
 msgid "Checksum mismatch"
 msgstr ""
 
-#: ../cerber-scanner.php:1591
+#: ../cerber-scanner.php:1592
 msgid "Suspicious code found"
 msgstr ""
 
-#: ../cerber-scanner.php:1592
+#: ../cerber-scanner.php:1593
 msgid "Malicious code found"
 msgstr ""
 
-#: ../cerber-scanner.php:1593
+#: ../cerber-scanner.php:1594
 msgid "Unattended suspicious file"
 msgstr ""
 
-#: ../cerber-scanner.php:1594
+#: ../cerber-scanner.php:1595
 msgid "Executable code found"
 msgstr ""
 
-#: ../cerber-scanner.php:1597 ../cerber-scanner.php:2826
+#: ../cerber-scanner.php:1598 ../cerber-scanner.php:2828
 msgid "Suspicious directives found"
 msgstr ""
 
-#: ../cerber-scanner.php:1598
+#: ../cerber-scanner.php:1599
 msgid "Unwanted file extension"
 msgstr ""
 
-#: ../cerber-scanner.php:1600
+#: ../cerber-scanner.php:1601
 msgid "Content has been modified"
 msgstr ""
 
-#: ../cerber-scanner.php:1601
+#: ../cerber-scanner.php:1602
 msgid "New file"
 msgstr ""
 
-#: ../cerber-scanner.php:1603
+#: ../cerber-scanner.php:1604
+msgid "Unable to delete"
+msgstr ""
+
+#: ../cerber-scanner.php:1605
 msgid "File deleted"
 msgstr ""
 
-#: ../cerber-scanner.php:1604
+#: ../cerber-scanner.php:1606
 msgid "File recovered"
 msgstr ""
 
-#: ../cerber-scanner.php:1624
+#: ../cerber-scanner.php:1626
 msgid "Every hour"
 msgstr ""
 
-#: ../cerber-scanner.php:1625
+#: ../cerber-scanner.php:1627
 msgid "Every 3 hours"
 msgstr ""
 
-#: ../cerber-scanner.php:1626
+#: ../cerber-scanner.php:1628
 msgid "Every 6 hours"
 msgstr ""
 
-#: ../cerber-scanner.php:2646
+#: ../cerber-scanner.php:2648
 msgid "Custom signature found"
 msgstr ""
 
-#: ../cerber-scanner.php:2821
+#: ../cerber-scanner.php:2823
 msgid ""
 "This file contains executable code and may contain obfuscated malware. If "
 "this file is a part of a theme or a plugin, it must be located in the theme "
 "or the plugin folder. No exception, no excuses."
 msgstr ""
 
-#: ../cerber-scanner.php:2822
+#: ../cerber-scanner.php:2824
 msgid ""
 "The scanner recognizes this file as \"ownerless\" or \"not bundled\" because it "
 "does not belong to any known part of the website and should not be here."
 msgstr ""
 
-#: ../cerber-scanner.php:2823
+#: ../cerber-scanner.php:2825
 #, php-format
 msgid ""
 "It may remain after upgrading to a newer version of %s. It also may be a "
@@ -3094,15 +3170,15 @@ msgid ""
 "made (bespoke) plugin or theme."
 msgstr ""
 
-#: ../cerber-scanner.php:2824
+#: ../cerber-scanner.php:2826
 msgid "Suspicious code instruction found"
 msgstr ""
 
-#: ../cerber-scanner.php:2825
+#: ../cerber-scanner.php:2827
 msgid "Suspicious code signatures found"
 msgstr ""
 
-#: ../cerber-scanner.php:2827
+#: ../cerber-scanner.php:2829
 msgid ""
 "The contents of the file have been changed and do not match what exists in "
 "the official WordPress repository or a reference file you have uploaded "
@@ -3110,254 +3186,246 @@ msgid ""
 "has been tampered with."
 msgstr ""
 
-#: ../cerber-scanner.php:2828
+#: ../cerber-scanner.php:2830
 #, php-format
 msgid ""
 "To solve this issue you have to reinstall %s or update it to the latest "
 "version."
 msgstr ""
 
-#: ../cerber-scanner.php:2829
+#: ../cerber-scanner.php:2831
 msgid "Please upload a reference ZIP archive"
 msgstr ""
 
-#: ../cerber-scanner.php:2830
+#: ../cerber-scanner.php:2832
 msgid "Resolve issue"
 msgstr ""
 
-#: ../cerber-scanner.php:3814
+#: ../cerber-scanner.php:3852
 msgid "Preparing for the scan"
 msgstr ""
 
-#: ../cerber-scanner.php:3815
+#: ../cerber-scanner.php:3853
 msgid "Scanning folders for files"
 msgstr ""
 
-#: ../cerber-scanner.php:3816
+#: ../cerber-scanner.php:3854
 msgid "Scanning the upload folder for files"
 msgstr ""
 
-#: ../cerber-scanner.php:3817
+#: ../cerber-scanner.php:3855
 msgid "Scanning the temp folder for files"
 msgstr ""
 
-#: ../cerber-scanner.php:3818
+#: ../cerber-scanner.php:3856
 msgid "Scanning the session folder for files"
 msgstr ""
 
-#: ../cerber-scanner.php:3819
+#: ../cerber-scanner.php:3857
 msgid "Parsing the list of files"
 msgstr ""
 
-#: ../cerber-scanner.php:3820
+#: ../cerber-scanner.php:3858
 msgid "Checking for new and modified files"
 msgstr ""
 
-#: ../cerber-scanner.php:3821
+#: ../cerber-scanner.php:3859
 msgid "Verifying the integrity of WordPress"
 msgstr ""
 
-#: ../cerber-scanner.php:3822
+#: ../cerber-scanner.php:3860
 msgid "Recovering WordPress files"
 msgstr ""
 
-#: ../cerber-scanner.php:3823
+#: ../cerber-scanner.php:3861
 msgid "Verifying the integrity of the plugins"
 msgstr ""
 
-#: ../cerber-scanner.php:3824
+#: ../cerber-scanner.php:3862
 msgid "Recovering plugins files"
 msgstr ""
 
-#: ../cerber-scanner.php:3825
+#: ../cerber-scanner.php:3863
 msgid "Verifying the integrity of the themes"
 msgstr ""
 
-#: ../cerber-scanner.php:3826
+#: ../cerber-scanner.php:3864
 msgid "Searching for malicious code"
 msgstr ""
 
-#: ../cerber-scanner.php:3827
+#: ../cerber-scanner.php:3865
 msgid "Finalizing the scan"
 msgstr ""
 
-#: ../cerber-scanner.php:3902
+#: ../cerber-scanner.php:3940
 msgid "Started"
 msgstr ""
 
-#: ../cerber-scanner.php:3906
+#: ../cerber-scanner.php:3944
 msgid "Finished"
 msgstr ""
 
-#: ../cerber-scanner.php:3914
+#: ../cerber-scanner.php:3952
 msgid "Performance"
 msgstr ""
 
-#: ../cerber-scanner.php:3930
+#: ../cerber-scanner.php:3968
 msgid "New files"
 msgstr ""
 
-#: ../cerber-scanner.php:3934
+#: ../cerber-scanner.php:3972
 msgid "Changed files"
 msgstr ""
 
-#: ../cerber-scanner.php:3938
+#: ../cerber-scanner.php:3976
 msgid "Unwanted extensions"
 msgstr ""
 
-#: ../cerber-scanner.php:3942
+#: ../cerber-scanner.php:3980
 msgid "Unattended files"
 msgstr ""
 
-#: ../cerber-scanner.php:3951 ../cerber-scanner.php:5710
+#: ../cerber-scanner.php:3989 ../cerber-scanner.php:5767
 msgid "Scanned"
 msgstr ""
 
-#: ../cerber-scanner.php:3951 ../cerber-scanner.php:4021
+#: ../cerber-scanner.php:3989 ../cerber-scanner.php:4059
 msgid "Files to scan"
 msgstr ""
 
-#: ../cerber-scanner.php:3958 ../cerber-scanner.php:4029
+#: ../cerber-scanner.php:3996 ../cerber-scanner.php:4067
 msgid "Critical issues"
 msgstr ""
 
-#: ../cerber-scanner.php:3958 ../cerber-scanner.php:4033 ../cerber-scanner.php:5238
+#: ../cerber-scanner.php:3996 ../cerber-scanner.php:4071 ../cerber-scanner.php:5295
 msgid "Issues total"
 msgstr ""
 
-#: ../cerber-scanner.php:4122
+#: ../cerber-scanner.php:4160
 msgid "We have not found any integrity data to verify"
 msgstr ""
 
-#: ../cerber-scanner.php:4124
+#: ../cerber-scanner.php:4162
 msgid ""
 "You have to upload a ZIP archive from which you've installed it. This "
 "enables the security scanner to verify the integrity of the code and detect "
 "malware."
 msgstr ""
 
-#: ../cerber-scanner.php:4411
-msgid "The directory is not writable"
-msgstr ""
-
-#: ../cerber-scanner.php:4429
-msgid "Unable to create WP CERBER directory"
-msgstr ""
-
-#: ../cerber-scanner.php:4647
+#: ../cerber-scanner.php:4704
 msgid ""
 "File access error. Possibly scan results are outdated. Please run Quick or "
 "Full Scan."
 msgstr ""
 
-#: ../cerber-scanner.php:5194
+#: ../cerber-scanner.php:5251
 msgid "Full Scan Report"
 msgstr ""
 
-#: ../cerber-scanner.php:5194
+#: ../cerber-scanner.php:5251
 msgid "Quick Scan Report"
 msgstr ""
 
-#: ../cerber-scanner.php:5207
+#: ../cerber-scanner.php:5264
 msgid "Files scanned"
 msgstr ""
 
-#: ../cerber-scanner.php:5292
+#: ../cerber-scanner.php:5349
 msgid "Deleted"
 msgstr ""
 
-#: ../cerber-scanner.php:5296
+#: ../cerber-scanner.php:5353
 msgid "Recovered"
 msgstr ""
 
-#: ../cerber-scanner.php:5345
+#: ../cerber-scanner.php:5402
 msgid "Automatically moved to quarantine"
 msgstr ""
 
-#: ../cerber-scanner.php:5346
+#: ../cerber-scanner.php:5403
 msgid "Automatically deleted"
 msgstr ""
 
-#: ../cerber-scanner.php:5349
+#: ../cerber-scanner.php:5406
 msgid "Automatically recovered"
 msgstr ""
 
-#: ../cerber-scanner.php:5361
+#: ../cerber-scanner.php:5418
 msgid "To view full report visit"
 msgstr ""
 
-#: ../cerber-scanner.php:5612
+#: ../cerber-scanner.php:5669
 msgid "There are no files in the quarantine at the moment."
 msgstr ""
 
-#: ../cerber-scanner.php:5679
+#: ../cerber-scanner.php:5736
 msgid "No files match the specified filter."
 msgstr ""
 
-#: ../cerber-scanner.php:5679
+#: ../cerber-scanner.php:5736
 msgid "Click here to see the full list of files"
 msgstr ""
 
-#: ../cerber-scanner.php:5699
+#: ../cerber-scanner.php:5756
 msgid "Delete permanently"
 msgstr ""
 
-#: ../cerber-scanner.php:5702
+#: ../cerber-scanner.php:5759
 msgid "Restore"
 msgstr ""
 
-#: ../cerber-scanner.php:5711
+#: ../cerber-scanner.php:5768
 msgid "Moved to quarantine"
 msgstr ""
 
-#: ../cerber-scanner.php:5712
+#: ../cerber-scanner.php:5769
 msgid "Automatic deletion"
 msgstr ""
 
-#: ../cerber-scanner.php:5713
+#: ../cerber-scanner.php:5770
 msgid "Size"
 msgstr ""
 
-#: ../cerber-scanner.php:5714 ../cerber-scanner.php:5854
+#: ../cerber-scanner.php:5771 ../cerber-scanner.php:5919
 msgid "File"
 msgstr ""
 
-#: ../cerber-scanner.php:5728
+#: ../cerber-scanner.php:5785
 msgid "All scans"
 msgstr ""
 
-#: ../cerber-scanner.php:5782
+#: ../cerber-scanner.php:5847
 msgid "The file has been deleted permanently."
 msgstr ""
 
-#: ../cerber-scanner.php:5796
+#: ../cerber-scanner.php:5861
 msgid "The file has been restored to its original location."
 msgstr ""
 
-#: ../cerber-scanner.php:5819
+#: ../cerber-scanner.php:5884
 msgid "Apply"
 msgstr ""
 
-#: ../cerber-scanner.php:5820 ../cerber-scanner.php:5847
+#: ../cerber-scanner.php:5885 ../cerber-scanner.php:5912
 msgid "Remove from the list"
 msgstr ""
 
-#: ../cerber-scanner.php:5821
+#: ../cerber-scanner.php:5886
 msgid "User Insights"
 msgstr ""
 
-#: ../cerber-scanner.php:5822
+#: ../cerber-scanner.php:5887
 msgid "Traffic Insights"
 msgstr ""
 
-#: ../cerber-scanner.php:5823
+#: ../cerber-scanner.php:5888
 msgid "Activity Insights"
 msgstr ""
 
-#: ../cerber-scanner.php:5825
+#: ../cerber-scanner.php:5890
 msgid "The list is empty."
 msgstr ""
 
-#: ../cerber-scanner.php:5853
+#: ../cerber-scanner.php:5918
 msgid "Added"
 msgstr ""

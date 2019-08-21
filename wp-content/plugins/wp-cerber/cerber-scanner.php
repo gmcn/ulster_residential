@@ -62,6 +62,7 @@ define( 'CERBER_DIR', 26 );
 define( 'CERBER_UXT', 30 );
 define( 'CERBER_NEW', 51 );
 
+define( 'CERBER_FDUN', 300 );
 define( 'CERBER_FDLD', 301 );
 define( 'CERBER_FRCV', 311 );
 
@@ -717,7 +718,7 @@ function cerber_empty_folder( $dir ) {
 
 	if ( is_wp_error( $r ) ) {
 		cerber_log_scan_error( 'Unable to delete files in the directory: ' . $dir );
-		crb_scan_debug( $r->get_error_message() );
+		crb_scan_debug( 'ERROR: ' . $r->get_error_message() );
 	}
 	else {
 		crb_scan_debug( 'Directory has been emptied: ' . $dir );
@@ -799,7 +800,7 @@ function cerber_apply_scan_policies() {
 				$result = cerber_quarantine_file( 'move', $file_name, $scan['id'] );
 				if ( is_wp_error( $result ) ) {
 					cerber_log_scan_error( $result->get_error_message() );
-					$issue['data']['prced'] = CERBER_FDLD - 1;
+					$issue['data']['prced'] = CERBER_FDUN;
 				}
 				else {
 					crb_scan_debug( 'File deleted: ' . $file_name );
@@ -1597,9 +1598,10 @@ function cerber_get_issue_label( $id = null ) {
 		CERBER_DIR => __( 'Suspicious directives found', 'wp-cerber' ),
 		CERBER_UXT => __( 'Unwanted file extension', 'wp-cerber' ),
 
-		50 => __( 'Content has been modified', 'wp-cerber' ), // Previous scan
+		50         => __( 'Content has been modified', 'wp-cerber' ), // Previous scan
 		CERBER_NEW => __( 'New file', 'wp-cerber' ),
 
+		CERBER_FDUN => __( 'Unable to delete', 'wp-cerber' ),
 		CERBER_FDLD => __( 'File deleted', 'wp-cerber' ),
 		CERBER_FRCV => __( 'File recovered', 'wp-cerber' ),
 
@@ -3585,14 +3587,13 @@ function cerber_scan_directory( $root, $pattern = null, $function ) {
 	$root = rtrim( $root, '/\\' ) . DIRECTORY_SEPARATOR;
 	$list         = array();
 
-	if ( $files = glob( $root . $pattern, GLOB_BRACE ) ) {
+	//if ( $files = glob( $root . $pattern, GLOB_BRACE ) ) {
+	if ( $files = cerber_glob_brace( $root, $pattern ) ) {
 		foreach ( $files as $file_name ) {
 			if ( @is_dir( $file_name ) || ! is_readable( $file_name ) ) {
 				continue;
 			}
 			$file_counter ++;
-			//$file_name = str_replace( array( '/', '\\' ), DIRECTORY_SEPARATOR, $file_name );
-			//$file_name = cerber_norm_file_name( $file_name );
 			$list[]    = $file_name;
 			if ( count( $list ) > 200 ) { // packet size, can affect the DB performance if $function saves file names to the DB
 				call_user_func( $function, $list );
@@ -3607,8 +3608,8 @@ function cerber_scan_directory( $root, $pattern = null, $function ) {
 		cerber_log_scan_error( 'PHP glob got error while accessing ' . $root . $pattern );
 	}
 
-	//if ( $dirs = glob( $root . '*', GLOB_ONLYDIR ) ) {
-	if ( $dirs = glob( $root . '{*,.*}', GLOB_ONLYDIR | GLOB_BRACE ) ) {
+	//if ( $dirs = glob( $root . '{*,.*}', GLOB_ONLYDIR | GLOB_BRACE ) ) {
+	if ( $dirs = cerber_glob_brace( $root, '{*,.*}', GLOB_ONLYDIR ) ) {
 		foreach ( $dirs as $dir ) {
 			if ( in_array( $dir, $exclude ) ) {
 				continue;
@@ -3627,6 +3628,43 @@ function cerber_scan_directory( $root, $pattern = null, $function ) {
 	}
 
 	return array( $dir_counter, $file_counter );
+}
+
+/**
+ * A PHP glob() implementation that works with no GLOB_BRACE available
+ *
+ * @param string $dir With the trailing directory delimiter
+ * @param string $patterns We expect '{pattern1,pattern2,etc.}'
+ * @param int $flags Standard glob() flags except GLOB_BRACE
+ *
+ * @return array|false
+ */
+function cerber_glob_brace( $dir, $patterns, $flags = 0 ) {
+
+	if ( $patterns{0} != '{' ) { // No GLOB_BRACE is needed
+		return glob( $dir . $patterns, $flags );
+	}
+
+	if ( defined( 'GLOB_BRACE' ) ) {
+		$flags = ( $flags ) ? $flags | GLOB_BRACE : GLOB_BRACE;
+
+		return glob( $dir . $patterns, $flags );
+	}
+
+	// GLOB_BRACE is not supported
+
+	$list = explode( ',', substr( $patterns, 1, strlen( $patterns ) - 2 ) );
+	$list = array_map( 'trim', $list );
+
+	$ret = array();
+
+	foreach ( $list as $pt ) {
+		if ( $glob = glob( $dir . $pt, $flags ) ) {
+			$ret = array_merge( $ret, $glob );
+		}
+	}
+
+	return $ret;
 }
 
 /**
@@ -4370,7 +4408,7 @@ function cerber_get_local_hash( $key, $version ) {
  * @return string|WP_Error Full path to the folder with trailing slash
  */
 function cerber_get_tmp_file_folder() {
-	$folder = cerber_get_the_folder();
+	$folder = cerber_get_the_folder( true );
 	if ( is_wp_error( $folder ) ) {
 		return $folder;
 	}
@@ -4388,11 +4426,30 @@ function cerber_get_tmp_file_folder() {
 }
 
 /**
- * Return Cerber's folder. If there is no folder it will be created.
+ * Return Cerber's folder. If there is no folder, creates it.
+ *
+ * @return string|bool|WP_Error  Full path to the folder with trailing slash
+ */
+function cerber_get_the_folder( $asis = false ) {
+	$ret = cerber_get_my_folder();
+	if ( is_wp_error( $ret ) ) {
+		crb_scan_debug( 'ERROR: ' . $ret->get_error_message() );
+		if ( $asis ) {
+			return $ret;
+		}
+
+		return false;
+	}
+
+	return $ret;
+}
+
+/**
+ * Return Cerber's folder. If there is no folder, creates it.
  *
  * @return string|WP_Error  Full path to the folder with trailing slash
  */
-function cerber_get_the_folder() {
+function cerber_get_my_folder() {
     static $ret;
 
 	if ( $ret !== null ) {
@@ -4408,7 +4465,7 @@ function cerber_get_the_folder() {
 			if ( is_dir( $folder ) ) {
 				if ( ! wp_is_writable( $folder ) ) {
 					if ( ! chmod( $folder, 0755 ) ) {
-						return new WP_Error( 'cerber-dir', __( 'The directory is not writable', 'wp-cerber' ) . ' ' . $folder );
+						return new WP_Error( 'cerber-dir', 'The directory is not writable: ' . $folder );
 					}
 				}
 				cerber_lock_the_folder( $folder );
@@ -4426,7 +4483,7 @@ function cerber_get_the_folder() {
 
 	if ( ! mkdir( $folder, 0755, true ) ) {
 		// TODO: try to set permissions for the parent folder
-		return new WP_Error( 'cerber-dir', __( 'Unable to create WP CERBER directory', 'wp-cerber' ) . ' ' . $folder );
+		return new WP_Error( 'cerber-dir', 'Unable to create WP CERBER directory: ' . $folder );
 	}
 
 	if ( ! cerber_lock_the_folder( $folder ) ) {
@@ -4436,7 +4493,7 @@ function cerber_get_the_folder() {
 	$k      = substr( str_shuffle( '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), 0, rand( 16, 20 ) );
 	$i      = rand( 5, 10 );
 	if ( ! cerber_update_set( '_cerber_mnemosyne', array( rand( 0, 3 ) => $k, 4 => $i, $i => $key ) ) ) {
-		return new WP_Error( 'cerber-dir', 'Unable to save option' );
+		return new WP_Error( 'cerber-dir', 'Unable to save WP CERBER directory info' );
 	}
 
 	$ret = $folder;
@@ -4910,7 +4967,7 @@ function cerber_quarantine_file( $action, $file_name, $scan_id ) {
 	}
 
 	if ( $folder === null ) {
-		$folder = cerber_get_the_folder();
+		$folder = cerber_get_the_folder( true );
 	}
 	if ( is_wp_error( $folder ) ) {
 		return $folder;
@@ -5602,7 +5659,7 @@ function cerber_make_numbers( &$update = array(), &$scan = array() ) {
 
 function cerber_show_quarantine() {
 
-	$folder = cerber_get_the_folder();
+	$folder = cerber_get_the_folder( true );
 	if ( is_wp_error( $folder ) ) {
 		echo $folder->get_error_message();
 
@@ -5742,7 +5799,15 @@ function cerber_quarantine_do( $what, $scan_id, $qfile ) {
 
 		return;
 	}
-	$dir = cerber_get_the_folder() . 'quarantine' . DIRECTORY_SEPARATOR . $scan_id;
+	//$dir = cerber_get_the_folder() . 'quarantine' . DIRECTORY_SEPARATOR . $scan_id;
+	$dir = cerber_get_the_folder( true );
+	if ( is_wp_error( $dir ) ) {
+		cerber_admin_notice( $dir->get_error_message() );
+
+		return;
+	}
+
+	$dir .= 'quarantine' . DIRECTORY_SEPARATOR . $scan_id;
 
 	$file   = $dir . DIRECTORY_SEPARATOR . $qfile;
 	if ( ! @is_file( $file ) || is_link( $file ) ) {

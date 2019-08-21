@@ -20,6 +20,7 @@ get_header(); ?>
   include(locate_template("inc/page-front/cta.php"));
   include(locate_template("inc/page-front/newsletter.php"));
   include(locate_template("inc/page-elements/stockists.php"));
+  include(locate_template("inc/page-elements/searchby.php"));
 ?>
 
 <?php

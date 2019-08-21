@@ -117,6 +117,12 @@ function cerber_push_the_news( $version ) {
 	$news['8.3'][] = 'Fixed: Switching to the English language in Cerber’s admin interface has no effect.';
 	$news['8.3'][] = 'Fixed: Multiple notifications about a new version of the plugin in the WordPress dashboard.';
 
+	$news['8.4'][] = 'New: More flexible role-based GEO access policies.';
+	$news['8.4'][] = 'New: A logged in users’ sessions manager.';
+	$news['8.4'][] = 'Update: Access to users’ data via WordPress REST API is always granted for administrator accounts now.';
+	$news['8.4'][] = 'Improvement: The custom login page feature has been updated to eliminate possible conflicts with themes and other plugins.';
+	$news['8.4'][] = 'Improvement: Compatibility with operating systems that natively doesn’t support the PHP GLOB_BRACE constant.';
+
 	if ( ! empty( $news[ $version ] ) ) {
 		//$text = '<h3>What\'s new in WP Cerber '.$version.'</h3>';
 

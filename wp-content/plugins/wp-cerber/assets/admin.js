@@ -162,11 +162,11 @@ jQuery(document).ready(function ($) {
     });
 
     crb_traffic.find('tr').mouseenter(function() {
-        $(this).find('a.crb-traffic-more').show();
+        $(this).find('a.crb-traffic-more').css('left','0');
     });
 
     crb_traffic.find('tr').mouseleave(function() {
-        $(this).find('a.crb-traffic-more').hide();
+        $(this).find('a.crb-traffic-more').css('left','-9999em');
     });
 
     $('#traffic-search-btn').click(function (event) {
@@ -225,8 +225,12 @@ jQuery(document).ready(function ($) {
 
     $('div#crb-admin').on('click', 'a', function (event) {
         var link = $(this).attr('href');
-        if (link.startsWith('https://wpcerber.com')) {
-            $(this).attr('href', link + '?utm_source=wp_plugin');
+        if (link.startsWith('https://wpcerber.com') && !link.includes('wp-admin')) {
+            var url_char = '?';
+            if (link.includes('?')) {
+                url_char = '&';
+            }
+            $(this).attr('href', link + url_char + 'utm_source=wp_plugin');
         }
     });
 
@@ -268,5 +272,44 @@ jQuery(document).ready(function ($) {
         event.preventDefault();
     });
 
+
+    // GEO
+
+    $("form#crb-geo-rules .crb-geo-switcher").change(function () {
+        var to_show = '#crb-geo-wrap_' + $(this).data('rule-id');
+        if ($(this).val() !== '---first') {
+            to_show += '_' + $(this).val()
+        }
+        $(to_show).parent().children('.crb-geo-wrapper').hide();
+        $(to_show).show();
+    });
+
+    // Simple Highlighter
+
+    // Search and highlighting pieces of text, case-sensitive
+    function cerber_highlight_text(id, text, limit) {
+        var inputText = document.getElementById(id);
+        if (inputText === null) {
+            return;
+        }
+
+        var innerHTML = inputText.innerHTML;
+        var i = 0;
+        var list = [];
+        var index = innerHTML.indexOf(text);
+        while (index >= 0 && i < limit) {
+            list.push(index);
+            index = innerHTML.indexOf(text, index + 1);
+            i++;
+        }
+        list.reverse();
+        list.forEach(function (index) {
+            innerHTML = innerHTML.substring(0, index) + "<span class='cerber-error'>" + innerHTML.substring(index, index + text.length) + "</span>" + innerHTML.substring(index + text.length);
+        });
+
+        inputText.innerHTML = innerHTML;
+    }
+
+    cerber_highlight_text('crb-log-viewer', 'ERROR:', 200);
 
 });

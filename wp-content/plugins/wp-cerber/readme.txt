@@ -5,7 +5,7 @@ Tags: security, malware scanner, antispam, firewall, limit login attempts, custo
 Requires at least: 4.5
 Requires PHP: 5.4
 Tested up to: 5.2
-Stable tag: 8.3
+Stable tag: 8.4
 License: GPLv2
 
 Protection against hacker attacks and bots. Malware scanner & integrity checker. User activity log. Antispam reCAPTCHA. Limit login attempts.
@@ -34,6 +34,7 @@ Restricts access with the Black IP Access List and the White IP Access List.
 * Security scanner verifies the integrity of WordPress files, plugins and themes.
 * Monitors file changes and new files with email notifications and reports.
 * [Mobile and email notifications with a set of flexible filters](https://wpcerber.com/wordpress-notifications-made-easy/).
+* Advanced users' sessions manager
 * Protects wp-login.php, wp-signup.php and wp-register.php from attacks.
 * Hides wp-admin (dashboard) if a visitor isn't logged in.
 * Immediately blocks an intruder IP when attempting to log in with non-existent or prohibited username.
@@ -317,6 +318,13 @@ To get access to your dashboard you need to copy the WP Cerber Reset folder to t
 
 
 == Changelog ==
+
+= 8.4 =
+* New: More flexible role-based GEO access policies.
+* New: A logged in users' sessions manager.
+* Update: Access to users’ data via WordPress REST API is always granted for administrator accounts now
+* Improvement: The custom login page feature has been updated to eliminate possible conflicts with themes and other plugins.
+* Improvement: Improved compatibility with operating systems that natively doesn’t support the PHP GLOB_BRACE constant.
 
 = 8.3 =
 * New: Two-Factor Authentication.

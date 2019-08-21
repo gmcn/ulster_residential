@@ -374,7 +374,7 @@ function cerber_settings_config( $args = array() ) {
 			'fields' => array(
 				'norestuser' => array(
 					'title' => __( 'Stop user enumeration', 'wp-cerber' ),
-					'label' => __( 'Block access to user data via REST API', 'wp-cerber' ),
+					'label' => __( "Block access to users' data via REST API", 'wp-cerber' ),
 					'type'  => 'checkbox',
 				),
 				'norest'     => array(
@@ -2017,7 +2017,7 @@ function cerber_get_defaults() {
 			'norestuser' => 1,
 			'norest'     => 0,
 			'restauth'   => 1,
-			'restroles'  => array(),
+			'restroles'  => array('administrator'),
 			'restwhite'  => 'oembed',
 			'hashauthor' => 0,
 			'cleanhead'  => 1,
@@ -2202,7 +2202,7 @@ function cerber_upgrade_settings() {
 	}
 	// @since 7.9.4 Stop user enumeration for REST API
 	if ( $h = get_site_option( CERBER_OPT_H ) ) {
-		if ( $h['stopenum'] ) {
+		if ( $h['stopenum'] && ! isset( $h['norestuser'] ) ) {
 			$h['norestuser'] = 1;
 			update_site_option( CERBER_OPT_H, $h );
 		}

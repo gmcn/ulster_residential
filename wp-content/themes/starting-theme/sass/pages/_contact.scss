@@ -1,0 +1,136 @@
+.contact {
+  background: #BAC2C6;
+  color: #fff;
+  padding: 50px;
+  &__content {
+    border-top: 2px dotted #fff;
+    border-bottom: 2px dotted #fff;
+    font-weight: 600;
+    padding: 25px 15px;
+    @include lg {
+      padding: 40px 40px;
+    }
+  }
+  h2 {
+    font-family: $font-family-serif;
+    font-size: 35px;
+    font-weight: 300;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    margin: 0;
+  }
+  span {
+    font-weight: 300;
+  }
+  a {
+    color: #fff;
+    transition: .5s;
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
+.container-fluid.form {
+  background: #BAAF6E;
+  padding: 50px;
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+  ::placeholder {
+    font-size: 14px;
+    color: #525C65;
+  }
+  p {
+    font-weight: 600;
+    margin-top: 40px;
+    opacity: .5;
+  }
+  .contact__content {
+    padding: 40px 0;
+  }
+  .frm_checkbox {
+    padding-left: 15px;
+    input {
+      margin-left: -15px;
+    }
+  }
+  input {
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: #525C65;
+  }
+  .frm_checkbox {
+    font-size: 12px;
+    font-weight: 300;
+  }
+  input[type="checkbox"] {
+    margin-bottom: 0;
+  }
+  textarea {
+    padding-right: 180px;
+  }
+  .frm_submit {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    text-align: right;
+    height: 100%;
+    button {
+      background: #2D353C;
+      color: #fff;
+      text-transform: uppercase;
+      width: 120px;
+      height: calc(100% - 35px);
+      font-size: 13px;
+      border-radius: 5px;
+      border: none;
+    }
+  }
+}
+
+.offices {
+  .office {
+    margin-bottom: 15px;
+    h2 {
+      background: #2D353C;
+      @include md {
+        margin-left: 25px;
+      }
+      margin-bottom: 25px;
+      padding: 15px;
+      font-size: 30px;
+      font-family: $font-family-serif;
+      color: #fff;
+      display: inline-block;
+    }
+    &_address {
+      @include md {
+        border-left: 1px solid #2D353C;
+        margin-left: 25px;
+      }
+      padding-bottom: 25px;
+      font-weight: 600;
+      a {
+        color: #2D353C;
+      }
+      span {
+        font-weight: 300;
+      }
+    }
+    &_phone {
+      @include md {
+        border-left: 1px solid #2D353C;
+        margin-left: 25px;
+      }
+      padding-bottom: 25px;
+      font-weight: 600;
+      a {
+        color: #2D353C;
+      }
+      span {
+        font-weight: 300;
+      }
+    }
+  }
+}

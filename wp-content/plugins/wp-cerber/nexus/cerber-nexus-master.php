@@ -169,7 +169,8 @@ function nexus_get_groups( $clean_up = false ) {
 	return $groups;
 }
 
-add_action( 'setup_theme', function () {
+//add_action( 'setup_theme', function () {
+add_action( 'admin_init', function () { // 8.3.3
 	if ( ! is_admin() || ! nexus_is_master() ) {
 		return;
 	}

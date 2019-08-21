@@ -20,6 +20,7 @@
    */
   function startMatchHeight() {
     $('.matchheight').matchHeight();
+    $('.bordermatch').matchHeight();
   }
   window.onload = startMatchHeight;
 
@@ -44,6 +45,22 @@
 });
 
 } ) (jQuery);
+
+function showform() {
+  var x = document.getElementById("career__content");
+  var y = document.getElementById("career__form");
+  var z = document.getElementById("showForm");
+
+    if (x.style.display === "none") {
+      x.style.display = "block";
+      y.style.display = "none";
+    } else {
+      x.style.display = "none";
+      y.style.display = "block";
+      z.style.display = "none";
+    }
+
+}
 
 /* Set the width of the side navigation to 300px */
 function openNav() {

@@ -21,6 +21,7 @@
 */
 
 define( 'CERBER_PIN_LENGTH', 4 );
+define( 'CERBER_PIN_EXPIRES', 15 );
 
 final class CRB_2FA {
 	private static $user_id = null;
@@ -206,7 +207,7 @@ final class CRB_2FA {
 
 		$cus['2fa'] = array(
 			'pin'      => $pin,
-			'expires'  => time() + 15 * 60,
+			'expires'  => time() + CERBER_PIN_EXPIRES * 60,
 			'attempts' => 0,
 			'ip'       => cerber_get_remote_ip(),
 			'ua'       => sha1( crb_array_get( $_SERVER, 'HTTP_USER_AGENT', '' ) )
@@ -485,7 +486,7 @@ final class CRB_2FA {
 		$subj   = __( 'Please verify that it’s you', 'wp-cerber' );
 		$body   = array();
 		$body[] = 'We need to verify that it’s you because you are trying to sign-in from a different device or a different location or you have not signed in for a long time. If this wasn’t you, please reset your password immediately.';
-		$body[] = __( 'Please use the following verification PIN code to confirm your identity', 'wp-cerber' );
+		$body[] = __( 'Please use the following verification PIN code to confirm your identity', 'wp-cerber' ) . '. ' . sprintf( __( 'The code is valid for %s minutes.', 'wp-cerber' ), CERBER_PIN_EXPIRES );
 
 		if ( ! $pin && ( $p = self::get_user_pin( $user_id ) ) ) {
 			$pin = $p['pin'];
@@ -506,7 +507,7 @@ final class CRB_2FA {
 			if ( $c = lab_get_country( cerber_get_remote_ip(), false ) ) {
 				$ds[] = 'Location: ' . cerber_country_name( $c ) . ' (' . $c . ')';
 			}
-			$ds[] = 'Browser: ' . strip_tags( crb_array_get( $_SERVER, 'HTTP_USER_AGENT', 'Not set' ) );
+			$ds[] = 'Browser: ' . substr( strip_tags( crb_array_get( $_SERVER, 'HTTP_USER_AGENT', 'Not set' ) ), 0, 1000 );
 			$ds[] = 'Date: ' . cerber_date( time() );
 
 			$body[] = '';

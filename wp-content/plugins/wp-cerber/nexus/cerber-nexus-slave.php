@@ -529,7 +529,7 @@ function nexus_is_granted( $type = null ) {
 		}
 		if ( $action == 'cerber_ajax' ) {
 			$fields = crb_get_request_fields();
-			if ( ! empty( $fields['acl_delete'] ) ) {
+			if ( empty( $fields['acl_delete'] ) ) {
 				return true;
 			}
 		}

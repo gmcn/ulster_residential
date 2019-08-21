@@ -1,0 +1,230 @@
+.advice {
+  background: url(images/advice_content_bg.jpg) top left #E7E8EB;
+  background-size: cover;
+  padding: 25px 15px;
+  @include md {
+    padding: 50px 0 50px 150px;
+  }
+  color: rgba(20,22,44, .7);
+  .row:first-of-type {
+    margin-bottom: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-top: 1px dotted #343A40;
+    border-bottom: 1px dotted #343A40;
+  }
+  .intro {
+    font-size: 25px;
+    line-height: 1.5em;
+  }
+  .content {
+    font-size: 15px;
+    &_instruction {
+      font-weight: 600;
+      text-transform: uppercase;
+      opacity: .2;
+      margin-top: 50px;
+    }
+  }
+  &_children {
+    padding-bottom: 25px;
+    img {
+      width: 100%;
+      transition: .5s;
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+.advice_back {
+  background-color: #343A40;
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  text-align: right;
+  a {
+    background-color: #7B7B7B;
+    padding: 15px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-size: 11px;
+    display: inline-block;
+    color: #fff;
+    font-weight: 600;
+    transition: .5s;
+    &:hover {
+      color: #7B7B7B;
+      background-color: #fff;
+    }
+  }
+}
+
+.multiwidth {
+  background: #E7E8EB;
+  padding: 50px 15px 0;
+  color: #707070;
+  p:first-of-type {
+    font-size: 25px;
+    line-height: 1.5em;
+    color: rgba(20, 33, 44, .7);
+  }
+  &_bg {
+    text-align: center;
+    background: url(images/multiwidth_bg.svg) top center no-repeat;
+  }
+  .multiwidth_benefit {
+    margin-bottom: 15px;
+    border-bottom: 1px dotted #343A40;
+    padding-bottom: 15px;
+    margin-top: 15px;
+    p {
+      font-size: 15px;
+    }
+  }
+  .wp-block-embed {
+    padding-top: 25px;
+    border-top: 1px dotted #343A40;
+    border-bottom: 1px dotted #343A40;
+  }
+  .wp-block-embed figcaption {
+    color: #fff;
+    text-align: left;
+    font-size: 15px;
+    strong {
+      font-size: 20px;
+      display: block;
+    }
+  }
+}
+
+.aftercare {
+  background: url(images/aftercare_content_bg.jpg) center center #E7E8EB;
+  background-size: cover;
+  color: rgba(20,22,44, .7);
+  padding: 15px;
+  h2 {
+    font-family: $font-family-serif;
+    font-size: 40px;
+    font-weight: 300;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    margin: 0;
+    color: #031A2F;
+  }
+  @include md {
+    padding: 25px;
+  }
+  @include lg {
+    padding: 50px;
+  }
+  .intro {
+    font-size: 25px;
+    line-height: 1.5em;
+  }
+  .content {
+    font-size: 15px;
+  }
+}
+
+.faqs {
+  color: #fff;
+  h2 {
+    background: #585757;
+    font-size: 22px;
+    @include md {
+      font-size: 35px;
+    }
+    padding: 20px;
+    margin-bottom: 0;
+    margin-top: 0;
+    font-weight: 600;
+  }
+  &_count {
+    text-align: center;
+    background: #585757;
+    font-size: 40px;
+    font-weight: 600;
+    padding: 10px 0;
+    color: rgba(255, 255, 255, .5);
+  }
+  &_content {
+    color: #14212C;
+    padding: 15px 25px 15px 15px;
+    p:first-of-type {
+      font-size: 25px;
+      font-weight: 600;
+    }
+    p:last-of-type {
+      border-bottom: 1px dotted #343A40;
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+}
+
+.terms {
+  color: #fff;
+  h2 {
+    background: #6F949C;
+    font-size: 22px;
+    @include md {
+      font-size: 35px;
+    }
+    padding: 20px;
+    margin-bottom: 0;
+    margin-top: 0;
+    font-weight: 600;
+  }
+  &_count {
+    text-align: center;
+    background: #6F949C;
+    font-size: 40px;
+    font-weight: 600;
+    padding: 10px 0;
+    color: rgba(255, 255, 255, .5);
+  }
+  &_content {
+    color: #14212C;
+    padding: 15px 25px 15px 15px;
+    p:first-of-type {
+      color: #6F949C;
+      font-size: 25px;
+      font-weight: 600;
+    }
+    p:last-of-type {
+      border-bottom: 1px dotted #343A40;
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+  .social {
+    color: #393555;
+    font-weight: 600;
+    h2 {
+      background: #393555;
+    }
+    &_details_border {
+      background: #393555;
+    }
+    &_details {
+      padding: 20px;
+    }
+    a {
+      color: #393555;
+      font-weight: 300;
+      font-size: 30px;
+    }
+    &_icons {
+      border-top: 1px dotted #343A40;
+      padding: 25px 0;
+      margin-top: 25px;
+    }
+  }
+}

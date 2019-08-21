@@ -23,22 +23,6 @@
 
 /*
 
-
-
- ▄████▄     ▓█████     ██▀███      ▄▄▄▄      ▓█████     ██▀███
-▒██▀ ▀█     ▓█   ▀    ▓██ ▒ ██▒   ▓█████▄    ▓█   ▀    ▓██ ▒ ██▒
-▒▓█    ▄    ▒███      ▓██ ░▄█ ▒   ▒██▒ ▄██   ▒███      ▓██ ░▄█ ▒
-▒▓▓▄ ▄██▒   ▒▓█  ▄    ▒██▀▀█▄     ▒██░█▀     ▒▓█  ▄    ▒██▀▀█▄
-▒ ▓███▀ ░   ░▒████▒   ░██▓ ▒██▒   ░▓█  ▀█▓   ░▒████▒   ░██▓ ▒██▒
-░ ░▒ ▒  ░   ░░ ▒░ ░   ░ ▒▓ ░▒▓░   ░▒▓███▀▒   ░░ ▒░ ░   ░ ▒▓ ░▒▓░
-  ░  ▒       ░ ░  ░     ░▒ ░ ▒░   ▒░▒   ░     ░ ░  ░     ░▒ ░ ▒░
-░              ░        ░░   ░     ░    ░       ░        ░░   ░
-░ ░            ░  ░      ░         ░            ░  ░      ░
-░                                       ░
-
-
-
-
 *========================================================================*
 |                                                                        |
 |	       ATTENTION!  Do not change or edit this file!                  |
@@ -65,6 +49,7 @@ define( 'CERBER_SCAN_TABLE', 'cerber_files' );
 define( 'CERBER_SETS_TABLE', 'cerber_sets' );
 define( 'CERBER_MS_TABLE', 'cerber_ms' );
 define( 'CERBER_MS_LIST_TABLE', 'cerber_ms_lists' );
+define( 'CERBER_USS_TABLE', 'cerber_uss' );
 
 define( 'CERBER_BUKEY', '_crb_blocked' );
 define( 'CERBER_PREFIX', '_cerber_' );
@@ -104,7 +89,6 @@ require_once( dirname( __FILE__ ) . '/cerber-2fa.php' );
 require_once( dirname( __FILE__ ) . '/nexus/cerber-nexus.php' );
 
 if ( defined( 'WP_ADMIN' ) || defined( 'WP_NETWORK_ADMIN' ) ) {
-	// Load dashboard stuff
 	cerber_load_admin_code();
 }
 
@@ -851,6 +835,11 @@ add_action( 'plugins_loaded', function () {
 }, 1000 );
 
 function cerber_load_admin_code() {
+
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-screen.php' );
+	require_once( ABSPATH . 'wp-admin/includes/screen.php' );
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+
 	require_once( dirname( __FILE__ ) . '/cerber-users.php' );
 	require_once( dirname( __FILE__ ) . '/dashboard.php' );
 	require_once( dirname( __FILE__ ) . '/cerber-maintenance.php' );
@@ -895,11 +884,12 @@ function cerber_extra_vision() {
 }
 
 /*
-	Display login form if Custom login URL has been requested
+	Display WordPress login form if the Custom login URL is requested
 
 */
-add_action( 'init', 'cerber_wp_login_page', 20 );
-//add_action( 'setup_theme', 'cerber_wp_login_page' ); // @since 5.05
+if ( defined( 'CERBER_OLD_LP' ) && CERBER_OLD_LP ) {
+	add_action( 'init', 'cerber_wp_login_page', 20 ); // TODO: remove in the next version
+}
 function cerber_wp_login_page() {
 	if ( $path = crb_get_settings( 'loginpath' ) ) {
 		if ( cerber_is_login_request() ) {
@@ -1088,7 +1078,7 @@ add_filter( 'wp_authenticate_user', function ( $user, $password ) {
     elseif ( ! cerber_is_ip_allowed() ) {
 		$deny = true;
 	}
-    elseif ( ! cerber_geo_allowed( 'geo_login' ) ) {
+    elseif ( ! cerber_geo_allowed( 'geo_login', $user ) ) {
 		$cerber_status = 16;
 		$deny          = true;
 	}
@@ -1139,12 +1129,13 @@ function cerber_user_login( $login, $user ) {
 }
 
 /**
- * Catching some cases of authentication without using login form or not the default WP user login process
+ * Catching user switching and authentications without using the login form
  */
 add_action( 'set_auth_cookie', function () {
-	add_action( 'init', function () { // deferred to allow the possible 'wp_login' action to be logged first
-		if ( $user = wp_get_current_user() ) {
-			cerber_user_login( $user->user_login, $user->ID );
+	add_action( 'set_current_user', function () { // deferred to allow the possible 'wp_login' action to be logged first
+		global $current_user;
+		if ( $current_user instanceof WP_User ) {
+			cerber_user_login( $current_user->user_login, $current_user->ID );
 		}
 	} );
 } );
@@ -1243,7 +1234,119 @@ function cerber_login_failed( $user_login, $user_id = 0 ) {
 
 }
 
-// Apply restrictions for the user
+// ------------ User Sessions
+
+// do_action( "added_{$meta_type}_meta", $mid, $object_id, $meta_key, $_meta_value );
+add_action( 'added_user_meta', function ( $meta_id, $user_id, $meta_key, $_meta_value ) {
+	if ( $meta_key === 'session_tokens' ) {
+		crb_update_session_data( $user_id, $_meta_value );
+	}
+}, 10, 4 );
+
+// do_action( "updated_{$meta_type}_meta", $meta_id, $object_id, $meta_key, $_meta_value );
+add_action( 'updated_user_meta', function ( $meta_id, $user_id, $meta_key, $_meta_value ) {
+	if ( $meta_key === 'session_tokens' ) {
+		crb_update_session_data( $user_id, $_meta_value );
+	}
+}, 10, 4 );
+
+// do_action( "deleted_{$meta_type}_meta", $meta_ids, $object_id, $meta_key, $_meta_value );
+add_action( 'deleted_user_meta', function ( $meta_ids, $user_id, $meta_key, $_meta_value ) {
+	if ( $meta_key === 'session_tokens' ) {
+		$query = 'DELETE FROM ' . cerber_get_db_prefix() . CERBER_USS_TABLE;
+		if ( $user_id ) {
+			$query .= ' WHERE user_id = ' . $user_id;
+		}
+		cerber_db_query( $query );
+	}
+}, 10, 4 );
+/**
+ * Keep the sessions table up to date
+ *
+ * @param $user_id
+ * @param array $sessions List of user sessions from "session_tokens" user meta
+ *
+ * @return bool
+ */
+function crb_update_session_data( $user_id, $sessions = null ) {
+	global $wpdb, $wp_cerber;
+	$table = cerber_get_db_prefix() . CERBER_USS_TABLE;
+
+	if ( $sessions === null ) {
+		$user_meta = cerber_db_get_var( 'SELECT um.* FROM ' . $wpdb->usermeta . ' um JOIN ' . $wpdb->users . ' us ON (um.user_id = us.ID) WHERE um.user_id = ' . $user_id . ' AND um.meta_key = "session_tokens"' );
+		if ( $user_meta && ! empty( $user_meta['meta_value'] ) ) {
+			$sessions = @unserialize( $user_meta['meta_value'] );
+		}
+	}
+
+	if ( ! $sessions ) {
+		cerber_db_query( 'DELETE FROM ' . $table . ' WHERE user_id = ' . $user_id );
+
+		return true;
+	}
+
+	$list = array_keys( $sessions );
+	cerber_db_query( 'DELETE FROM ' . $table . ' WHERE user_id = ' . $user_id . ' AND wp_session_token NOT IN ("' . implode( '","', $list ) . '")' );
+
+	$exist = cerber_db_get_col( 'SELECT wp_session_token FROM ' . $table . ' WHERE user_id = ' . $user_id );
+
+	$new = array_diff( $list, $exist ); // Should be just one element or none
+
+	foreach ( $new as $id ) {
+		$data = $sessions[ $id ];
+		$session_id = $wp_cerber->getSessionID();
+		$ip         = $data['ip'];
+		//$ip = cerber_get_remote_ip();
+		$country    = (string) lab_get_country( $ip );
+		cerber_db_query( 'INSERT INTO ' . $table . ' (user_id, ip, country, started, expires, session_id, wp_session_token) VALUES (' . $user_id . ',"' . $ip . '","' . $country . '","' . $data['login'] . '","' . $data['expiration'] . '","' . $session_id . '","' . $id . '")' );
+	}
+
+	return true;
+}
+
+/**
+ * Synchronize sessions in a bulk mode
+ *
+ * @param bool $full If true will perform full sync from scratch
+ *
+ * @return bool
+ */
+function cerber_sync_sessions( $full = true ) {
+	global $wpdb;
+	$table = cerber_get_db_prefix() . CERBER_USS_TABLE;
+	if ( ! $full && cerber_db_get_var( 'SELECT user_id FROM ' . $table . ' LIMIT 1' ) ) {
+		return false;
+	}
+
+	cerber_db_query( 'DELETE FROM ' . $table );
+
+	$query = 'SELECT um.* FROM ' . $wpdb->usermeta . ' um JOIN ' . $wpdb->users . ' us ON (um.user_id = us.ID) WHERE um.meta_key = "session_tokens"';
+	if ( ! $metas = cerber_db_get_results( $query ) ) {
+		return false;
+	}
+
+	foreach ( $metas as $user_meta ) {
+		$sessions = @unserialize( $user_meta['meta_value'] );
+		if ( empty( $sessions ) ) {
+			continue;
+		}
+		foreach ( $sessions as $id => $data ) {
+			if ( $data['expiration'] < time() ) {
+				continue;
+			}
+			if ( crb_is_user_blocked( $user_meta['user_id'] ) ) {
+				continue;
+			}
+			$country = (string) lab_get_country( $data['ip'] );
+			cerber_db_query( 'INSERT INTO ' . $table . ' (user_id, ip, country, started, expires, wp_session_token) VALUES (' . $user_meta['user_id'] . ',"' . $data['ip'] . '","' . $country . '","' . $data['login'] . '","' . $data['expiration'] . '","' . $id . '")' );
+		}
+	}
+
+	return true;
+}
+
+
+// Enforce restrictions for the current user
 
 add_action( 'set_current_user', function () { // the normal way
 	global $current_user;
@@ -1264,7 +1367,7 @@ function cerber_restrict_user( $user_id ) {
 
 	if ( crb_is_user_blocked( $user_id )
 	     || crb_acl_is_black() // @since 8.2.4
-	     || ! cerber_geo_allowed( 'geo_login' ) ) { // @since 8.2.3
+	     || ! cerber_geo_allowed( 'geo_login', $user_id ) ) { // @since 8.2.3
 
 	    cerber_user_logout();
 
@@ -1766,12 +1869,19 @@ add_action( 'init', function () {
 			define( 'CONCATENATE_SCRIPTS', false );
 		}
 	}
+
 	if ( ! is_admin()
 	     && ! cerber_is_wp_cron() ) {
 		cerber_access_control();
 		cerber_auth_access();
 	}
+
 	cerber_post_control();
+
+	if ( ! defined( 'CERBER_OLD_LP' ) || ! CERBER_OLD_LP ) { // TODO: remove in the next version
+		cerber_wp_login_page(); // @since 8.3.4
+	}
+
 }, 0 );
 
 /**
@@ -2480,7 +2590,7 @@ function cerber_is_bot( $location = '' ) {
 	return $ret;
 }
 
-function cerber_geo_allowed( $rule_id = '' ) {
+function cerber_geo_allowed( $rule_id = '', $user = null ) {
 
 	if ( ! $rule_id || cerber_is_wp_cron() || ! lab_lab() ) {
 		return true;
@@ -2490,21 +2600,54 @@ function cerber_geo_allowed( $rule_id = '' ) {
 		return true;
 	}
 
-	$rule = cerber_get_geo_rules( $rule_id );
+	if ( $user ) {
 
-	if ( $rule && $country = lab_get_country( cerber_get_remote_ip(), false ) ) {
-		if ( in_array( $country, $rule['list'] ) ) {
-			if ( $rule['type'] == 'W' ) {
-				return true;
+		if ( $user instanceof WP_User ) {
+			$roles = $user->roles;
+		}
+		else {
+			$user  = get_userdata( $user );
+			$roles = $user->roles;
+		}
+
+		if ( $roles ) {
+			foreach ( $roles as $role ) {
+				$ret = cerber_check_geo( $rule_id . '_' . $role );
+				if ( $ret !== 0 ) { // This rule exists and country was successfully checked
+					return $ret;
+				}
 			}
-
-			return false;
 		}
-		if ( $rule['type'] == 'W' ) {
-			return false;
-		}
+	}
 
+	$ret = cerber_check_geo( $rule_id );
+
+	if ( $ret === 0 ) {
 		return true;
+	}
+
+	return $ret;
+}
+
+function cerber_check_geo( $rule_id ) {
+	if ( ! $rule = cerber_get_geo_rules( $rule_id ) ) {
+		return 0;
+	}
+
+	if ( ! $country = lab_get_country( cerber_get_remote_ip(), false ) ) {
+		return 0;
+	}
+
+	if ( in_array( $country, $rule['list'] ) ) {
+		if ( $rule['type'] == 'W' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	if ( $rule['type'] == 'W' ) {
+		return false;
 	}
 
 	return true;
@@ -2513,36 +2656,36 @@ function cerber_geo_allowed( $rule_id = '' ) {
 /**
  * Retrieve and return GEO rule(s) from the DB
  *
- * @param string $rule_id   Slug of a rule
+ * @param string $rule_id ID of the rule
  *
- * @return bool|array If a rule exists return array of countries
+ * @return bool|array False if no rule configured
  */
 function cerber_get_geo_rules( $rule_id = '' ) {
+    static $rules;
 	global $wpdb;
 
-	if ( is_multisite() ) {
-		$geo = cerber_db_get_var( 'SELECT meta_value FROM ' . $wpdb->sitemeta . ' WHERE meta_key = "geo_rule_set"' );
-	}
-	else {
-		$geo = cerber_db_get_var( 'SELECT option_value FROM ' . $wpdb->options . ' WHERE option_name = "geo_rule_set"' );
-	}
-
-	if ( $geo ) {
-		$rules = unserialize( $geo );
-		if ( $rule_id ) {
-			if ( ! empty( $rules[ $rule_id ] ) ) {
-				$ret = $rules[ $rule_id ];
-			}
-			else {
-				$ret = false;
-			}
+	if ( ! isset( $rules ) || cerber_is_http_post() ) {
+		if ( is_multisite() ) {
+			$geo = cerber_db_get_var( 'SELECT meta_value FROM ' . $wpdb->sitemeta . ' WHERE meta_key = "geo_rule_set"' );
 		}
 		else {
-			$ret = $rules;
+			$geo = cerber_db_get_var( 'SELECT option_value FROM ' . $wpdb->options . ' WHERE option_name = "geo_rule_set"' );
+		}
+
+		if ( $geo ) {
+			$rules = unserialize( $geo );
+		}
+		else {
+			$rules = false;
+			return false;
 		}
 	}
+
+	if ( $rule_id ) {
+		$ret = ( ! empty( $rules[ $rule_id ] ) ) ? $rules[ $rule_id ] : false;
+	}
 	else {
-		$ret = false;
+		$ret = $rules;
 	}
 
 	return $ret;
@@ -3615,7 +3758,6 @@ remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0 );
  * @return bool
  */
 function cerber_send_email( $type = '', $msg = '', $ip = '' ) {
-	global $wp_cerber;
 	if ( ! $type ) {
 		return false;
 	}
@@ -3670,7 +3812,7 @@ function cerber_send_email( $type = '', $msg = '', $ip = '' ) {
 
 			$subj .= __( 'Citadel mode is activated', 'wp-cerber' );
 
-			$body = sprintf( __( 'Citadel mode is activated after %d failed login attempts in %d minutes.', 'wp-cerber' ), $wp_cerber->getSettings( 'cilimit' ), $wp_cerber->getSettings( 'ciperiod' ) ) . "\n\n";
+			$body = sprintf( __( 'Citadel mode is activated after %d failed login attempts in %d minutes.', 'wp-cerber' ), crb_get_settings( 'cilimit' ), crb_get_settings( 'ciperiod' ) ) . "\n\n";
 			$body .= sprintf( __( 'Last failed attempt was at %s from IP %s with user login: %s.', 'wp-cerber' ), $last_date, $last->ip, $last->user_login ) . "\n\n";
 			$body .= __( 'View activity in dashboard', 'wp-cerber' ) . ': ' . cerber_admin_link( 'activity' ) . "\n\n";
 			//$body .= __('Change notification settings','wp-cerber').': '.cerber_admin_link();
@@ -4701,7 +4843,7 @@ function cerber_finito() {
 	}
 
 	$dir = cerber_get_the_folder();
-	if ( ! is_wp_error( $dir ) && file_exists( $dir ) ) {
+	if ( $dir && file_exists( $dir ) ) {
 		$fs = cerber_init_wp_filesystem();
 		if ( ! is_wp_error( $fs ) ) {
 			$fs->rmdir( $dir, true );
@@ -4740,8 +4882,10 @@ function cerber_upgrade_all( $force = false ) {
 		cerber_upgrade_settings();
 		cerber_htaccess_sync( 'main' );
 		wp_clear_scheduled_hook( 'cerber_hourly' ); // @since 5.8
-		update_site_option( '_cerber_up', array( 'v' => CERBER_VER, 't' => time() ) );
+		cerber_sync_sessions(); // @since 8.3.3
 		cerber_push_the_news( CERBER_VER );
+		update_site_option( '_cerber_up', array( 'v' => CERBER_VER, 't' => time() ) );
+
 		cerber_delete_expired_set( true );
 		lab_get_key( true );
 		$cerber_doing_upgrade = false;
@@ -4926,6 +5070,21 @@ function cerber_create_db($recreate = true) {
     			';
 	}
 
+	if ( ! cerber_is_table( cerber_get_db_prefix() . CERBER_USS_TABLE ) ) {
+		$sql[] = '
+            CREATE TABLE IF NOT EXISTS ' . cerber_get_db_prefix() . CERBER_USS_TABLE . ' (
+            user_id bigint(20) UNSIGNED NOT NULL,
+            ip varchar(39) CHARACTER SET ascii NOT NULL,
+            country char(3) CHARACTER SET ascii NOT NULL DEFAULT "",
+            started int(10) UNSIGNED NOT NULL,
+            expires int(10) UNSIGNED NOT NULL,
+            session_id char(32) CHARACTER SET ascii NOT NULL DEFAULT "",
+            wp_session_token varchar(250) CHARACTER SET ascii NOT NULL,             
+            KEY user_id (user_id)
+			) DEFAULT CHARSET=utf8;
+    			';
+	}
+
 	foreach ( $sql as $query ) {
 		if ( ! $wpdb->query( $query ) && $wpdb->last_error ) {
 			$db_errors[] = array( $wpdb->last_error, $wpdb->last_query );
@@ -5037,6 +5196,7 @@ function cerber_get_tables() {
 		cerber_get_db_prefix() . CERBER_SETS_TABLE,
 		cerber_get_db_prefix() . CERBER_MS_TABLE,
 		cerber_get_db_prefix() . CERBER_MS_LIST_TABLE,
+		cerber_get_db_prefix() . CERBER_USS_TABLE,
 	);
 }
 

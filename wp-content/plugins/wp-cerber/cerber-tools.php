@@ -203,8 +203,8 @@ function cerber_show_diag(){
 			echo lab_status();
 			?>
             <p style="text-align: right;">
-                <a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( array( 'clean_up_the_cache' => 1 ) ), 'control', 'cerber_nonce' ); ?>">Clean up the cache</a>
-                <a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( array( 'force_check_nodes' => 1 ) ), 'control', 'cerber_nonce' ); ?>">Force recheck nodes</a>
+                <a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( array( 'clean_up_the_cache' => 1 ) ), 'control', 'cerber_nonce' ); ?>">Clear up cache</a>
+                <a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( array( 'force_check_nodes' => 1 ) ), 'control', 'cerber_nonce' ); ?>">Recheck node status</a>
             </p>
         </div>
 	    <?php
@@ -257,10 +257,11 @@ function cerber_show_lic() {
 		if ( $expires = lab_validate_lic( $lic ) ) {
 			$valid = '
                 <p><span style="color: green;">This key is valid until '.$expires.'</span></p>
-                <p>To move the key to another website, please follow these steps: <a href="https://my.wpcerber.com/how-to-move-license-key/">https://my.wpcerber.com/how-to-move-license-key/</a></p>';
+                <p>To move the key to another website or web server, please follow these steps: <a href="https://my.wpcerber.com/how-to-move-license-key/" target="_blank">https://my.wpcerber.com/how-to-move-license-key/</a></p>';
 		}
 		else {
-			$valid = '<p><span style="color: red;">This license key is invalid or expired</span></p>';
+			$valid = '<p><span style="color: red;">This license key is invalid or expired</span></p>
+			<p>If you believe this key is valid, please follow these steps: <a href="https://my.wpcerber.com/how-to-fix-invalid-or-expired-key/" target="_blank">https://my.wpcerber.com/how-to-fix-invalid-or-expired-key/</a></p>';
 		}
 	}
 	else {
@@ -327,6 +328,16 @@ function cerber_show_wp_diag(){
 
 	$ret[] = cerber_make_plain_table( $sys );
 
+	$folder = cerber_get_the_folder();
+	if ( is_wp_error( $folder ) ) {
+		$folder = $folder->get_error_message();
+	}
+	else {
+		$folder .= 'quarantine' . DIRECTORY_SEPARATOR;
+	}
+
+
+
 	$folders = array(
 		array( 'WordPress root folder (ABSPATH) ', ABSPATH ),
 		array( 'WordPress uploads folder', cerber_get_upload_dir() ),
@@ -337,7 +348,7 @@ function cerber_show_wp_diag(){
 		array( 'PHP folder for uploading files', ini_get( 'upload_tmp_dir' ) ),
 		array( 'Server folder for temporary files', sys_get_temp_dir() ),
 		array( 'Server folder for user session data', session_save_path() ),
-		array( 'Security scanner quarantine folder', cerber_get_the_folder() . 'quarantine' . DIRECTORY_SEPARATOR ),
+		array( 'Security scanner quarantine folder', $folder ),
 		array( 'Cerber\'s diagnostic log', cerber_get_diag_log() )
 	);
 

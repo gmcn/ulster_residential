@@ -669,8 +669,32 @@ function crb_array_column( $arr = array(), $column = '' ) {
  *
  * @return mixed
  */
-function crb_array_get( &$arr, $key, $default = false ) {
-	return ( isset( $arr[ $key ] ) ) ? $arr[ $key ] : $default;
+function crb_array_get( &$arr, $key, $default = false, $pattern = '' ) {
+	//return ( isset( $arr[ $key ] ) ) ? $arr[ $key ] : $default;
+	$ret = ( isset( $arr[ $key ] ) ) ? $arr[ $key ] : $default;
+	if ( ! $pattern ) {
+		return $ret;
+	}
+
+	if ( ! is_array( $ret ) ) {
+		if ( @preg_match( '/^' . $pattern . '$/i', $ret ) ) {
+			return $ret;
+		}
+
+		return $default;
+	}
+
+	global $cerber_temp;
+	$cerber_temp = $pattern;
+
+	array_walk( $ret, function ( &$item ) {
+		global $cerber_temp;
+		if ( ! @preg_match( '/^' . $cerber_temp . '$/i', $item ) ) {
+			$item = '';
+		}
+	} );
+
+	return array_filter( $ret );
 }
 
 /**
@@ -896,10 +920,24 @@ function crb_admin_submit_button( $text = '', $echo = false ) {
  * @return bool|array|string
  */
 function cerber_get_bulk_action() {
-	if ( ( $ac = cerber_get_get( 'action', '[\w\-]+' ) ) && $ac != '-1' ) {
+
+	// GET
+	if ( cerber_is_http_get() ) {
+		if ( ( $ac = cerber_get_get( 'action', '[\w\-]+' ) ) && $ac != '-1' ) {
+			return $ac;
+		}
+		if ( ( $ac = cerber_get_get( 'action2', '[\w\-]+' ) ) && $ac != '-1' ) {
+			return $ac;
+		}
+
+		return false;
+	}
+
+	// POST
+	if ( ( $ac = crb_get_post_fields( 'action' ) ) && $ac != '-1' ) {
 		return $ac;
 	}
-	if ( ( $ac = cerber_get_get( 'action2', '[\w\-]+' ) ) && $ac != '-1' ) {
+	if ( ( $ac = crb_get_post_fields( 'action2' ) ) && $ac != '-1' ) {
 		return $ac;
 	}
 
@@ -936,6 +974,7 @@ function cerber_is_route_allowed() {
  *
  * @return bool
  */
+/*
 function cerber_is_route_blocked() {
 	if ( crb_get_settings( 'norestuser' ) ) {
 		$path = explode( '/', crb_get_rest_path() );
@@ -944,7 +983,7 @@ function cerber_is_route_blocked() {
 		}
 	}
 	return false;
-}
+}*/
 
 function cerber_is_rest_permitted() {
 	$opt = crb_get_settings();
@@ -952,8 +991,13 @@ function cerber_is_rest_permitted() {
 	if ( ! empty( $opt['norestuser'] ) ) {
 		$path = explode( '/', crb_get_rest_path() );
 		if ( $path && count( $path ) > 2 && $path[0] == 'wp' && $path[2] == 'users' ) {
+			if ( is_super_admin() ) {
+				return true; // @since 8.3.4
+			}
+
 			return false;
 		}
+
 	}
 
 	if ( empty( $opt['norest'] ) ) {
@@ -1648,9 +1692,11 @@ function cerber_check_for_newer() {
  */
 function cerber_detect_browser( $ua ) {
 	$ua  = trim( $ua );
+
 	if ( empty( $ua ) ) {
 		return __( 'Not specified', 'wp-cerber' );
 	}
+
 	if ( preg_match( '/\(compatible\;(.+)\)/i', $ua, $matches ) ) {
 		$bot_info = explode( ';', $matches[1] );
 		foreach ( $bot_info as $item ) {
@@ -1660,11 +1706,43 @@ function cerber_detect_browser( $ua ) {
 			     || stripos( $item, 'Yandex' )
 			     || stripos( $item, 'Yahoo! Slurp' )
 			) {
+				if ( strpos( $ua, 'Android' ) ) {
+					$item .= ' Mobile';
+				}
 				return htmlentities( $item );
 			}
 		}
 	}
-	elseif (0 === strpos( $ua, 'WordPress/' )){
+	elseif ( strpos( $ua, 'google.com' ) ) {
+		// Various Google bots
+
+		$ret = '';
+
+		if ( false !== strpos( $ua, 'Googlebot' ) ) {
+			if ( strpos( $ua, 'Android' ) ) {
+				$ret = 'Googlebot Mobile';
+			}
+			elseif ( false !== strpos( $ua, 'Mozilla' ) ) {
+				$ret = 'Googlebot Desktop';
+			}
+		}
+		elseif ( preg_match( '/AdsBot-Google-Mobile|AdsBot-Google|APIs-Google/', $ua, $matches ) ) {
+			$ret = $matches[0];
+		}
+
+		if ( $ret ) {
+			return htmlentities( $ret );
+		}
+		else {
+			return __( 'Unknown', 'wp-cerber' );
+		}
+	}
+	elseif ( 0 === strpos( $ua, 'Googlebot' ) ) {
+		if ( preg_match( '/Googlebot-\w+/', $ua, $matches ) ) {
+			return $matches[0];
+		}
+	}
+	elseif ( 0 === strpos( $ua, 'WordPress/' ) ) {
 		list( $ret ) = explode( ';', $ua, 2 );
 		return htmlentities( $ret );
 	}
@@ -1675,7 +1753,7 @@ function cerber_detect_browser( $ua ) {
 		return htmlentities( $ua );
 	}
 	elseif (0 === strpos( $ua, 'Mediapartners-Google' )){
-		return 'Mobile AdSense Crawler';
+		return 'AdSense Crawler';
 	}
 
 
@@ -1716,6 +1794,9 @@ function cerber_detect_browser( $ua ) {
 
 	if ( $b && $s ) {
 		$ret = $b . ' on ' . $s;
+	}
+	elseif ( 0 === strpos( $ua, 'python-requests' ) ) {
+		$ret = 'Python Script';
 	}
 	else {
 		$ret = __( 'Unknown', 'wp-cerber' );
@@ -2711,7 +2792,16 @@ function cerber_diag_log( $msg, $source = '' ) {
 }
 
 function cerber_get_diag_log() {
-	$dir = ( defined( 'CERBER_DIAG_DIR' ) && is_dir( CERBER_DIAG_DIR ) ) ? CERBER_DIAG_DIR . '/' : cerber_get_the_folder();
+
+	//$dir = ( defined( 'CERBER_DIAG_DIR' ) && is_dir( CERBER_DIAG_DIR ) ) ? CERBER_DIAG_DIR . '/' : cerber_get_the_folder();
+	if ( defined( 'CERBER_DIAG_DIR' ) && is_dir( CERBER_DIAG_DIR ) ) {
+		$dir = CERBER_DIAG_DIR;
+	}
+	else {
+		if ( ! $dir = cerber_get_the_folder() ) {
+			return false;
+		}
+	}
 
 	return rtrim( $dir, '/' ) . '/cerber-debug.log';
 }
@@ -2804,10 +2894,11 @@ function cerber_empty_dir( $dir ) {
 	}
 
 	$ret = true;
+
 	foreach ( $files as $file ) {
 		$full = $dir . $file;
 		if ( is_file( $full ) ) {
-			if ( ! unlink( $full ) ) {
+			if ( ! @unlink( $full ) ) {
 				$ret = false;
 			}
 		}
@@ -2816,6 +2907,10 @@ function cerber_empty_dir( $dir ) {
 				$ret = false;
 			}
 		}
+	}
+
+	if ( ! $ret ) {
+		return new WP_Error( 'file-deletion-error', 'Some files or subdirectories in this directory cannot be deleted: ' . $dir );
 	}
 
 	return $ret;

@@ -1,0 +1,81 @@
+.loggedin {
+  background: #BAC2C6;
+  margin-bottom: 15px;
+  color: #525C65;
+  padding: 50px 15px;
+  &_account_no {
+    font-weight: 600;
+    margin-bottom: 25px;
+  }
+  p {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .input {
+    background: #fff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+}
+
+.retailer_children {
+  &:last-of-type {
+    border-bottom: 40px solid #BAC2C6;
+  }
+  &_content {
+    &:nth-of-type(odd) {
+      @include md {
+        text-align: right;
+      }
+    }
+    &:nth-of-type(even) {
+      @include md {
+        text-align: left;
+      }
+    }
+    h2 {
+      color: #525C65;
+      font-size: 40px;
+      font-weight: 600;
+    }
+    a.more {
+      background-color: #6E9BCC;
+      color: #fff;
+      border-radius: 5px;
+      padding: 10px 20px;
+      display: inline-block;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 12px;
+      transition: .5s;
+      &:hover {
+        background: #BAC2C6;
+      }
+    }
+  }
+  &_count {
+    padding: 25px 50px;
+    background: #BAC2C6;
+    &:nth-of-type(odd) {
+      @include md {
+        text-align: left;
+      }
+    }
+    &:nth-of-type(even) {
+      @include md {
+        text-align: right;
+      }
+    }
+    p {
+      color: #fff;
+      font-size: 100px;
+      font-weight: 600;
+      @include lg {
+        font-size: 190px;
+      }
+    }
+  }
+}

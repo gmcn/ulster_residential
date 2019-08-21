@@ -157,9 +157,18 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 @import "pages/footer";
 
 /*--------------------------------------------------------------
-# Homepage
+# Pages
 --------------------------------------------------------------*/
 @import "pages/home";
+@import "pages/advice";
+@import "pages/about";
+@import "pages/retailer-main";
+@import "pages/contact";
+
+/*--------------------------------------------------------------
+# Default Pages
+--------------------------------------------------------------*/
+@import "pages/page";
 
 /*--------------------------------------------------------------
 # Content
@@ -181,3 +190,4 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 # Media
 --------------------------------------------------------------*/
 @import "media/media";
+@import "media/fancybox";
