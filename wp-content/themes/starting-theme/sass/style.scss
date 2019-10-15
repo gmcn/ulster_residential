@@ -160,10 +160,20 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 # Pages
 --------------------------------------------------------------*/
 @import "pages/home";
+@import "pages/choose";
+@import "pages/blog";
+@import "pages/coordination";
+@import "pages/gallery";
 @import "pages/advice";
 @import "pages/about";
 @import "pages/retailer-main";
 @import "pages/contact";
+@import "pages/rugs";
+
+@import "pages/ranges";
+@import "layout/filter_pagination";
+@import "pages/blog";
+@import "pages/basket";
 
 /*--------------------------------------------------------------
 # Default Pages

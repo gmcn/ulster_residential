@@ -43,7 +43,7 @@ class FrmProForm {
 	 */
 	private static function setup_file_protection( $atts ) {
 		$previous_opts = FrmDb::get_var( 'frm_forms', array( 'id' => $atts['form_id'] ), 'options' );
-		$previous_opts = maybe_unserialize( $previous_opts );
+		FrmProAppHelper::unserialize_or_decode( $previous_opts );
 		$previous_val = isset( $previous_opts['protect_files'] ) ? $previous_opts['protect_files'] : 0;
 
 		if ( $previous_val != $atts['new'] ) {

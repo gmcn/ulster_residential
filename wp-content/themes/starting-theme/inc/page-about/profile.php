@@ -33,17 +33,16 @@
   		$mediaType = get_sub_field('media_type');
   		$galleryImages = get_sub_field('gallery_images');
       $video = get_sub_field('video');
+      $video_description = get_sub_field('video_description');
       $download = get_sub_field('download');
       $mediaTitle = get_sub_field('media_title');
       $linkBg = get_sub_field('link_bg_colour');
 
   		?>
 
-  		<div class="col-md-3 company-profile_media matchheight" >
+  		<div class="col-sm-6 col-md-3 company-profile_media matchheight" >
 
         <div class="company-profile_media_wrapper" style="background: url(<?php echo $backgroundImage ?>) center center no-repeat; background-size: cover; height: 100%;">
-
-
 
 
         <?php if ($mediaType == 'gallery') : ?>
@@ -51,23 +50,27 @@
 
           <img src="<?php echo get_template_directory_uri(); ?>/images/gallery_icon.svg" alt="gallery"><br />
 
-          <a style="background:<?php echo $linkBg; ?>" class="fancybox" href="#" rel="group<?php echo $i ?>" title="">
-            <?php echo $mediaTitle; ?>
-          </a>
+          <a style="background:<?php echo $linkBg; ?>" href="#" class="open-album" data-open-id="group<?php echo $i ?>"><?php echo $mediaTitle; ?></a>
 
+          <?php if( have_rows('gallery_images') ): ?>
+            <div class="hidden">
 
-          <?php if( $galleryImages ): ?>
-          <!-- Hidden Gallery -->
-          <div class="hidden">
-            <?php foreach( $galleryImages as $galleryImage ): ?>
+          	<?php while( have_rows('gallery_images') ): the_row();
 
-                <a class="fancybox" rel="group<?php echo $i ?>" title="">
-                    <img src="<?php echo $galleryImage; ?>" alt="" />
-                </a>
+          		// vars
+          		$gallery_image = get_sub_field('gallery_image');
+          		$gallery_image_title = get_sub_field('gallery_image_title');
+          		$gallery_image_description = get_sub_field('gallery_image_description');
 
-            <?php endforeach; ?>
-          </div>
-        <?php endif; ?>
+          		?>
+
+              <a class="image-show" rel="group<?php echo $i ?>" alt="<?php echo $gallery_image_title; ?>" alt="<?php echo $gallery_image_title; ?>" title="<?php echo $gallery_image_title; ?>">
+                  <img src="<?php echo $gallery_image; ?>" alt="<?php echo $gallery_image_description; ?>" />
+              </a>
+
+          	<?php endwhile; ?>
+            </div>
+          <?php endif; ?>
 
 
         <?php elseif($mediaType == 'download') : ?>
@@ -78,9 +81,10 @@
           </a>
 
           <?php elseif($mediaType == 'video') : ?>
-            <img src="<?php echo get_template_directory_uri(); ?>/images/video_icon.svg" alt="video"><br />
-            <a style="background:<?php echo $linkBg; ?>" class="various fancybox" data-fancybox-type="iframe" href="https://www.youtube.com/embed/<?php echo $video ?>?autoplay=1&amp;rel=0">
+            <img src="<?php echo get_template_directory_uri(); ?>/images/video_icon.svg" alt="<?php echo $mediaTitle; ?>"><br />
+            <a style="background:<?php echo $linkBg; ?>" class="various fancybox" data-fancybox-type="iframe" alt="<?php echo $mediaTitle; ?>" title="<?php echo $mediaTitle; ?>" href="https://www.youtube.com/embed/<?php echo $video ?>?autoplay=1&amp;rel=0">
             <?php echo $mediaTitle ?>
+            <img src="" alt="<?php echo $video_description; ?>" style="display:none;">
             </a>
           <?php endif; ?>
 

@@ -433,7 +433,8 @@ class FrmProEntriesHelper {
 				// Check if field in conditional logic is a Dynamic field
 				$cl_field_type = FrmField::get_type( $hfield );
 				if ( $cl_field_type == 'data' ) {
-					$cl_field_val = maybe_unserialize( $entry->metas[ $hfield ] );
+					$cl_field_val = $entry->metas[ $hfield ];
+					FrmProAppHelper::unserialize_or_decode( $cl_field_val );
 					if ( is_array( $cl_field_val ) ) {
 						$field_value += $cl_field_val;
 					} else {

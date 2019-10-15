@@ -30,17 +30,13 @@
 
 
       <div class="label">
-        Start Date:
+        Required Documents
       </div>
-      <p><?php echo $start_date ?></p>
-      <div class="label">
-        Salary:
-      </div>
-      <p><?php echo $salary ?></p>
-      <div class="label">
-        Contract Duration:
-      </div>
-      <p><?php echo $contract_duration ?></p>
+      <?php if( get_field('job_payment_cycle') == 'weekly' ) : ?>
+        <a href="/wp-content/uploads/jobs_application-form.docx" download>Application Form <img style="width: 20px;" src="<?php echo get_template_directory_uri() ?>/images/dl_icon.svg" alt="Download Application Form">  </a><br />
+      <?php endif; ?>
+      <a href="/wp-content/uploads/jobs_monitoring-form.docx" download>Monitoring Form <img style="width: 20px;" src="<?php echo get_template_directory_uri() ?>/images/dl_icon.svg" alt="Download Application Form">  </a>
+
 
       <div class="buttons">
         <a id="showForm" onclick="showform()">Apply Now</a>
@@ -92,7 +88,14 @@
 
 
         <div id="career__form" class="col-md-12 career__content" style="display: none;">
-          <?php echo do_shortcode('[formidable id=4]') ?>
+
+
+          <?php if( get_field('job_payment_cycle') == 'weekly' ) : ?>
+            <?php echo do_shortcode('[formidable id=4]') ?>
+          <?php else : ?>
+            <?php echo do_shortcode('[formidable id=7]') ?>
+          <?php endif; ?>
+
         </div>
 
 

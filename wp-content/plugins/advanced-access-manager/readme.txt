@@ -2,8 +2,8 @@
 Contributors: vasyltech
 Tags: access control, membership, backend menu, user role, restricted content, security, jwt
 Requires at least: 4.0
-Tested up to: 5.2.2
-Stable tag: 5.9.8.1
+Tested up to: 5.2.3
+Stable tag: 5.9.9.1
 
 All you need to manage access to you WordPress websites on frontend, backend and API levels for any role, user or visitors.
 
@@ -79,6 +79,14 @@ https://www.youtube.com/watch?v=mj5Xa_Wc16Y
 11. Improve your website security
 
 == Changelog ==
+
+= 5.9.9.1 =
+* Fixed PHP warning associated with media access control
+* Updated verbiage on the Extensions tab.
+
+= 5.9.9 =
+* Fixed security vulnerability reported by "Props to Ov3rfly"
+* Added the functionality that checks correctly for the AAM premium plugins updates 
 
 = 5.9.8.1 =
 * Making sure that all setcookie as flagged as HTTPOnly

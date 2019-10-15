@@ -15,8 +15,11 @@
     		?>
 
         <div class="col-md-6 office wow fadeInDown">
-          <h2><?php echo $office_name; ?></h2> <br />
+
           <div class="row">
+            <div class="col-md-12">
+              <h2><?php echo $office_name; ?></h2>
+            </div>
             <div class="col-md-4 office_address matchheight">
               Ulster Carpets<br />
               <span><?php echo $office_name; ?></span>
@@ -32,9 +35,9 @@
               <?php endif; ?>
 
             </div>
-            <!-- <div class="col-md-12"> -->
+            <div class="col-md-12 office__map">
               <?php echo $office_map ?>
-            <!-- </div> -->
+            </div>
           </div>
         </div>
 

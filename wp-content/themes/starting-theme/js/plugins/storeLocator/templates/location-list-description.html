@@ -1,0 +1,55 @@
+{{#location}}
+
+<li data-markerid="{{markerid}}">
+	<!-- <div class="list-label">{{marker}}</div> -->
+	<div class="list-details">
+		<div class="row list-content">
+
+			<div class="col-md-2">
+				<div class="loc-name">{{name}}</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="loc-addr">
+					{{address1}},
+					{{#if address2}} {{address2}},{{/if}} {{city}}{{#if city}},{{/if}} {{state}}{{#if state}},{{/if}} {{zip}}
+				</div>
+			</div>
+
+			<div class="col-md-2">
+				{{#if distance}}
+					<!-- <div class="loc-dist loc-default-dist">{{distance}} {{length}}</div> -->
+					{{#if altdistance}}
+						<!-- <div class="loc-dist loc-alt-dist">{{altdistance}} {{altlength}}</div> -->
+					{{/if}}
+					<div class="loc-directions">
+						<a href="https://maps.google.com/maps?saddr={{origin}}&amp;daddr={{address1}} {{address2}} {{city}}, {{state}} {{zip}}" target="_blank">
+							<img src="/wp-content/themes/starting-theme/images/directions.svg" alt="Directions to {{name}}"><br />
+							{{distance}} {{length}} (approx)
+						</a>
+					</div>
+				{{/if}}
+			</div>
+
+			<div class="col-md-2">
+				{{#if phone}}
+				<div class="loc-phone"><a href="tel:{{phone}}">{{phone}}</a></div>
+				{{/if}}
+			</div>
+
+			<div class="col-md-2">
+				{{#if web}}
+					<div class="loc-web"><a href="http://{{niceURL web}}" target="_blank">View website</a></div>
+				{{/if}}
+			</div>
+
+
+
+
+
+
+
+		</div>
+	</div>
+</li>
+{{/location}}

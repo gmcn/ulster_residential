@@ -1,0 +1,154 @@
+.choose_range {
+  text-align: center;
+  margin-bottom: 15px;
+  padding: 15px 50px;
+  @include md {
+    padding: 15px 50px;
+  }
+  h3 {
+    font-size: 32px;
+    @include sm {
+      font-size: 42px;
+    }
+    @include md {
+      font-size: 60px;
+    }
+    color: #fff;
+    padding: 15px;
+    font-family: "Libre Baskerville", serif;
+    display: inline-block;
+    margin: 0 0 35px 0;
+    text-shadow: 2px 2px 8px #000;
+  }
+  a {
+    color: #fff;
+    padding: 10px 35px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+  }
+  .range__wrapper, .style__wrapper, .colour__wrapper {
+    padding-top: 75px;
+    padding-bottom: 40px;
+  }
+  .range {
+    color: #55757B;
+    border-bottom: 1px solid #fff;
+    @include md {
+      border-right: 1px solid #fff;
+      border-bottom: none;
+    }
+    @include xs {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    @include md {
+      padding-left: 0;
+      padding-right: 15px;
+    }
+    &__wrapper {
+    }
+    a {
+      background-color: #733355;
+    }
+  }
+  .style {
+    color: #505050;
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: 1px solid #fff;
+    @include md {
+      border-right: 1px solid #fff;
+      border-bottom: none;
+    }
+    &__wrapper {
+      background-size: cover;
+    }
+    a {
+      background-color: #55757B;
+    }
+  }
+  .colour {
+    @include xs {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    @include md {
+      padding-right: 0;
+      padding-left: 15px;
+    }
+    &__wrapper {
+      background-size: cover;
+    }
+    a {
+      background-color: #505050;
+    }
+    color: #53194F;
+  }
+}
+
+
+.choose_children {
+  margin-bottom: 15px;
+  &_child:first-of-type {
+    a {
+      background: #83983C;
+    }
+  }
+  &_child {
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 15px;
+    @include md {
+      margin-bottom: 0;
+      padding-left: 0;
+      padding-right: 15px;
+    }
+    .wrapper {
+      padding-top: 125px;
+      padding-bottom: 125px;
+      text-align: center;
+    }
+    a {
+      background: #9A6E1C;
+      color: #fff;
+      padding: 12px 40px;
+      border-radius: 5px;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-block;
+      &:hover {
+        background: #000;
+      }
+    }
+  }
+  &_content {
+    padding-left: 25px;
+    padding-right: 25px;
+    background: url(images/choose-content_bg.jpg) center center / cover;
+    padding-top: 25px;
+    text-align: center;
+    @include md {
+      text-align: left;
+      height: 289px;
+    }
+    color: rgba(2, 0, 0, .7);
+    h3 {
+      font-size: 45px;
+      font-family: "Libre Baskerville", serif;
+      display: inline-block;
+      margin: 0 0 25px 0;
+    }
+    p {
+      @include md {
+        width: 90%;
+      }
+      @include lg {
+        width: 80%;
+      }
+    }
+  }
+}

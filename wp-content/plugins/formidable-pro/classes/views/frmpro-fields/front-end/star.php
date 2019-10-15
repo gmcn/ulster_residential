@@ -7,7 +7,8 @@ if ( ! empty( $max ) ) {
 
 if ( is_array( $field['options'] ) ) {
 	if ( ! isset( $field['value'] ) ) {
-		$field['value'] = maybe_unserialize( $field['default_value'] );
+		$field['value'] = $field['default_value'];
+		FrmProAppHelper::unserialize_or_decode( $field['value'] );
 	}
 
 	foreach ( $field['options'] as $opt_key => $opt ) {

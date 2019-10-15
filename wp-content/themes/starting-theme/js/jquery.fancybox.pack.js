@@ -823,7 +823,7 @@
 			e = a.type;
 			f.isFunction(d) && (d = d.call(c.element, c));
 			if (r(d) && "" !== f.trim(d)) {
-				c = f('<div class="fancybox-title fancybox-title-' + e + '-wrap"><h2>' + d + "</h2></div>");
+				c = f('<div class="fancybox-title fancybox-title-' + e + '-wrap"><h6>' + d + "</h6></div>");
 				switch (e) {
 				case "inside":
 					e = b.skin;
@@ -838,7 +838,7 @@
 					e = b.skin,
 					c.appendTo("body"),
 					K && c.width(c.width()),
-					c.wrapInner('<span class="child"><h2></h2></span>'),
+					c.wrapInner('<span class="child"></span>'),
 					b.current.margin[2] += Math.abs(m(c.css("margin-bottom")))
 				}
 				c["top" === a.position ? "prependTo": "appendTo"](e)

@@ -137,6 +137,12 @@ class FrmProEntry {
             $sub_ids = array();
 
 			foreach ( $field_values as $k => $v ) {
+				$has_values = array_filter( $v, array( 'FrmProContent', 'is_not_empty' ) );
+				if ( empty( $has_values ) ) {
+					// Don't create empty entries.
+					continue;
+				}
+
                 $entry_values = $new_values;
                 $entry_values['form_id'] = $sub_form_id;
                 $entry_values['item_meta'] = (array) $v;
@@ -252,7 +258,8 @@ class FrmProEntry {
             }
 
             $field_ids = array();
-			$ids = maybe_unserialize( $entry->metas[ $field->id ] );
+			$ids = $entry->metas[ $field->id ];
+			FrmProAppHelper::unserialize_or_decode( $ids );
             if ( ! empty($ids) ) {
                 // duplicate all entries for this field
                 foreach ( (array) $ids as $sub_id ) {
@@ -304,7 +311,8 @@ class FrmProEntry {
                 continue;
             }
 
-			$ids = maybe_unserialize( $entry->metas[ $field->id ] );
+			$ids = $entry->metas[ $field->id ];
+			FrmProAppHelper::unserialize_or_decode( $ids );
             if ( ! empty($ids) ) {
                 $sub_ids = array_merge($ids, $sub_ids);
             }

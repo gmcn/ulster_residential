@@ -36,7 +36,8 @@ class FrmProFieldScale extends FrmFieldType {
 
 		$options = $this->get_field_column('options');
 		if ( ! empty( $options ) ) {
-			$range = maybe_unserialize( $options );
+			$range = $options;
+			FrmProAppHelper::unserialize_or_decode( $range );
 
 			$opts['minnum'] = reset( $range );
 			$opts['maxnum'] = end( $range );

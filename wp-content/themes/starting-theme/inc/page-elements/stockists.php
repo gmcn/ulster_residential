@@ -1,8 +1,33 @@
 <div class="container-fluid stockists">
+
     <h2>find a stockist</h2>
-    <p>Dtias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil imp.</p>
+    <p>Ulster Carpets is stocked across the world. Simply click on your region below and enter a few simple details to find your nearest stockist.</p>
+
+    <div class="collapse" id="collapseUK">
+      <div class="row">
+        <div class="stockists_locations">
+
+          <div class="bh-sl-container container">
+
+            <div class="bh-sl-form-container">
+              <form id="bh-sl-user-location" method="post" action="#">
+
+                  <div class="form-input">
+                    <label for="bh-sl-address">Search your Town or Postcode</label>
+                    <input type="text" id="bh-sl-address" name="bh-sl-address" placeholder="Location goes here" />
+                  </div>
+
+                  <button id="bh-sl-submit" onclick="document.location+='#stockistResults';"  type="submit">Submit</button>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   <div class="row stockists_locations clear">
-    <div class="col-xs-6 col-md-3 matchheight">
+    <div class="col-md-3 stockists_locations__location matchheight">
       <h4>UK <span>&</span> Ireland</h4>
       <p>United Kingdom & Ireland</p>
 
@@ -11,50 +36,81 @@
       </button>
 
     </div>
-    <div class="col-xs-6 col-md-3 matchheight">
+    <div class="col-md-3 stockists_locations__location matchheight">
       <h4>EU</h4>
       <p>European Union</p>
 
-      <button type="button" data-toggle="collapse" data-target="#collapseEU" aria-expanded="false" aria-controls="collapseExample">
+      <button class="hidden-xs hidden-sm" type="button" data-toggle="collapse" data-target="#collapseEU" aria-expanded="false" aria-controls="collapseExample">
         Find me a store
       </button>
 
+      <button class="hidden-md hidden-lg" type="button" data-toggle="collapse" data-target="#collapseEU_mobile" aria-expanded="false" aria-controls="collapseExample">
+        Find me a store
+      </button>
+
+      <div class="collapse hidden-md hidden-lg" id="collapseEU_mobile">
+        <div class="row">
+          <div class="stockists_locations">
+            <p class="">Email us now to find out how to purchase on <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a> or using the form below.</p>
+            <?php echo do_shortcode('[contact-form-7 id="98" title="Find A Stockist"]'); ?>
+            <div style="clear:both"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="col-xs-6 col-md-3 matchheight">
+    <div class="col-md-3 stockists_locations__location matchheight">
       <h4>USA</h4>
       <p>United States of America</p>
-      <button type="button" data-toggle="collapse" data-target="#collapseUS" aria-expanded="false" aria-controls="collapseExample">
+
+      <button class="hidden-xs hidden-sm" type="button" data-toggle="collapse" data-target="#collapseUS" aria-expanded="false" aria-controls="collapseExample">
         Find me a store
       </button>
+
+      <button class="hidden-md hidden-lg" type="button" data-toggle="collapse" data-target="#collapseUS_mobile" aria-expanded="false" aria-controls="collapseExample">
+        Find me a store
+      </button>
+
+      <div class="collapse hidden-md hidden-lg" id="collapseUS_mobile">
+        <div class="row">
+          <div class="stockists_locations">
+            <p class="">Email us now to find out how to purchase on <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a> or using the form below.</p>
+            <?php echo do_shortcode('[contact-form-7 id="98" title="Find A Stockist"]'); ?>
+            <div style="clear:both"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="col-xs-6 col-md-3 matchheight">
+
+    <div class="col-md-3 stockists_locations__location matchheight">
       <h4>Rest <span>of</span> World</h4>
       <p>Rest of the World</p>
-      <button type="button" data-toggle="collapse" data-target="#collapseROW" aria-expanded="false" aria-controls="collapseExample">
+
+      <button class="hidden-xs hidden-sm" type="button" data-toggle="collapse" data-target="#collapseROW" aria-expanded="false" aria-controls="collapseExample">
         Find me a store
       </button>
-    </div>
 
-  </div>
+      <button class="hidden-md hidden-lg" type="button" data-toggle="collapse" data-target="#collapseROW_mobile" aria-expanded="false" aria-controls="collapseExample">
+        Find me a store
+      </button>
 
-  <div class="collapse" id="collapseUK">
-    <div class="row">
-      <div class="stockists_locations">
 
-        <label>Search your Town or Postcode</label>
-        <input class="controls" type="text" placeholder="Search your Town or Postcode">
-
+      <div class="collapse hidden-md hidden-lg" id="collapseROW_mobile">
+        <div class="row">
+          <div class="stockists_locations">
+            <p class="">Email us now to find out how to purchase on <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a> or using the form below.</p>
+            <?php echo do_shortcode('[contact-form-7 id="98" title="Find A Stockist"]'); ?>
+            <div style="clear:both"></div>
+          </div>
+        </div>
       </div>
+
     </div>
+
   </div>
 
-
-
-
-
-
-
-  <div class="collapse" id="collapseEU">
+  <div class="collapse hidden-xs hidden-sm" id="collapseEU">
     <div class="row">
       <div class="stockists_locations">
         <p class="">Email us now to find out how to purchase on <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a> or using the form below.</p>
@@ -84,109 +140,50 @@
     </div>
   </div>
 
+<a name="stockistResults"></a>
+
 </div>
 
-<div id="map"></div>
-<script>
-  // This example adds a search box to a map, using the Google Place Autocomplete
-  // feature. People can enter geographical searches. The search box will return a
-  // pick list containing a mix of places and predicted search terms.
 
-  // This example requires the Places library. Include the libraries=places
-  // parameter when you first load the API. For example:
-  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+<div class="bh-sl-container">
 
-  function initMap() {
-  var sydney = new google.maps.LatLng(-33.867, 151.195);
 
-  infowindow = new google.maps.InfoWindow();
 
-  map = new google.maps.Map(
-      document.getElementById('map'), {center: sydney, zoom: 15});
+  <div id="bh-sl-map-container" class="bh-sl-map-container">
+    <div id="bh-sl-map" class="bh-sl-map" style="display: none;"></div>
+    <div class="bh-sl-loc-list">
+      <h1>Results</h1>
+      <div class="row th hidden-xs hidden-sm">
 
-  var request = {
-    query: 'Museum of Contemporary Art Australia',
-    fields: ['name', 'geometry'],
-  };
+        <div class="col-md-2">
+          Name
+        </div>
 
-  var service = new google.maps.places.PlacesService(map);
+        <div class="col-md-4">
+          Address
+          <span>(click pointer to view google maps in separate window)</span>
+        </div>
 
-  service.findPlaceFromQuery(request, function(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      for (var i = 0; i < results.length; i++) {
-        createMarker(results[i]);
-      }
-      map.setCenter(results[0].geometry.location);
-    }
-  });
-}
+        <div class="col-md-2">
 
-  function initAutocomplete() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -33.8688, lng: 151.2195},
-      zoom: 13,
-      mapTypeId: 'roadmap'
-    });
+        </div>
 
-    // Create the search box and link it to the UI element.
-    var input = document.getElementById('pac-input');
-    var searchBox = new google.maps.places.SearchBox(input);
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+        <div class="col-md-2">
+          Phone
+        </div>
 
-    // Bias the SearchBox results towards current map's viewport.
-    map.addListener('bounds_changed', function() {
-      searchBox.setBounds(map.getBounds());
-    });
+        <div class="col-md-2">
+          Website
+        </div>
+      </div>
 
-    var markers = [];
-    // Listen for the event fired when the user selects a prediction and retrieve
-    // more details for that place.
-    searchBox.addListener('places_changed', function() {
-      var places = searchBox.getPlaces();
+      <ul class="list"></ul>
 
-      if (places.length == 0) {
-        return;
-      }
+    </div>
+  </div>
+</div>
 
-      // Clear out the old markers.
-      markers.forEach(function(marker) {
-        marker.setMap(null);
-      });
-      markers = [];
 
-      // For each place, get the icon, name and location.
-      var bounds = new google.maps.LatLngBounds();
-      places.forEach(function(place) {
-        if (!place.geometry) {
-          console.log("Returned place contains no geometry");
-          return;
-        }
-        var icon = {
-          url: place.icon,
-          size: new google.maps.Size(71, 71),
-          origin: new google.maps.Point(0, 0),
-          anchor: new google.maps.Point(17, 34),
-          scaledSize: new google.maps.Size(25, 25)
-        };
 
-        // Create a marker for each place.
-        markers.push(new google.maps.Marker({
-          map: map,
-          icon: icon,
-          title: place.name,
-          position: place.geometry.location
-        }));
 
-        if (place.geometry.viewport) {
-          // Only geocodes have viewport.
-          bounds.union(place.geometry.viewport);
-        } else {
-          bounds.extend(place.geometry.location);
-        }
-      });
-      map.fitBounds(bounds);
-    });
-  }
-
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEgmXmc6iIdAgHKm9DzbYS-40OEwPefRw&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyAfU2hsPF_D_DwXwxr8QEk2NU_RPzBO4YA"></script>

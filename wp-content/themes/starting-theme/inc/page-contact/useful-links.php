@@ -2,6 +2,18 @@
     <div class="container-fluid useful">
     	<div class="row">
 
+        <div class="col-md-6 hidden-xs hidden-sm">
+          <p>Listed below are some other websites that you might be interested in:</p>
+        </div>
+
+        <div class="col-md-6">
+          <h2>Useful Links</h2>
+        </div>
+
+        <div class="col-md-6 hidden-md hidden-lg">
+          <p>Listed below are some other websites that you might be interested in:</p>
+        </div>
+
     	<?php while( have_rows('useful_links') ): the_row();
 
     		// vars
@@ -13,17 +25,17 @@
 
     		?>
 
-        <div class="col-md-3 col-xs-6 useful_link wow fadeInDown">
+        <div class="col-sm-6 col-md-3 useful_link wow fadeInDown">
           <div class="useful_link_wrapper matchheight">
 
             <img src="<?php echo $useful_branding ?>" alt="<?php echo $useful_title ?>">
 
-            <h3><?php echo $useful_title ?></h3>
+            <h3 class="hmatchheight"><?php echo $useful_title ?></h3>
             <p>Type of business:</p>
             <p><?php echo $useful_business ?></p>
-            <a href="https://<?php echo $useful_website ?>" target="_blank"><?php echo $useful_website ?></a>
+            <a href="http://<?php echo $useful_website ?>" target="_blank"><?php echo $useful_website ?></a>
 
-            <a class="view" style="background-color: <?php echo $useful_colour ?>" href="https://<?php echo $useful_website ?>" target="_blank">View site now</a>
+            <a class="view" style="background-color: <?php echo $useful_colour ?>" href="http://<?php echo $useful_website ?>" target="_blank">View site now</a>
 
           </div>
 

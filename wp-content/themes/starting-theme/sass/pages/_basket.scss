@@ -1,0 +1,291 @@
+.e-samplesCartIcon {
+    position: relative;
+
+    span {
+      position: absolute !important;
+      left: 0;
+      // padding: .375em .675em;
+      padding: 12px 0;
+      @extend .u-text--blue;
+      font-weight: 700;
+      text-align: center !important;
+      width: 100% !important;
+    }
+}
+
+.e-samplesCartIcon--side {
+    position: relative;
+
+    span {
+        position: absolute !important;
+        left: 0;
+        z-index: 100;
+        // padding: .375em .675em;
+        @extend .u-text--blue;
+        padding: 12px 0;
+        font-weight: 600;
+        color: #fff !important;
+        width: 100%;
+    }
+}
+
+#lala-alert-container {
+    position: fixed;
+    height: auto;
+    max-width: 350px;
+    width: 100%;
+    top: 2em;
+    right: 1em;
+    z-index: 100;
+}
+
+
+.lala-alert {
+    position: relative;
+    padding: 25px 30px 20px;
+    font-size: 15px;
+    margin-top: 15px;
+    opacity: 1;
+    line-height: 1.4;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    cursor: default;
+    transition: all 0.5s ease-in-out;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    span {
+        opacity: 0.7;
+        transition: all 0.25s ease-in-out;
+
+        & :hover {
+            opacity: 1.0;
+        }
+    }
+
+
+}
+
+
+.alert-danger {
+    color: #fff;
+    background-color: map-get($colors, "red");
+    border-color: map-get($colors, "red");
+
+}
+
+.deliveryProgress {
+
+    $number-of-steps: 3;
+    $line-width: 2px;
+    $bullet-size: 6px;
+    overflow: hidden;
+
+    ul {
+        position: relative;
+        overflow: hidden;
+        list-style: none;
+        margin-left: -(100% / $number-of-steps)/2;
+        margin-right: -(100% / $number-of-steps)/2;
+
+        @media (max-width: $screen-md-max) {
+            margin-right: -12%;
+        }
+
+        padding-top: 1.25em;
+    }
+
+    li {
+        padding: 4em 0 0 0;
+        position: relative;
+        float: left;
+        width: 100% / $number-of-steps;
+        text-align: center;
+        font-size: 10px;
+        color: map-get($colors, "grey");
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+
+    li:before {
+        box-sizing: content-box;
+        content: " ";
+        display: block;
+        color: map-get($colors, "grey");
+        background-color: map-get($colors, "grey");
+        border: $line-width solid map-get($colors, "light_grey");
+        text-align: center;
+        width: $bullet-size;
+        height: $bullet-size;
+        line-height: $bullet-size;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        margin-bottom: $bullet-size / 2;
+        margin-left: $bullet-size * -0.5;
+        z-index: 1;
+        top: -$line-width /2;
+    }
+
+    li.active:before {
+        top: -18px;
+        border-color: #fff;
+        border-width: 20px;
+        margin-left: -24px;
+        background-color: map-get($colors, "grey");
+    }
+
+    li+li {
+        &:after {
+            content: "";
+            display: block;
+            width: 100%;
+            background: #fff;
+            height: $line-width;
+            position: absolute;
+            left: -50%;
+            top: $bullet-size / 2;
+            z-index: 0;
+        }
+    }
+
+    .active~li:after {
+        background-color: #fff;
+    }
+
+}
+
+.basket {
+    h1 {
+        font-family: $font-family-serif;
+        font-size: 40px;
+    }
+    h2 {
+      a {
+        color: #fff;
+        font-style: italic;
+        transition: .5s;
+        &:hover {
+          color: #000;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    form {
+        .row {
+            margin-left: -.5em;
+            margin-right: -.5em;
+
+            & [class^="col"] {
+                padding-left: .5em;
+                padding-right: .5em;
+            }
+        }
+
+        .form_group {
+            margin-bottom: 1em;
+
+            .form-control {
+                font-weight: 500;
+                padding: .5em .375em;
+
+                &.has-error {
+                    border-color: map-get($colors, "red");
+                    background-color: lighten(map-get($colors, "red"), 20%);
+                }
+            }
+
+        }
+
+        .frm_checkbox {
+            font-size: 10px;
+        }
+
+    }
+}
+
+.basket__success {
+    .basket__sucess--content {
+        h2 {
+            font-family: $font-family-serif;
+            font-size: 45px;
+            padding-bottom: 45px;
+            @include md {
+              font-size: 90px;
+              padding-bottom: 90px;
+            }
+
+        }
+
+        h3 {
+            font-family: $font-family-serif;
+            font-size: 40px;
+
+        }
+    }
+}
+
+.basket__samples {
+    table {
+        tr {
+            border-top: 1px dotted #737C83;
+
+            &:last-child {
+                border-bottom: 1px dotted #737C83;
+            }
+        }
+
+        td {
+            vertical-align: top;
+            text-align: left;
+            font-size: 20px;
+
+            @media (max-width: $screen-xs-max) {
+                display: block !important;
+            }
+
+            @media (max-width: $screen-md-max) {
+                font-size: 18px;
+            }
+
+            color: #525C65;
+            padding: 20px 15px 20px 0;
+
+            h3 {
+                font-size: 30px;
+                font-weight: 700;
+                margin-top: 0.5rem;
+            }
+
+            .e-btn {
+                margin-top: .5rem;
+            }
+
+            small {
+                font-weight: bold;
+                font-size: 15px;
+
+                @media (max-width: $screen-md-max) {
+                    font-size: 13px;
+                }
+
+                opacity: .5;
+            }
+
+            &:last-child {
+                text-align: right;
+                padding-right: 0;
+
+                @media (max-width: $screen-md-min) {
+                    width: 100%;
+                    display: block;
+                }
+
+            }
+        }
+    }
+}

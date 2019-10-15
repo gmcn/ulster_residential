@@ -7,7 +7,7 @@ class FrmProDb {
 	/**
 	 * @since 3.0.02
 	 */
-	public static $plug_version = '4.02.01';
+	public static $plug_version = '4.02.03';
 
 	/**
 	 * @since 2.3
@@ -113,7 +113,8 @@ class FrmProDb {
 		$fields = FrmDb::get_results( 'frm_fields', $query, 'id, field_options' );
 
 		foreach ( $fields as $field ) {
-			$field_options = maybe_unserialize( $field->field_options );
+			$field_options = $field->field_options;
+			FrmProAppHelper::unserialize_or_decode( $field_options );
 			$original      = $field_options;
 
 			FrmProXMLHelper::migrate_lookup_placeholder( $field_options );
@@ -139,7 +140,8 @@ class FrmProDb {
 		$fields = FrmDb::get_results( 'frm_fields', $query, 'id, field_options' );
 
 		foreach ( $fields as $field ) {
-			$field_options = maybe_unserialize( $field->field_options );
+			$field_options = $field->field_options;
+			FrmProAppHelper::unserialize_or_decode( $field_options );
 			$original      = $field_options;
 
 			FrmProXMLHelper::migrate_lookup_checkbox_setting( $field_options );
@@ -166,7 +168,8 @@ class FrmProDb {
 		$fields = FrmDb::get_results( 'frm_fields', $query, 'id, type, field_options, default_value' );
 
 		foreach ( $fields as $field ) {
-			$field_options = maybe_unserialize( $field->field_options );
+			$field_options = $field->field_options;
+			FrmProAppHelper::unserialize_or_decode( $field_options );
 			$update = FrmProXMLHelper::migrate_dyn_default_value( $field->type, $field_options );
 			if ( ! empty( $update ) ) {
 				FrmField::update( $field->id, $update );
@@ -238,7 +241,8 @@ class FrmProDb {
 		$fields = FrmDb::get_results( 'frm_fields', array( 'type' => 'date' ), 'id, field_options, form_id' );
 
 		foreach ( $fields as $field ) {
-			$field_options = maybe_unserialize( $field->field_options );
+			$field_options = $field->field_options;
+			FrmProAppHelper::unserialize_or_decode( $field_options );
 			if ( isset( $field_options['end_year'] ) && $field_options['end_year'] == '2020' ) {
 				$field_options['end_year'] = '+10';
 				$options = array(
@@ -309,7 +313,8 @@ class FrmProDb {
 		$image_fields = FrmDb::get_results( 'frm_fields', array( 'type' => array( 'scale', '10radio' ) ), 'id, field_options, form_id' );
 
 		foreach ( $image_fields as $field ) {
-			$field_options = maybe_unserialize( $field->field_options );
+			$field_options = $field->field_options;
+			FrmProAppHelper::unserialize_or_decode( $field_options );
 			if ( isset( $field_options['star'] ) && $field_options['star'] ) {
 				$options = array(
 					'form_id'       => $field->form_id,
@@ -330,7 +335,8 @@ class FrmProDb {
 		$image_fields = FrmDb::get_results( 'frm_fields', array( 'type' => 'image' ), 'id, field_options, form_id' );
 
 		foreach ( $image_fields as $field ) {
-			$field_options = maybe_unserialize( $field->field_options );
+			$field_options = $field->field_options;
+			FrmProAppHelper::unserialize_or_decode( $field_options );
 			$field_options['show_image'] = 1;
 			$options = array(
 				'form_id'       => $field->form_id,
@@ -358,7 +364,8 @@ class FrmProDb {
 		global $wpdb;
 		foreach ( $values as $value ) {
 			$meta_id = $value->id;
-			$value = maybe_unserialize( $value->meta_value );
+			$value = $value->meta_value;
+			FrmProAppHelper::unserialize_or_decode( $value );
 			$new_value = array();
 
 			foreach ( (array) $value as $v ) {
@@ -431,7 +438,7 @@ class FrmProDb {
 			}
 
 			$keep_child_ids = FrmDb::get_var( 'frm_item_metas', array( 'field_id' => $section_field->id, 'item_id' => $parent_id ), 'meta_value' );
-			$keep_child_ids = maybe_unserialize( $keep_child_ids );
+			FrmProAppHelper::unserialize_or_decode( $keep_child_ids );
 
 			if ( ! is_array( $keep_child_ids ) ) {
 				$keep_child_ids = (array) $keep_child_ids;
@@ -460,7 +467,7 @@ class FrmProDb {
 			$file_ids = array();
 			foreach ( $uploaded_files as $files ) {
 				if ( ! is_numeric( $files ) ) {
-					$files = maybe_unserialize( $files );
+					FrmProAppHelper::unserialize_or_decode( $files );
 				}
 				$add_files = array_filter( (array) $files, 'is_numeric' );
 				$file_ids = array_merge( $file_ids, $add_files );
@@ -538,7 +545,7 @@ class FrmProDb {
 			if ( ! $view_options ) {
 				$view_options = array();
 			} else {
-				$view_options = maybe_unserialize( $view_options );
+				FrmProAppHelper::unserialize_or_decode( $view_options );
 			}
 
 			self::add_entry_id_is_equal_to_get_param_filter( $view_options );
@@ -755,7 +762,8 @@ class FrmProDb {
         if ( ! empty($field_ids) ) {
 			$fields = FrmDb::get_results( 'frm_fields', array( 'id' => $field_ids ), 'id, field_options' );
             foreach ( $fields as $f ) {
-                $opts = maybe_unserialize($f->field_options);
+				$opts = $f->field_options;
+				FrmProAppHelper::unserialize_or_decode( $opts );
                 $opts['unique'] = 1;
 				$wpdb->update( $wpdb->prefix . 'frm_fields', array( 'field_options' => serialize( $opts ) ), array( 'id' => $f->id ) );
                 unset($f);
@@ -803,7 +811,7 @@ class FrmProDb {
                 unset($f);
             }
 
-            $d->options = maybe_unserialize($d->options);
+			FrmProAppHelper::unserialize_or_decode( $d->options );
             update_post_meta($post_ID, 'frm_options', $d->options);
 
 			if ( isset( $d->options['insert_loc'] ) && $d->options['insert_loc'] != 'none' && is_numeric( $d->options['post_id'] ) && ! isset( $display_posts[ $d->options['post_id'] ] ) ) {

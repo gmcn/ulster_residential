@@ -5,6 +5,13 @@
  ?>
 
 <div class="container-fluid advice">
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-6">
+      <h2>From years of experience</h2>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-md-5 intro">
       <?php echo $intro; ?>

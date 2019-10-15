@@ -15,6 +15,7 @@
 get_header(); ?>
 
 <?php
+  include(locate_template("inc/retailer-area/login.php"));
   include(locate_template("inc/page-elements/title.php"));
   include(locate_template("inc/retailer-area/page-main/loggedin.php"));
   include(locate_template("inc/retailer-area/page-main/children.php"));

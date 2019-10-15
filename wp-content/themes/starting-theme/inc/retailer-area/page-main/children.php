@@ -16,35 +16,63 @@ $child_query = new WP_Query( $args ); ?>
     while ($child_query->have_posts()) : $child_query->the_post();
     $thumbnail = get_the_post_thumbnail_url();
     $excerpt = get_the_excerpt();
+    $additional_image = get_field('additional_image');
      ?>
 
      <div class="row retailer_children">
 
        <?php if($i % 2) : ?>
 
-       <div class="col-md-6 retailer_children_count matchheight" style="background: #BAC2C6 url(<?php echo $thumbnail ?>) center center no-repeat; background-size: cover">
+       <div class="col-md-6 retailer_children_count matchheight" style="background: #BAC2C6 url(<?php echo $additional_image ?>) center center no-repeat; background-size: cover">
          <p>#<?php if($i < 9) : ?>0<?php endif; ?><?php echo $i ?></p>
        </div>
 
-       <div class="col-md-6 retailer_children_content matchheight">
-         <h2> <?php echo the_title(); ?></h2>
-         <p>
-           <?php echo $excerpt ?>
-         </p>
-         <a href="<?php echo the_permalink(); ?>" class="more">view more</a>
+       <div class="col-md-6 col-lg-4 retailer_children_content matchheight">
+
+         <div class="vert-align">
+           <h2> <?php echo the_title(); ?></h2>
+           <p>
+             <?php echo $excerpt ?>
+           </p>
+
+           <?php if ( is_user_logged_in() ) : ?>
+             <a href="<?php echo the_permalink(); ?>" class="more">view more</a>
+           <?php else : ?>
+
+           <?php endif; ?>
+         </div>
+
+
+
+
+
        </div>
 
      <?php else : ?>
 
-       <div class="col-md-6 retailer_children_content matchheight">
-         <h2> <?php echo the_title(); ?></h2>
-         <p>
-           <?php echo $excerpt ?>
-         </p>
-         <a href="<?php echo the_permalink(); ?>" class="more">view more</a>
+       <div class="col-md-6 retailer_children_count hidden-md hidden-lg" style="background: #BAC2C6 url(<?php echo $additional_image ?>) center center no-repeat; background-size: cover">
+         <p>#<?php if($i < 9) : ?>0<?php endif; ?><?php echo $i ?></p>
        </div>
 
-       <div class="col-md-6 retailer_children_count matchheight" style="background: #BAC2C6 url(<?php echo $thumbnail ?>) center center no-repeat; background-size: cover">
+       <div class="col-md-6 col-lg-4 col-lg-offset-2 retailer_children_content matchheight">
+
+         <div class="vert-align">
+           <h2> <?php echo the_title(); ?></h2>
+           <p>
+             <?php echo $excerpt ?>
+           </p>
+
+           <?php if ( is_user_logged_in() ) : ?>
+             <a href="<?php echo the_permalink(); ?>" class="more">view more</a>
+           <?php else : ?>
+
+           <?php endif; ?>
+
+         </div>
+
+       </div>
+
+       <div class="col-md-6 retailer_children_count hidden-xs hidden-sm matchheight" style="background: #BAC2C6 url(<?php echo $additional_image ?>) center center no-repeat; background-size: cover">
          <p>#<?php if($i < 9) : ?>0<?php endif; ?><?php echo $i ?></p>
        </div>
 

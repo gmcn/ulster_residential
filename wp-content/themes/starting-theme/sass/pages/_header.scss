@@ -23,10 +23,58 @@ body {
 header {
   position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 101;
+  background: #fff;
+  @include md {
   left: 35px;
-  z-index: 1;
   width: calc(100% - 70px);
   margin-top: 40px;
+  background: none;
+  }
+  .mobile_nav {
+    text-align: center;
+    span {
+      cursor: pointer;
+    }
+    &__open {
+      padding: 10px 0;
+    }
+    &__search {
+      padding: 0;
+    }
+    &__cart {
+      padding: 5px 0;
+    }
+    a.site-branding {
+      padding: 10px 10px 0 10px;
+      display: block;
+    }
+    .search-form {
+      label {
+        width: 100%;
+      }
+      input {
+        text-transform: uppercase;
+        font-weight: 500;
+        padding: 10px;
+        background: #fff url(images/search_icon.svg) no-repeat;
+        background-position: 95%;
+        width: 100%;
+      }
+      .search-submit {
+        background: #BAC2C6;
+        padding: 5px;
+        color: #fff;
+        font-size: 14px;
+        display: none;
+      }
+    }
+  }
+  span {
+    cursor: pointer;
+  }
   ul.nav {
     li {
       a {
@@ -49,8 +97,12 @@ header {
   .icons {
     margin-top: -5px;
     span {
-      width: 20%;
+      width: 30%;
+      @include sm {
+        width: 20%;
+      }
       position: relative;
+      cursor: pointer;
       display: inline-block;
       text-align: center;
       height: 40px;
@@ -79,7 +131,7 @@ header {
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: rgba(255,255,255, 0.9);
+  background-color: rgba(255,255,255, 0.99);
   overflow-y: hidden;
   transition: 0.5s;
   &-content {
@@ -87,9 +139,17 @@ header {
     top: 25%;
     text-align: center;
     margin-top: 30px;
+    ::placeholder {
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #fff;
+      text-align: center;
+      @include md {
+        text-align: left;
+      }
+    }
     h2 {
       color: $grey;
-      letter-spacing: 3px;
       font-family: $font-family-serif;
       font-size: 25px;
       margin-bottom: 50px;
@@ -98,13 +158,16 @@ header {
       }
     }
     .consent {
-      font-size: 12px;
+      font-size: 11px;
+      color: #9D9D9D;
       text-align: left;
+      padding-left: 30px;
+      @include md {
+        padding-left: 15px;
+      }
       input[type="checkbox"] {
         float: left;
-        @include md {
-          margin-left: -15px;
-        }
+        margin-left: -15px;
       }
       label {
         font-weight: 400;
@@ -114,10 +177,12 @@ header {
       width: 100%;
       color: #fff;
       padding: 8px;
+      text-align: center;
+      @include md {
+        text-align: left;
+      }
       background: rgba(0, 0, 0, .45);
-    }
-    .email::-webkit-input-placeholder, .search-input-box::-webkit-input-placeholder {
-      color: #fff;
+      margin-bottom: 15px;
     }
     input[type="submit"], button {
       color: #fff;
@@ -125,7 +190,7 @@ header {
       text-transform: uppercase;
       padding: 15px;
       width: 100%;
-      background: rgba(0, 0, 0, .45);
+      background: #58544D;
       font-weight: 600;
       transition: .5s;
     }
@@ -141,13 +206,13 @@ header {
   a {
     padding: 8px;
     text-decoration: none;
-    font-size: 36px;
+    font-size: 12px;
     color: #818181;
     display: block;
     transition: 0.3s;
   }
   a:hover, a:focus {
-    color: #f1f1f1;
+    color: #ccc;
   }
   .closebtn {
     position: absolute;
@@ -179,7 +244,7 @@ header {
   height: 100%; /* 100% Full-height */
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
-  z-index: 100 !important; /* Stay on top */
+  z-index: 999999 !important; /* Stay on top */
   top: 0; /* Stay at the top */
   right: 0;
   color: #fff;
@@ -210,8 +275,8 @@ header {
     }
     input {
       text-transform: uppercase;
-      font-weight: 300;
-      padding: 6px;
+      font-weight: 500;
+      padding: 10px;
       background: #fff url(images/search_icon.svg) no-repeat;
       background-position: 95%;
       width: 100%;
@@ -224,42 +289,100 @@ header {
       display: none;
     }
   }
-  #loginform {
+
+  .login_wrapper {
     font-weight: 300;
     background: #5B646A;
     padding: 25px;
     height: 100%;
-    input[type="text"] {
-      background: #fff url(images/username_icon.svg) left center no-repeat;
-      background-position: 10px;
+    p.intro {
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #fff;
+      opacity: .5;
+      display: block;
     }
-    input[type="password"] {
-      background: #fff url(images/password_icon.svg) left center no-repeat;
-      background-position: 10px;
+    a {
+      color: #fff;
     }
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 6px 6px 6px 35px;
-    }
-    .login-submit {
-      .button {
-        width: 100%;
-        background: #BAC2C6;
-        padding: 15px;
+    span {
+      color: #fff;
+      font-size: 12px;
+      a {
         color: #fff;
-        text-transform: uppercase;
-        font-size: 14px;
         font-weight: 600;
       }
     }
+    button {
+      width: 100%;
+      background: #BAC2C6;
+      padding: 15px;
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 15px;
+    }
+
+    form {
+      label {
+        font-size: 13px;
+      }
+      .login-username, .login-password {
+        label {
+          display: none;
+        }
+      }
+    }
+
+    #loginform {
+      input[type="text"] {
+        background: #fff url(images/username_icon.svg) left center no-repeat;
+        background-position: 10px;
+      }
+      input[type="password"] {
+        background: #fff url(images/password_icon.svg) left center no-repeat;
+        background-position: 10px;
+      }
+      input[type="text"], input[type="password"] {
+        width: 100%;
+        padding: 10px 10px 10px 35px;
+      }
+      .login-submit {
+        .button {
+          width: 100%;
+          background: #BAC2C6;
+          padding: 15px;
+          color: #fff;
+          text-transform: uppercase;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
+    }
   }
+
+
   ul {
     list-style: none;
-    padding: 25px 0 25px 25px;
+    padding: 25px 0 25px 0;
     margin: 0;
+    li.menu-item-has-children {
+      a:first-of-type {
+        background: url(images/dropdown_icon.svg) left center no-repeat;
+        background-position: 95% 12px;
+      }
+    }
     li {
+      padding-left: 25px;
       display: block;
-      border-bottom: 1px solid rgba(255,255,255,.4);
+      a {
+        border-bottom: 1px solid rgba(255,255,255,.4);
+      }
+      &:hover {
+        background: url(images/sidenav_hover.svg) left center no-repeat;
+        background-position: 0 15px;
+      }
       ul.dropdown-menu {
         margin: 0;
         padding: 0;
@@ -267,16 +390,19 @@ header {
           border-bottom: none;
           margin: 0;
           padding: 0;
+          background: none !important;
           a {
+            background: none !important;
             text-transform: none;
             font-weight: 300;
             font-size: 12px;
             color: rgba(255,255,255,.6);
             padding: 1px 0 5px 8px;
+            border-bottom: none;
           }
           a:hover, a:focus {
             color: #000;
-            background: none;
+            background: none !important;
           }
         }
       }

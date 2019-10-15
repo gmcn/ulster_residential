@@ -1,0 +1,55 @@
+.l-filter_pagination {
+    margin-top: -15px;
+    background-color: #453E3F;
+    color: #fff;
+    padding: 15px 10px;
+    margin-bottom: 15px;
+
+    &.l-filter_pagination--footer {
+        margin-top: 0;
+        background-color: #797979
+    }
+}
+
+.e-pagination {
+    text-align: right;
+    color: #fff;
+
+
+    .page-numbers {
+        display: inline-block;
+        width: 1.5em;
+        line-height: 1em;
+        font-size: 1em;
+        text-align: center;
+        vertical-align: bottom;
+        padding: .75em 0 .5em 0;
+        opacity: .5;
+        color: #fff;
+
+        &.prev,
+        &.next {
+            opacity: .7;
+            padding: 0 0 .125em 0;
+        }
+
+        &.current {
+            opacity: 1;
+        }
+
+        &:visited {
+            color: #fff;
+        }
+
+        &:hover {
+            opacity: 1;
+
+        }
+    }
+}
+
+.e-filters {
+    select {
+        width: auto;
+    }
+}

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Formidable Forms Pro plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Formidable Forms Pro 4.02.01\n"
+"Project-Id-Version: Formidable Forms Pro 4.02.03\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/formidable-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-08-09T18:34:57+02:00\n"
+"POT-Creation-Date: 2019-09-05T20:23:42+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.1.0\n"
 "X-Domain: formidable-pro\n"
@@ -97,7 +97,7 @@ msgid "Are you sure you want to cancel this upload?"
 msgstr ""
 
 #: classes/models/FrmProFileField.php:46
-#: classes/views/frmpro-fields/front-end/file.php:53
+#: classes/views/frmpro-fields/front-end/file.php:54
 msgid "Remove file"
 msgstr ""
 
@@ -314,34 +314,34 @@ msgid "Toggle fields"
 msgstr ""
 
 #: classes/models/fields/FrmProFieldAddress.php:100
-#: classes/controllers/FrmProAddressesController.php:144
+#: classes/controllers/FrmProAddressesController.php:151
 msgid "City"
 msgstr ""
 
 #: classes/models/fields/FrmProFieldAddress.php:101
-#: classes/controllers/FrmProAddressesController.php:145
+#: classes/controllers/FrmProAddressesController.php:152
 msgid "State/Province"
 msgstr ""
 
 #: classes/models/fields/FrmProFieldAddress.php:102
-#: classes/controllers/FrmProAddressesController.php:146
+#: classes/controllers/FrmProAddressesController.php:153
 msgid "Zip/Postal"
 msgstr ""
 
 #: classes/models/fields/FrmProFieldAddress.php:103
 #: classes/models/fields/FrmProFieldAddress.php:114
-#: classes/controllers/FrmProAddressesController.php:121
-#: classes/controllers/FrmProAddressesController.php:147
+#: classes/controllers/FrmProAddressesController.php:128
+#: classes/controllers/FrmProAddressesController.php:154
 msgid "Country"
 msgstr ""
 
 #: classes/models/fields/FrmProFieldAddress.php:112
-#: classes/controllers/FrmProAddressesController.php:119
+#: classes/controllers/FrmProAddressesController.php:126
 msgid "Line 1"
 msgstr ""
 
 #: classes/models/fields/FrmProFieldAddress.php:113
-#: classes/controllers/FrmProAddressesController.php:120
+#: classes/controllers/FrmProAddressesController.php:127
 msgid "Line 2"
 msgstr ""
 
@@ -349,7 +349,7 @@ msgstr ""
 msgid "This value is invalid"
 msgstr ""
 
-#: classes/models/FrmProDb.php:688
+#: classes/models/FrmProDb.php:695
 msgid "Formidable Style"
 msgstr ""
 
@@ -408,7 +408,7 @@ msgstr ""
 #: classes/controllers/FrmProFormsController.php:362
 #: classes/views/displays/where_row.php:17
 #: classes/views/xml/map_csv_fields.php:50
-#: classes/helpers/FrmProFieldsHelper.php:2567
+#: classes/helpers/FrmProFieldsHelper.php:2569
 msgid "Post ID"
 msgstr ""
 
@@ -914,7 +914,7 @@ msgstr ""
 #: classes/views/xml/map_csv_fields.php:70
 #: classes/helpers/FrmProEntriesListHelper.php:68
 #: classes/helpers/FrmProEntriesListHelper.php:83
-#: classes/helpers/FrmProFieldsHelper.php:2565
+#: classes/helpers/FrmProFieldsHelper.php:2567
 msgid "Entry ID"
 msgstr ""
 
@@ -1013,8 +1013,8 @@ msgid "For Each"
 msgstr ""
 
 #: classes/controllers/FrmProSettingsController.php:129
-#: classes/controllers/FrmProGraphsController.php:1699
-#: classes/controllers/FrmProGraphsController.php:1731
+#: classes/controllers/FrmProGraphsController.php:1701
+#: classes/controllers/FrmProGraphsController.php:1733
 msgid "Creation Date"
 msgstr ""
 
@@ -1061,15 +1061,15 @@ msgstr ""
 msgid "Styles"
 msgstr ""
 
-#: classes/controllers/FrmProXMLController.php:159
+#: classes/controllers/FrmProXMLController.php:160
 msgid "All Fields are required"
 msgstr ""
 
-#: classes/controllers/FrmProXMLController.php:171
+#: classes/controllers/FrmProXMLController.php:172
 msgid "That CSV was not uploaded. Are CSV files allowed on your site?"
 msgstr ""
 
-#: classes/controllers/FrmProXMLController.php:198
+#: classes/controllers/FrmProXMLController.php:199
 msgid "CSV cannot be opened."
 msgstr ""
 
@@ -1255,8 +1255,8 @@ msgstr ""
 
 #: classes/controllers/FrmProEntriesController.php:1718
 #: classes/controllers/FrmProEntriesController.php:2243
-#: classes/helpers/FrmProAppHelper.php:288
-#: classes/helpers/FrmProEntriesHelper.php:853
+#: classes/helpers/FrmProAppHelper.php:302
+#: classes/helpers/FrmProEntriesHelper.php:854
 msgid "Edit"
 msgstr ""
 
@@ -1353,8 +1353,8 @@ msgstr ""
 
 #: classes/controllers/FrmProDisplaysController.php:243
 #: classes/views/displays/mb_advanced.php:111
-#: classes/helpers/FrmProFieldsHelper.php:2588
-#: classes/helpers/FrmProFieldsHelper.php:2614
+#: classes/helpers/FrmProFieldsHelper.php:2590
+#: classes/helpers/FrmProFieldsHelper.php:2616
 msgid "Key"
 msgstr ""
 
@@ -1476,46 +1476,46 @@ msgid "No data"
 msgstr ""
 
 #: classes/controllers/FrmProGraphsController.php:608
-#: classes/controllers/FrmProGraphsController.php:1146
-#: classes/controllers/FrmProGraphsController.php:1732
+#: classes/controllers/FrmProGraphsController.php:1148
+#: classes/controllers/FrmProGraphsController.php:1734
 #: classes/views/frmpro-statistics/show.php:16
 msgid "Submissions"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1142
+#: classes/controllers/FrmProGraphsController.php:1144
 msgid "Total"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1144
+#: classes/controllers/FrmProGraphsController.php:1146
 #: classes/views/frmpro-statistics/show.php:73
 msgid "Average"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1161
+#: classes/controllers/FrmProGraphsController.php:1163
 msgid "Fields"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1701
+#: classes/controllers/FrmProGraphsController.php:1703
 msgid "Updated At"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1705
+#: classes/controllers/FrmProGraphsController.php:1707
 msgid "Invalid x-axis"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1908
+#: classes/controllers/FrmProGraphsController.php:1910
 msgid "Q1"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1910
+#: classes/controllers/FrmProGraphsController.php:1912
 msgid "Q2"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1912
+#: classes/controllers/FrmProGraphsController.php:1914
 msgid "Q3"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:1914
+#: classes/controllers/FrmProGraphsController.php:1916
 msgid "Q4"
 msgstr ""
 
@@ -1840,8 +1840,8 @@ msgstr ""
 #: classes/views/frmpro-entries/table.php:5
 #: classes/views/frmpro-entries/table.php:84
 #: classes/views/displays/mb_advanced.php:108
-#: classes/helpers/FrmProFieldsHelper.php:2587
-#: classes/helpers/FrmProFieldsHelper.php:2613
+#: classes/helpers/FrmProFieldsHelper.php:2589
+#: classes/helpers/FrmProFieldsHelper.php:2615
 msgid "ID"
 msgstr ""
 
@@ -2105,14 +2105,14 @@ msgstr ""
 #: classes/views/displays/order_row.php:10
 #: classes/helpers/FrmProEntriesListHelper.php:65
 #: classes/helpers/FrmProEntriesListHelper.php:82
-#: classes/helpers/FrmProFieldsHelper.php:2569
+#: classes/helpers/FrmProFieldsHelper.php:2571
 msgid "Entry creation date"
 msgstr ""
 
 #: classes/views/displays/_calendar_options.php:8
 #: classes/views/displays/_calendar_options.php:25
 #: classes/views/displays/order_row.php:13
-#: classes/helpers/FrmProFieldsHelper.php:2570
+#: classes/helpers/FrmProFieldsHelper.php:2572
 msgid "Entry update date"
 msgstr ""
 
@@ -2315,7 +2315,7 @@ msgstr ""
 #: classes/views/displays/order_row.php:7
 #: classes/views/xml/map_csv_fields.php:72
 #: classes/views/xml/map_csv_fields.php:73
-#: classes/helpers/FrmProFieldsHelper.php:2566
+#: classes/helpers/FrmProFieldsHelper.php:2568
 msgid "Entry Key"
 msgstr ""
 
@@ -2405,7 +2405,7 @@ msgstr ""
 msgid "(no label)"
 msgstr ""
 
-#: classes/views/frmpro-fields/front-end/file.php:68
+#: classes/views/frmpro-fields/front-end/file.php:69
 #: classes/views/frmpro-fields/back-end/field-file.php:6
 msgid "Maximum upload size: %sMB"
 msgstr ""
@@ -3197,7 +3197,7 @@ msgstr ""
 msgid "No options found"
 msgstr ""
 
-#: classes/helpers/FrmProEntryMetaHelper.php:170
+#: classes/helpers/FrmProEntryMetaHelper.php:171
 msgid "View all posts filed under %s"
 msgstr ""
 
@@ -3219,83 +3219,83 @@ msgstr ""
 msgid "All Fields"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:790
+#: classes/helpers/FrmProFieldsHelper.php:791
 msgid "The entered values do not match"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:1351
+#: classes/helpers/FrmProFieldsHelper.php:1352
 msgid "No Categories"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2121
+#: classes/helpers/FrmProFieldsHelper.php:2122
 msgid "Confirm"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2297
+#: classes/helpers/FrmProFieldsHelper.php:2299
 msgid "Edit Uploaded File"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2563
+#: classes/helpers/FrmProFieldsHelper.php:2565
 msgid "Select a value to insert into the box below"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2568
+#: classes/helpers/FrmProFieldsHelper.php:2570
 msgid "User IP"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2572
+#: classes/helpers/FrmProFieldsHelper.php:2574
 msgid "Form Fields"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2591
+#: classes/helpers/FrmProFieldsHelper.php:2593
 msgid "Thumbnail"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2594
+#: classes/helpers/FrmProFieldsHelper.php:2596
 msgid "Medium"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2597
+#: classes/helpers/FrmProFieldsHelper.php:2599
 msgid "Large"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2600
+#: classes/helpers/FrmProFieldsHelper.php:2602
 msgid "Full Size"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2626
+#: classes/helpers/FrmProFieldsHelper.php:2628
 msgid "Helpers"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2627
+#: classes/helpers/FrmProFieldsHelper.php:2629
 msgid "Admin link to edit the entry"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2630
+#: classes/helpers/FrmProFieldsHelper.php:2632
 msgid "Link to view single page if showing dynamic entries"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2638
+#: classes/helpers/FrmProFieldsHelper.php:2640
 msgid "Add a rotating 'even' or 'odd' class"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2642
+#: classes/helpers/FrmProFieldsHelper.php:2644
 msgid "Default Email Message"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2645
+#: classes/helpers/FrmProFieldsHelper.php:2647
 msgid "Site URL"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:2646
+#: classes/helpers/FrmProFieldsHelper.php:2648
 msgid "Site Name"
 msgstr ""
 
-#: classes/helpers/FrmProAppHelper.php:725
+#: classes/helpers/FrmProAppHelper.php:739
 msgid "Previous Page"
 msgstr ""
 
-#: classes/helpers/FrmProAppHelper.php:729
+#: classes/helpers/FrmProAppHelper.php:743
 msgid "Next Page"
 msgstr ""
 
@@ -3359,47 +3359,47 @@ msgstr ""
 msgid "Formidable Entries List"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:213
+#: classes/widgets/FrmListEntries.php:214
 msgid "Title"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:216
+#: classes/widgets/FrmListEntries.php:217
 msgid "Use Settings from View"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:226
+#: classes/widgets/FrmListEntries.php:227
 msgid "Views with a \"Both (Dynamic)\" format will show here."
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:228
+#: classes/widgets/FrmListEntries.php:229
 msgid "Page"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:239
+#: classes/widgets/FrmListEntries.php:240
 msgid "Title Field"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:257
+#: classes/widgets/FrmListEntries.php:258
 msgid "List Entries by Category"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:261
+#: classes/widgets/FrmListEntries.php:262
 msgid "Category Field"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:277
+#: classes/widgets/FrmListEntries.php:278
 msgid "Show Entry Counts"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:282
+#: classes/widgets/FrmListEntries.php:283
 msgid "Show Only Category Name"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:287
+#: classes/widgets/FrmListEntries.php:288
 msgid "Show Entries Beneath Categories"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:294
+#: classes/widgets/FrmListEntries.php:295
 msgid "Entry Limit (leave blank to list all)"
 msgstr ""
 

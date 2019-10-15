@@ -196,6 +196,20 @@ class FrmProAppHelper {
     }
 
 	/**
+	 * Check for either json or serilized data. This is temporary while transitioning
+	 * all data to json.
+	 *
+	 * @since 4.02.03
+	 */
+	public static function unserialize_or_decode( &$value ) {
+		if ( is_callable( 'FrmAppHelper::unserialize_or_decode' ) ) {
+			FrmAppHelper::unserialize_or_decode( $value );
+		} else {
+			$value = maybe_unserialize( $value );
+		}
+	}
+
+	/**
 	 * @since 2.0.2
 	 */
 	public static function display_to_datepicker_format() {
@@ -314,7 +328,7 @@ class FrmProAppHelper {
 		} else {
             $field = (array) $field;
             if ( ! isset($field['taxonomy']) ) {
-                $field['field_options'] = maybe_unserialize($field['field_options']);
+				self::unserialize_or_decode( $field['field_options'] );
                 $field['taxonomy'] = $field['field_options']['taxonomy'];
             }
 

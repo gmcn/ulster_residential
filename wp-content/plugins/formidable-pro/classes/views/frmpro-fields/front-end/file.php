@@ -1,6 +1,7 @@
 <?php
 $is_multiple = FrmField::is_option_true( $field, 'multiple' );
-$media_ids = maybe_unserialize( $field['value'] );
+$media_ids = $field['value'];
+FrmProAppHelper::unserialize_or_decode( $media_ids );
 if ( $is_multiple ) {
 	$media_ids = array_map( 'trim', array_filter( (array) $media_ids, 'is_numeric' ) );
 } else if ( is_array( $media_ids ) ) {

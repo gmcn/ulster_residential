@@ -166,7 +166,7 @@ class FrmProDisplaysHelper {
 
 		$form_ids = array( $form_id );
 		foreach ( $fields as $field_options ) {
-			$field_options = maybe_unserialize( $field_options );
+			FrmProAppHelper::unserialize_or_decode( $field_options );
 			if ( isset( $field_options['form_select'] ) && ! empty( $field_options['form_select'] ) ) {
 				$form_ids[] = $field_options['form_select'];
 			}
@@ -257,7 +257,8 @@ class FrmProDisplaysHelper {
 		$views_options = self::get_meta_values( 'frm_options', 'frm_display' );
 
 		foreach ( $views_options as $key => $value ) {
-			$views_options[ $key ]->meta_value = unserialize( $value->meta_value );
+			FrmProAppHelper::unserialize_or_decode( $value->meta_value );
+			$views_options[ $key ]->meta_value = $value->meta_value;
 		}
 
 		return $views_options;

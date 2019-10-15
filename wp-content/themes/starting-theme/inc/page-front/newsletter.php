@@ -6,12 +6,12 @@
         <!-- <div id="mc_embed_signup_scroll"> -->
           <h2>e-newsletter signup <span>(find out first)</span></h2>
           <div class="row">
-            <div class="col-md-6">
+            	<div class="col-md-5 col-md-offset-1">
               <div class="mc-field-group">
-                <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="YOUR EMAIL: example@domain.com">
+                <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="YOUR EMAIL">
               </div>
             </div>
-            <div class="col-md-4 consent">
+            <div class="col-md-3 consent">
               <input type="checkbox" value="1" name="group[2621][1]" id="mce-group[2621]-2621-0"><label for="mce-group[2621]-2621-0">Please tick this if you would like us to contact  you by email for updates and marketing material.</label>
             </div>
             <div class="col-md-2">

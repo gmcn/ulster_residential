@@ -3,7 +3,8 @@ _deprecated_file( basename( __FILE__ ), '4.0.01', null, 'frmpro-fields/10radio.p
 
 if ( is_array( $field['options'] ) ) {
 	if ( ! isset( $field['value'] ) ) {
-		$field['value'] = maybe_unserialize( $field['default_value'] );
+		$field['value'] = $field['default_value'];
+		FrmProAppHelper::unserialize_or_decode( $field['value'] );
 	}
 
 	$star = FrmField::is_option_true( $field, 'star' );

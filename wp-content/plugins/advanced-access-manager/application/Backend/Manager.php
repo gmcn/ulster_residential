@@ -899,9 +899,7 @@ class AAM_Backend_Manager {
      * @access protected
      */
     protected function printLocalization($localKey) {
-        $subject   = AAM_Backend_Subject::getInstance();
-        $endpoint1 = getenv('AAM_V1_ENDPOINT');
-        $endpoint2 = getenv('AAM_V2_ENDPOINT');
+        $subject = AAM_Backend_Subject::getInstance();
         
         $locals = array(
             'nonce'    => wp_create_nonce('aam_ajax'),
@@ -924,8 +922,8 @@ class AAM_Backend_Manager {
             'system' => array(
                 'domain'        => wp_parse_url(site_url(), PHP_URL_HOST),
                 'uid'           => AAM_Core_API::getOption('aam-uid', null, 'site'),
-                'apiV1Endpoint' => ($endpoint1 ? $endpoint1 : AAM_Core_Server::SERVER_V1_URL),
-                'apiV2Endpoint' => ($endpoint2 ? $endpoint2 : AAM_Core_Server::SERVER_V2_URL)
+                'apiV1Endpoint' => AAM_Core_Server::getEndpoint('V1'),
+                'apiV2Endpoint' => AAM_Core_Server::getEndpoint('V2')
             ),
             'translation' => AAM_Backend_View_Localization::get(),
             'caps'        => array(

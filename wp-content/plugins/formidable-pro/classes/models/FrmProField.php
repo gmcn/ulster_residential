@@ -135,7 +135,7 @@ class FrmProField {
 		if ( isset( $values['field_options']['hide_field'] ) && ! empty( $values['field_options']['hide_field'] ) ) {
 			foreach ( array( 'hide_field_cond', 'hide_opt', 'hide_field' ) as $logic ) {
 				if ( isset( $values['field_options'][ $logic ] ) ) {
-					$values['field_options'][ $logic ] = maybe_unserialize( $values['field_options'][ $logic ] );
+					FrmProAppHelper::unserialize_or_decode( $values['field_options'][ $logic ] );
 				} else {
 					$values['field_options'][ $logic ] = array();
 				}

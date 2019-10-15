@@ -151,7 +151,7 @@ class FrmProFieldValue extends FrmFieldValue {
 		if ( FrmField::is_option_true( $this->field, 'post_field' ) ) {
 			$entry = FrmEntry::getOne( $this->entry_id, true );
 			$this->displayed_value = FrmProEntryMetaHelper::get_post_or_meta_value( $entry, $this->field, array( 'truncate' => true ) );
-			$this->displayed_value = maybe_unserialize( $this->displayed_value );
+			FrmProAppHelper::unserialize_or_decode( $this->displayed_value );
 		}
 	}
 

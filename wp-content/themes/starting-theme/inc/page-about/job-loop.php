@@ -3,6 +3,7 @@
   <?php
   $args = array(
   'post_parent' => $post->ID,
+  'post__not_in' => array(4510),
   'post_type' => 'page',
   'orderby' => 'menu_order',
   'order' => 'ASC'
@@ -27,6 +28,8 @@
       $excerpt = get_the_excerpt();
 
       ?>
+
+
 
       <div class="career">
 
@@ -73,47 +76,12 @@
             </div>
             <div class="col-md-4 buttons">
               <a href="<?php the_permalink(); ?>">View Details</a>
-              <!-- <a href="#" onclick="openApp<?php echo $i ?>()">Apply Now</a> -->
             </div>
           </div>
-
-        <script type="text/javascript">
-        /* Open when someone clicks on the span element */
-        function openApp<?php echo $i ?>() {
-            document.getElementById("myApp<?php echo $i ?>").style.height = "100%";
-        }
-
-        /* Close when someone clicks on the "x" symbol inside the overlay */
-        function closeApp<?php echo $i ?>() {
-            document.getElementById("myApp<?php echo $i ?>").style.height = "0%";
-        }
-        </script>
-
-
-        <!-- The overlay -->
-    			<div id="myApp<?php echo $i ?>" class="overlay">
-
-    			  <!-- Button to close the overlay navigation -->
-    			  <a href="javascript:void(0)" class="closebtn" onclick="closeApp<?php echo $i ?>()">&times;</a>
-
-    			  <!-- Overlay content -->
-    			  <div class="container overlay-content">
-
-    					<div class="row">
-
-                <?php echo do_shortcode('[contact-form-7 id="165" title="Job Application"]') ?>
-
-
-    					</div>
-
-    				</div>
-    			</div>
 
 
 
       </div>
-
-
 
 
       <?php $i++; endwhile; wp_reset_postdata(); ?>
@@ -123,7 +91,7 @@
     <div class="row">
 
       <div class="col-md-12">
-        FUEL are not currently recruiting. However, please continue to review this page periodically for any update.
+        <h2>Ulser are not currently recruiting. However, please continue to review this page periodically for any update.</h2>
       </div>
 
     </div>

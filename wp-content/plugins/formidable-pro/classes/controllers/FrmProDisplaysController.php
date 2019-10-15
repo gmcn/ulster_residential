@@ -2906,7 +2906,8 @@ class FrmProDisplaysController {
 			return;
 		}
 
-		$categories = maybe_unserialize( $cat_field->options );
+		$categories = $cat_field->options;
+		FrmProAppHelper::unserialize_or_decode( $categories );
 
 		if ( isset( $categories[ $frm_cat_id ] ) ) {
 			$cat_entry_ids = FrmEntryMeta::getEntryIds( array( 'meta_value' => $categories[ $frm_cat_id ], 'fi.field_key' => $frm_cat ) );

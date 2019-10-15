@@ -94,7 +94,8 @@ class FrmProXMLController {
 		$i = 0;
 		if ( $comments ) {
 			foreach ( $comments as $comment ) {
-				$c = maybe_unserialize( $comment->meta_value );
+				$c = $comment->meta_value;
+				FrmProAppHelper::unserialize_or_decode( $c );
 				if ( ! isset( $c['comment'] ) ) {
 					continue;
 				}

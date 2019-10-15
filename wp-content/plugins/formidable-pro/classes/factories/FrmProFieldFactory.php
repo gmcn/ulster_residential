@@ -42,7 +42,9 @@ class FrmProFieldFactory {
 	 */
 	public static function create_settings( $db_row ) {
 		$type = $db_row->type;
-		$field_options = (array) maybe_unserialize( $db_row->field_options );
+		$field_options = $db_row->field_options;
+		FrmProAppHelper::unserialize_or_decode( $field_options );
+		$field_options = (array) $field_options;
 
 		switch ( $type ) {
 			case 'text':

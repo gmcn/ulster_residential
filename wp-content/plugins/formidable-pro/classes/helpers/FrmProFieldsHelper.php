@@ -5,7 +5,8 @@ class FrmProFieldsHelper {
     public static function get_default_value( $value, $field, $dynamic_default = true, $allow_array = false ) {
 		$dynamic_value = self::get_dynamic_default( $field, $dynamic_default );
 
-		$unserialized = maybe_unserialize( $value );
+		$unserialized = $value;
+		FrmProAppHelper::unserialize_or_decode( $unserialized );
 		if ( is_array( $unserialized ) ) {
 			$field_obj = FrmFieldFactory::get_field_object( $field );
 			if ( $field->type == 'time' ) {
@@ -2181,7 +2182,8 @@ class FrmProFieldsHelper {
             $wp_date_format = apply_filters('frm_csv_date_format', 'Y-m-d');
             $val = self::get_date($val, $wp_date_format);
 		} else if ( $field->type == 'data' ) {
-            $new_val = maybe_unserialize($val);
+			$new_val = $val;
+			FrmProAppHelper::unserialize_or_decode( $new_val );
 
 			if ( empty( $new_val ) && ! empty( $entry ) && FrmProField::is_list_field( $field ) ) {
 				FrmProEntriesHelper::get_dynamic_list_values( $field, $entry, $new_val );

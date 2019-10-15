@@ -63,8 +63,6 @@ class AAM_Core_Media {
             } else {
                 $this->printMedia();
             }
-        } else {
-            $this->printMedia();
         }
     }
     
@@ -132,16 +130,25 @@ class AAM_Core_Media {
         $rpath = preg_replace('/\?.*$/', '', $this->request_uri);
         
         //finally replace the filename with requested filename
-        $request = str_replace(basename($path), basename($rpath), $path);
+        $request = realpath(str_replace(basename($path), basename($rpath), $path));
         
         if (empty($mime)) {
             if (function_exists('mime_content_type')) {
                 $mime = mime_content_type($request);
             }
         }
-        
-        @header('Content-Type: ' . (empty($mime) ? $type : $mime));
-        echo file_get_contents($request);
+
+        $filetype   = wp_check_filetype(basename($request));
+        $location   = wp_get_upload_dir();
+        $upload_dir = (isset($location['basedir']) ? $location['basedir'] : WP_CONTENT_DIR . '/uploads');
+
+        // Props to Ov3rfly report
+        if (!empty($filetype['ext']) && (strpos($request, realpath($upload_dir)) !== false)) {
+            @header('Content-Type: ' . (empty($mime) ? $type : $mime));
+            echo file_get_contents($request);
+        } else {
+            http_response_code(403);
+        }
         exit;
     }
     

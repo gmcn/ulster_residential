@@ -1123,7 +1123,7 @@ class FrmProFieldsController {
 		$update_values = array();
 
 		$field_options = FrmDb::get_var( 'frm_fields', array( 'id' => $field_id ), 'field_options' );
-		$field_options = unserialize( $field_options );
+		FrmProAppHelper::unserialize_or_decode( $field_options );
 
 		// Update the in_section value
 		if ( ! isset( $field_options['in_section'] ) || $field_options['in_section'] != $section_id ) {

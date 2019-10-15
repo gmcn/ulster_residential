@@ -18,22 +18,24 @@ $child_query = new WP_Query( $args ); ?>
 
     </div>
 
+    <div class="container-fluid about_wrapper">
+
     <?php $i = 1;
     while ($child_query->have_posts()) : $child_query->the_post();
     $thumbnail = get_the_post_thumbnail_url();
     $excerpt = get_the_excerpt();
      ?>
 
-     <div class="row about_children hidden-md hidden-sm">
-       <div class="col-xs-3 hidden-md hidden-lg matchheight">
+     <div class="row about_children hidden-md hidden-lg">
+
+       <div class="col-xs-3 about_children_<?php echo $i ?> matchheight">
          <div class="about_children_count matchheight">
            <p>#<?php if($i < 9) : ?>0<?php endif; ?><?php echo $i ?></p>
-            <img class="about_img_mobile" src="<?php echo $thumbnail ?>" alt="<?php echo the_title() ?>">
+            <img class="about_img_mobile hidden-xs" src="<?php echo $thumbnail ?>" alt="<?php echo the_title() ?>">
          </div>
-
        </div>
 
-       <div class="col-xs-9 hidden-md hidden-lg matchheight">
+       <div class="col-xs-9 matchheight">
          <h2><?php echo the_title(); ?></h2>
          <p><?php echo $excerpt; ?></p>
          <a href="<?php echo the_permalink(); ?>">
@@ -43,20 +45,8 @@ $child_query = new WP_Query( $args ); ?>
 
    </div>
 
-     <div class="row about_children hidden-xs hidden-sm">
+     <div class="row about_children about_children_<?php echo $i ?> hidden-xs hidden-sm">
 
-       <div class="col-xs-3 about_children_count hidden-md hidden-lg matchheight">
-         <p>#<?php if($i < 9) : ?>0<?php endif; ?><?php echo $i ?></p>
-          <img src="<?php echo $thumbnail ?>" alt="<?php echo the_title() ?>">
-       </div>
-
-       <div class="col-xs-9 hidden-md hidden-lg matchheight">
-         <h2><?php echo the_title(); ?></h2>
-         <p><?php echo $excerpt; ?></p>
-         <a href="<?php echo the_permalink(); ?>">
-           View More
-         </a>
-       </div>
 
        <div class="col-xs-8 col-md-4 matchheight">
          <?php if($i % 2) : ?>
@@ -67,6 +57,7 @@ $child_query = new WP_Query( $args ); ?>
            <a href="<?php echo the_permalink(); ?>">
              View More
            </a>
+           <hr />
          <?php endif; ?>
        </div>
 
@@ -74,13 +65,14 @@ $child_query = new WP_Query( $args ); ?>
          <p>#<?php if($i < 9) : ?>0<?php endif; ?><?php echo $i ?></p>
        </div>
 
-       <div class="col-xs-12 col-md-6 matchheight">
+       <div class="col-xs-12 col-md-5 matchheight">
          <?php if($i % 2) : ?>
            <h2><?php echo the_title(); ?></h2>
            <p><?php echo $excerpt; ?></p>
            <a href="<?php echo the_permalink(); ?>">
              View More
            </a>
+           <hr />
          <?php else : ?>
            <img src="<?php echo $thumbnail ?>" alt="<?php echo the_title() ?>">
          <?php endif; ?>
@@ -89,6 +81,8 @@ $child_query = new WP_Query( $args ); ?>
      </div>
 
     <?php $i++; endwhile; ?>
+
+    </div>
 
     <div class="container-fluid row">
       <div class="wrapper post-about_children">

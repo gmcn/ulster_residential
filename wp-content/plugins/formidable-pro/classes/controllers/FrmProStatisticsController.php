@@ -52,7 +52,7 @@ class FrmProStatisticsController {
 		$cleaned_values = array();
 
 		foreach ( $field_values as $k => $i ) {
-			$i = maybe_unserialize( $i );
+			FrmProAppHelper::unserialize_or_decode( $i );
 
 			if ( ! is_array( $i ) ) {
 				$cleaned_values[] = $i;

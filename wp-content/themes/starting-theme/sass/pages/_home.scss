@@ -1,5 +1,3 @@
-
-
 #bxslider {
   height: calc(100vh - 15px);
   margin: 0;
@@ -12,9 +10,12 @@
     height: calc(100vh - 40px);
     margin: 0;
     padding: 0;
+    .vert-align {
+      text-align: center;
+    }
     h1 {
       color: #fff;
-      padding: 30px 20px;
+      padding: 20px 30px;
       display: inline-block;
       font-family: $font-family-serif;
       // line-height: 2em;
@@ -25,7 +26,7 @@
         max-width: 45%;
       }
       @include lg {
-        font-size: 54px;
+        font-size: 57px;
       }
     }
     a {
@@ -137,6 +138,7 @@
     font-family: $font-family-serif;
     padding: 15px;
     background: #fff;
+    margin: 0;
     display: inline-block;
     font-size: 30px;
   }
@@ -157,9 +159,22 @@
       background: #000 !important;
     }
   }
+  .col2 {
+    height: 250px;
+    @include md {
+      height: 550px;
+    }
+  }
   .col3 {
     margin-right: 0;
+    margin-left: 0;
     padding-right: 0;
+    padding-left: 0;
+    @include md {
+      margin-right: 0;
+      padding-right: 0;
+    }
+
     .col-md-12 {
       &:first-of-type {
         height: calc(50% - 20px);
@@ -177,22 +192,35 @@
   h2 {
     color: $grey;
     text-align: center;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     font-family: $font-family-serif;
     font-size: 25px;
     margin: 0 0 50px 0;
+    font-weight: 400;
     span {
       font-size: 18px;
     }
   }
+  ::placeholder {
+    font-weight: 600;
+    text-align: center;
+    @include md {
+      text-align: left;
+    }
+    text-transform: uppercase;
+    color: #fff;
+  }
   .consent {
-    font-size: 12px;
+    font-size: 11px;
+    color: #9D9D9D;
     text-align: left;
+    padding-left: 30px;
+    @include md {
+      padding-left: 15px;
+    }
     input[type="checkbox"] {
       float: left;
-      @include md {
-        margin-left: -15px;
-      }
+      margin-left: -15px;
     }
     label {
       font-weight: 400;
@@ -203,9 +231,11 @@
     color: #fff;
     padding: 8px;
     background: rgba(0, 0, 0, .45);
-  }
-  .email::-webkit-input-placeholder, .search-input-box::-webkit-input-placeholder {
-    color: #fff;
+    margin-bottom: 15px;
+    text-align: center;
+    @include md {
+      text-align: left;
+    }
   }
   input[type="submit"], button {
     color: #fff;
@@ -213,7 +243,7 @@
     text-transform: uppercase;
     padding: 15px;
     width: 100%;
-    background: rgba(0, 0, 0, .45);
+    background: #58544D;
     font-weight: 600;
     transition: .5s;
   }
@@ -232,7 +262,7 @@
   h3 {
     font-size: 30px;
     background: #fff;
-    padding: 15px;
+    padding: 20px 25px;
     font-family: "Libre Baskerville", serif;
     display: inline-block;
     margin: 0 0 50px 0;
@@ -255,10 +285,8 @@
   }
   .range {
     color: #55757B;
-    @include xs {
-      padding-left: 0;
-      padding-right: 0;
-    }
+    padding-left: 0;
+    padding-right: 0;
     @include md {
       padding-left: 0;
       padding-right: 15px;
@@ -284,10 +312,8 @@
     }
   }
   .colour {
-    @include xs {
-      padding-left: 0;
-      padding-right: 0;
-    }
+    padding-left: 0;
+    padding-right: 0;
     @include md {
       padding-right: 0;
       padding-left: 15px;

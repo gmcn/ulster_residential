@@ -57,6 +57,22 @@ final class AAM_Core_Server {
     }
 
     /**
+     * Undocumented function
+     *
+     * @param string $v
+     * @return void
+     */
+    public static function getEndpoint($v = 'V1') {
+        $endpoint = getenv("AAM_API_{$v}_ENDPOINT");
+        
+        if (empty($endpoint)) {
+            $endpoint = ($v === 'V1' ? self::SERVER_V1_URL : self::SERVER_V2_URL);
+        }
+
+        return $endpoint;
+    }
+
+    /**
      * Send request
      * 
      * @param string $request
@@ -68,7 +84,7 @@ final class AAM_Core_Server {
     protected static function send($request, $params, $timeout = 10) {
         $response = self::parseResponse(
             AAM_Core_API::cURL(
-                self::SERVER_V1_URL . $request, $params, $timeout
+                self::getEndpoint('V1') . $request, $params, $timeout
             )
         );
         

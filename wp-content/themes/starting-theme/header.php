@@ -23,6 +23,9 @@
 </head>
 
 <body <?php body_class(); ?>>
+	<div id="fb-root"></div>
+	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v4.0&appId=589975334798209&autoLogAppEvents=1"></script>
+	<script async defer src="//assets.pinterest.com/js/pinit.js"></script>
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'starting-theme' ); ?></a>
 
@@ -31,20 +34,40 @@
 	      <nav class="navbar navbar-default">
 	        <div class="container-fluid">
 
-						<div class="row">
-							<div class="col-xs-5 col-md-4">
+						<div class="row no-gutters mobile_nav hidden-md hidden-lg">
+							<div class="col-xs-2 mobile_nav__open">
+								<span class="hiddennav" onclick="openNav()">
+									<!-- <div class="vert-align"> -->
+										<img src="<?php echo get_template_directory_uri() ?>/images/hamburger_img_mob.svg" alt="Open Navigation">
+									<!-- </div> -->
+								</span>
+							</div>
+							<div class="col-xs-8 mobile_nav__search">
+								<?php echo get_search_form(); ?>
+							</div>
+							<div class="col-xs-2 mobile_nav__cart">
+								<span>
+										<a class="e-samplesCartIcon" href="<?php echo site_url('basket'); ?>">
+											<img src="<?php echo get_template_directory_uri() ?>/images/shopping_cart_head.svg" alt="Samples Cart">
+											<span class="js-cartCount">
+												<?php echo cartCount(); ?>
+											</span>
+										</a>
+								</span>
+							</div>
+							<div class="col-xs-12">
+								<a class="site-branding" href="/"><img src="<?php echo get_template_directory_uri() ?>/images/logo.svg" alt="<?php bloginfo( 'name' ); ?> | <?php echo $description; /* WPCS: xss ok. */ ?>">	</a>
+							</div>
+						</div>
+
+						<div class="row hidden-xs hidden-sm">
+							<div class="col-xs-5 col-md-4 col-lg-2">
 								<div class="navbar-header">
-			            <button type="button" class="navbar-toggle collapsed hidden-xs hidden-sm" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-			              <span class="sr-only">Toggle navigation</span>
-			              <span class="icon-bar"></span>
-			              <span class="icon-bar"></span>
-			              <span class="icon-bar"></span>
-			            </button>
 									<?php $description = get_bloginfo( 'description', 'display' ); ?>
 									<a class="site-branding" href="/"><img src="<?php echo get_template_directory_uri() ?>/images/logo.svg" alt="<?php bloginfo( 'name' ); ?> | <?php echo $description; /* WPCS: xss ok. */ ?>">	</a>
 			          </div>
 							</div>
-							<div class="col-md-4 hidden-xs hidden-sm" style="text-align: center">
+							<div class="col-lg-6 hidden-xs hidden-sm hidden-md" style="text-align: center">
 								<?php wp_nav_menu( array(
 									'theme_location' => 'menu-1',
 									'menu_id' => 'navbar',
@@ -54,7 +77,7 @@
 									'items_wrap' => '<ul id="" class="nav navbar-nav navbar-right">%3$s</ul>' ) );
 									?>
 							</div>
-							<div class="col-xs-7 col-md-4" style="text-align: right">
+							<div class="col-xs-7 col-md-8 col-lg-4" style="text-align: right">
 								<div class="row">
 									<div class="col-md-6 social hidden-xs hidden-sm">
 										<a href="https://www.instagram.com/ulstercarpets/" target="_blank"><img src="<?php echo get_template_directory_uri() ?>/images/instagram_icon.svg" alt="Instagram"></a>
@@ -64,7 +87,7 @@
 										<a href="https://www.linkedin.com/company/ulster-carpets/?originalSubdomain=uk" target="_blank"> <img src="<?php echo get_template_directory_uri() ?>/images/linkedin_icon.svg" alt="Linkedin"></a>
 									</div>
 									<div class="col-md-6 icons">
-										<span onclick="openNewsletter()">
+										<span class="hidden-xs" onclick="openNewsletter()">
 												<img src="<?php echo get_template_directory_uri() ?>/images/newsletter.svg" alt="e-newsletter signup (find out first)">
 										</span>
 										<span onclick="openSearch()">
@@ -76,7 +99,7 @@
 											<!-- </div> -->
 										</span>
 										<span>
-												<a href="#"><img src="<?php echo get_template_directory_uri() ?>/images/shopping_cart_head.svg" alt="Samples Cart"></a>
+												<a class="e-samplesCartIcon" href="<?php echo site_url('basket'); ?>"><img src="<?php echo get_template_directory_uri() ?>/images/shopping_cart_head.svg" alt="Samples Cart"><span class="js-cartCount"><?php echo cartCount(); ?></span></a>
 										</span>
 									</div>
 								</div>
@@ -99,10 +122,10 @@
 							<form method="get" id="searchform" class="searchform" action="<?php echo esc_url( home_url( '/' ) ); ?>" role="search">
 
 								<div class="row">
-									<div class="col-md-9">
+									<div class="col-md-7 col-md-offset-2">
 										<input class="search-input-box" type="text" name="s" value="" placeholder="enter search keywords" maxlength="50" required="required" />
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-2">
 										<button type="submit">Search</button>
 									</div>
 								</div>
@@ -128,12 +151,12 @@
 								<!-- <div id="mc_embed_signup_scroll"> -->
 									<h2>e-newsletter signup <span>(find out first)</span></h2>
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-4 col-md-offset-2">
 											<div class="mc-field-group">
-												<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="YOUR EMAIL: example@domain.com">
+												<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="YOUR EMAIL">
 											</div>
 										</div>
-										<div class="col-md-4 consent">
+										<div class="col-md-3 consent">
 											<input type="checkbox" value="1" name="group[2621][1]" id="mce-group[2621]-2621-0"><label for="mce-group[2621]-2621-0">Please tick this if you would like us to contact  you by email for updates and marketing material.</label>
 										</div>
 										<div class="col-md-2">
@@ -157,7 +180,7 @@
 
 								<!-- </div> -->
 							</form>
-							<a class="policy" href="<?php echo site_url() ?>/privacy-policy">View our privacy policy</a>
+							<a class="policy" href="<?php echo site_url() ?>/data-policy">View our privacy policy</a>
 						</div>
 
 						<!--End mc_embed_signup-->
@@ -176,7 +199,7 @@
 							<a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="<?php echo get_template_directory_uri() ?>/images/close_icon.svg" alt="Close"></a>
 						</div>
 						<div class="col-xs-5">
-							<a href="#"><img src="<?php echo get_template_directory_uri() ?>/images/shopping_cart.svg" alt="Basket"></a>
+							<a href="<?php echo site_url('basket'); ?>" class="e-samplesCartIcon--side"><img src="<?php echo get_template_directory_uri() ?>/images/shopping_cart.svg" alt="Basket"><span class="js-cartCount"><?php echo cartCount(); ?></span></a>
 						</div>
 					</div>
 
@@ -186,9 +209,52 @@
 						'menu_class' => 'accordion' ) );
 						?>
 
-						<?php echo get_search_form(); ?>
 
-						<?php echo wp_login_form(); ?>
+
+	 						<?php echo get_search_form(); ?>
+
+
+
+							<div class="login_wrapper">
+								<p class="intro">Retailer Area</p>
+								<?php if (is_user_logged_in()) : ?>
+
+									<div class="logout">
+										<a href="/retailer-area">View our retailer area</a>
+										<button type="button" name="button"><a id="wp-submit" class="logout" href="<?php echo wp_logout_url(); ?>" title="Logout">Logout</a></button>
+									</div>
+
+								<?php else : ?>
+
+									<?php
+										$args = array(
+											'echo'           => true,
+											'redirect'       => '/retailer-area/',
+											'label_log_in'   => __( 'Continue' ),
+											'label_username' => __( 'Username' ),
+											'label_password' => __( 'Password' ),
+											'label_remember' => __( 'Remember Me' ),
+											'id_username'    => 'user_login',
+											'id_password'    => 'user_pass',
+											'id_submit'      => 'wp-submit',
+											'remember'       => true,
+											'placeholder_username' => __( 'Username/ID' ),
+											'placeholder_password' => __( 'Password' ),
+											'value_username' => NULL,
+											'value_remember' => true
+									);
+
+									wp_login_form($args); ?>
+
+									<span>Forgot <a href="<?php echo wp_lostpassword_url( $redirect ); ?>">Username/Password</a></span>
+
+
+
+								<?php endif; ?>
+
+							</div>
+
+
 
 				</div>
 

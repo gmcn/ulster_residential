@@ -15,7 +15,7 @@
 
 <div class="container-fluid cta">
   <div class="row">
-    <div class="col-md-5 col1 wow fadeInLeft" style="background: url(<?php echo $cta1_background_image ?>) center center; background-size: cover;">
+    <div class="col-md-4 col-lg-5 col1 wow fadeInLeft" style="background: url(<?php echo $cta1_background_image ?>) center center; background-size: cover;">
       <div class="vert-align">
         <h3 style="color: <?php echo $cta1_colour ?>"><?php echo $cta1_title ?></h3>
         <?php if ($cta1_link): ?>
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="col-md-2 col2 wow fadeInUp" style="background: url(<?php echo $cta2_background_image ?>) center center; background-size: cover;">
+    <div class="col-md-4 col-lg-2 col2 wow fadeInUp" style="background: url(<?php echo $cta2_background_image ?>) center center; background-size: cover;">
       <div class="vert-align">
         <h3 style="color: <?php echo $cta2_colour ?>"><?php echo $cta2_title ?></h3>
         <?php if ($cta2_link): ?>
@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <div class="col-md-5 col3 wow fadeInRight">
+    <div class="col-md-4 col-lg-5 col3 wow fadeInRight">
       <?php if( have_rows('rows') ): ?>
       	<?php while( have_rows('rows') ): the_row();
 

@@ -81,7 +81,7 @@ class FrmProDynamicFieldsController {
 				$observed_field_val = '';
 			}
 
-			$observed_field_val = maybe_unserialize( $observed_field_val );
+			FrmProAppHelper::unserialize_or_decode( $observed_field_val );
 
 			$metas = array();
 			FrmProEntryMetaHelper::meta_through_join( $values['hide_field'], $selected_field, $observed_field_val, false, $metas );

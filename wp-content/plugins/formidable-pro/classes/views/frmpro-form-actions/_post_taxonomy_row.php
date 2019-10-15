@@ -32,7 +32,7 @@ $selected_type = '';
         if ( ! empty( $values['fields'] ) ) {
 		foreach ( $values['fields'] as $fo ) {
 			if ( is_object( $fo ) ) {
-                $fo->field_options = maybe_unserialize($fo->field_options);
+				FrmProAppHelper::unserialize_or_decode( $fo->field_options );
                 if ( isset($fo->field_options['form_select']) ) {
                     $fo->form_select = $fo->field_options['form_select'];
                 }

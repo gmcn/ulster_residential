@@ -1,46 +1,185 @@
 .loggedin {
   background: #BAC2C6;
-  margin-bottom: 15px;
+  // margin-bottom: 15px;
   color: #525C65;
-  padding: 50px 15px;
+  padding: 50px 15px 15px 15px;
+  margin-top: -15px;
+  @include md {
+    margin-top: 0;
+  }
   &_account_no {
+    font-size: 18px;
+    color: #7A8082;
     font-weight: 600;
     margin-bottom: 25px;
+    padding-top: 40px;
+  }
+  h2 {
+    font-family: $font-family-serif;
+    font-size: 28px;
+    @include md {
+      font-size: 40px;
+    }
+    font-weight: 300;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    margin: 0;
+    color: #fff;
+  }
+  hr {
+    width: calc(100% - 100px);
+    border-bottom: none;
+    background: none;
+    margin: 15px 50px 25px;
+    border-top: 1px dotted #fff;
   }
   p {
     font-size: 12px;
     font-weight: 600;
     color: #fff;
   }
+  p.edit {
+    margin-top: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #525C65;
+    a {
+      color: #525C65;
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
   .input {
     background: #fff;
     border-radius: 5px;
     padding: 10px;
+    margin-bottom: 15px;
+  }
+  .pre-reailer_children {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    font-size: 12px;
   }
 }
 
 .retailer_children {
   &:last-of-type {
-    border-bottom: 40px solid #BAC2C6;
+    @include md {
+      border-bottom: 40px solid #BAC2C6;
+    }
+    margin-bottom: 15px;
+  }
+  &:nth-of-type(odd) {
+    @include md {
+      text-align: left;
+    }
+    .vert-align {
+      padding: 25px;
+    }
+
+
+
+
+  }
+  &:nth-of-type(even) {
+    @include md {
+      text-align: right;
+    }
+    .vert-align {
+      padding: 25px;
+    }
+    .retailer_children_count {
+      p {
+        @include md {
+          text-align: right;
+        }
+      }
+    }
   }
   &_content {
-    &:nth-of-type(odd) {
-      @include md {
-        text-align: right;
-      }
-    }
-    &:nth-of-type(even) {
-      @include md {
-        text-align: left;
-      }
-    }
     h2 {
       color: #525C65;
       font-size: 40px;
       font-weight: 600;
     }
     a.more {
-      background-color: #6E9BCC;
+      background-color: #525C65;
+      color: #fff;
+      border-radius: 5px;
+      padding: 15px 25px;
+      display: inline-block;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 12px;
+      transition: .5s;
+      &:hover {
+        background: #BAC2C6;
+      }
+    }
+  }
+  &_count {
+    padding: 15px 15px;
+    @include sm {
+      padding: 25px 50px;
+    }
+    @include md {
+      padding: 50px 50px;
+    }
+    background: #BAC2C6;
+    &:nth-of-type(odd) {
+      @include md {
+        text-align: left;
+      }
+    }
+    &:nth-of-type(even) {
+      @include md {
+        text-align: right;
+      }
+    }
+    p {
+      color: #fff;
+      font-size: 75px;
+      @include md {
+        font-size: 100px;
+      }
+      font-weight: 600;
+      @include lg {
+        font-size: 190px;
+      }
+    }
+  }
+}
+
+.useful-links {
+  &_content {
+    margin-top: -15px;
+    padding: 50px 15px;
+    color: #525C65;
+    @include md {
+      color: #BAC2C6;
+    }
+    h2 {
+      font-family: $font-family-serif;
+      font-size: 32px;
+      @include md {
+        font-size: 40px;
+      }
+      font-weight: 300;
+      padding-bottom: 25px;
+      padding-top: 25px;
+      margin: 0;
+    }
+    p {
+      font-size: 18px;
+      @include md {
+        font-size: 25px;
+      }
+    }
+    a.more {
+      background-color: #525C65;
       color: #fff;
       border-radius: 5px;
       padding: 10px 20px;
@@ -55,26 +194,421 @@
         background: #BAC2C6;
       }
     }
+    ul {
+      font-size: 25px;
+      margin: 0 0 25px 0;
+      font-weight: 600;
+    }
+    hr {
+      width: calc(100% - 100px);
+      border-bottom: none;
+      background: none;
+      margin: 15px 50px 25px;
+      border-top: 1px dotted #BAC2C6;
+    }
   }
-  &_count {
-    padding: 25px 50px;
-    background: #BAC2C6;
-    &:nth-of-type(odd) {
-      @include md {
-        text-align: left;
+}
+
+.events {
+  background: #F0F0F0;
+  padding: 25px 15px 0;
+  margin-bottom: 15px;
+  &_link {
+    margin-bottom: 25px;
+    &_wrapper {
+      background: #fff;
+      padding: 0 0 40px 0;
+      color: #2D353C;
+      img {
+        width: 100%;
+      }
+      h3 {
+        font-size: 20px;
+        font-weight: 600;
+        width: 80%;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      p {
+        font-size: 14px;
+        margin-bottom: 0;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      a {
+        margin-top: 15px;
+        display: block;
+        font-size: 16px;
+        color: #2D353C;
+      }
+      a.view {
+        padding: 10px 25px;
+        background: #000;
+        display: inline-block;
+        border-radius: 5px;
+        color: #fff;
+        text-transform: uppercase;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .75px;
       }
     }
-    &:nth-of-type(even) {
-      @include md {
-        text-align: right;
-      }
+  }
+}
+
+.installation_multiwidth {
+  background: #CCCFD6;
+  padding: 25px 15px 0;
+  @include md {
+    padding: 50px 15px 0;
+  }
+  color: #707070;
+  margin-bottom: 15px;
+  &_bg {
+    text-align: center;
+    background: url(images/multiwidth_bg.svg) top center no-repeat;
+  }
+  &_logo {
+    margin-bottom: 50px;
+  }
+  &_benefit {
+    margin-bottom: 15px;
+    // border-bottom: 1px dotted #343A40;
+    padding-bottom: 15px;
+    margin-top: 15px;
+    &__img {
+      text-align: center;
+      margin-bottom: 15px;
     }
     p {
+      font-size: 15px;
+    }
+  }
+  &_branding {
+    height: 200px;
+    @include md {
+      height: 400px;
+    }
+    background: url(images/multiwidth_horizontal.svg) left center no-repeat;
+    background-size: 120%;
+    background-position: 25px;
+  }
+}
+
+.installation_details:last-of-type {
+  background: #E6E6E6;
+}
+
+.installation_details {
+  background: #E6E6E6;
+  padding: 25px 15px 25px 15px;
+  @include md {
+    padding: 50px 15px 25px 15px;
+  }
+  color: rgba(20, 33, 44, .7);
+  margin-bottom: 15px;
+  &.first {
+    @include md {
+      background: #E6E6E6 url(images/chair-cup-of-coffee-desk.png) center center no-repeat;
+      background-size: cover;
+    }
+  }
+  ul {
+    margin: 0 15px 15px 0;
+    // padding: 0;
+  }
+  h2 {
+    color: #031A2F;
+    font-size: 28px;
+    @include md {
+      font-size: 40px;
+    }
+    font-weight: 600;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    margin: 0;
+  }
+  &_intro {
+    font-size: 20px;
+    @include md {
+      font-size: 25px;
+    }
+    line-height: 1.4em;
+    margin-bottom: 25px;
+  }
+  strong {
+    color: #031A2F;
+    font-weight: 700;
+  }
+  img.download {
+    margin-bottom: 25px;
+  }
+  &_click {
+    padding-top: 30px;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  &_media {
+    text-align: center;
+    &_wrapper {
+      padding: 100px 15px;
+    }
+    a {
       color: #fff;
-      font-size: 100px;
+      display: inline-block;
+      margin-top: 25px;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 11px;
+      text-transform: uppercase;
       font-weight: 600;
-      @include lg {
-        font-size: 190px;
+      transition: .5s;
+      &:hover {
+        background: #fff !important;
+        color: #000;
+      }
+    }
+  }
+}
+
+.installation_calc {
+  background: #14212C;
+  color: #fff;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  padding: 25px 15px;
+  @include md {
+    padding: 25px 50px;
+  }
+  img.download {
+    margin-bottom: 25px;
+  }
+  &_form {
+    @include md {
+      border-right: 1px dotted #fff;
+    }
+    h3 {
+      font-size: 33px;
+      font-weight: 600;
+    }
+    label {
+      position: absolute;
+      top:8px;
+      left: 25px;
+      z-index: 1;
+      color: #453E3F;
+      font-weight: 300;
+    }
+    .result {
+      text-transform: uppercase;
+      p {
+        font-size: 12px;
+        font-weight: 600;
+      }
+    }
+    input {
+      text-align: right;
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #000;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+       opacity: 1;
+    }
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      cursor:pointer;
+      width:8px;
+      text-align:center;
+      position:relative;
+    }
+    input[type=number]::-webkit-inner-spin-button {
+        background: url(images/qty_spin.svg) no-repeat 50% 50%;
+        width: 9px;
+        height: 14px;
+        padding: 4px;
+        position: relative;
+        // right: 4px;
+    }
+    output {
+      color: #B9AF61;
+      display: inline-block;
+      font-size: 48px;
+      font-weight: 300;
+    }
+    span {
+      color: #B9AF61 !important;
+      font-weight: 600;
+      font-size: 20px;
+    }
+  }
+}
+
+.logincontainer {
+  text-align: center;
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  height:100%;
+  background-color: rgba(0,0,0,.9);
+  z-index: 99999999999999;
+  .vert-align {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  .loginwrapper {
+    text-align: left;
+    color: #fff;
+    max-width: 600px;
+    background-color: #616569;
+    padding-top: 15px;
+    position: relative;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    &_signin {
+      margin-bottom: 15px;
+      border-right: 1px solid rgba(255, 255, 255, .4);
+    }
+    &_signup {
+      margin-bottom: 15px;
+      label.frm_primary_label {
+        display: none;
+      }
+      .frm_checkbox {
+        margin-top: 15px;
+        font-size: 12px;
+        font-weight: 300;
+        padding-left: 15px;
+        input {
+          margin-left: -15px;
+        }
+      }
+      a {
+        color: #fff;
+        transition: .5s;
+        font-weight: 600;
+        margin: 15px;
+        display: block;
+        &:hover {
+          color: #000;
+        }
+      }
+      button {
+        font-size: 12px;
+        border: none;
+        text-transform: uppercase;
+        width: 100%;
+        @include md {
+          width: 80%;
+        }
+        padding: 20px;
+        color: #fff;
+        background: #BAC2C6;
+        border-radius: 5px;
+        font-weight: 700;
+      }
+    }
+    span {
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .4);
+      display: block;
+      margin-bottom: 15px;
+    }
+    h1 {
+      margin: 0 0 5px 0;
+      font-size: 35px;
+      @include md {
+        font-size: 55px;
+      }
+      font-weight: 700;
+    }
+    .frm_error, .frm_error_style {
+      color: #000;
+    }
+    input[type="text"] {
+      width: 100%;
+      border-radius: 0;
+      background: #fff url(images/username_icon.svg) left center no-repeat;
+      background-position: 10px;
+    }
+    input[type="email"] {
+      width: 100%;
+      border-radius: 0;
+      background: #fff url(images/email_icon.svg) left center no-repeat;
+      background-position: 10px;
+    }
+    input[type="password"] {
+      width: 100%;
+      border-radius: 0;
+      background: #fff url(images/password_icon.svg) left center no-repeat;
+      background-position: 10px;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 6px 6px 6px 35px;
+    }
+    p.intro {
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      a {
+        color: #fff;
+        font-weight: 700;
+      }
+    }
+    label {
+      display: block;
+    }
+    input {
+      padding: 10px;
+    }
+    .button {
+      font-size: 12px;
+      border: none;
+      text-transform: uppercase;
+      width: 100%;
+      @include md {
+        width: 80%;
+      }
+      padding: 20px;
+      color: #fff;
+      background: #BAC2C6;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+    a.exit {
+      position: absolute;
+      top: -30px;
+      right: 0;
+      color: #fff;
+      font-weight: 600;
+      padding: 5px 10px;
+      background-color: #616569;
+      &:hover {
+        color: #000;
+      }
+    }
+    &_footer {
+      img {
+        display: none;
+        @include md {
+          display: block;
+          width: 100%;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
       }
     }
   }

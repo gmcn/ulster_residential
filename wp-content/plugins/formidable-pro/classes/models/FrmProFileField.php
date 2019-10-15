@@ -100,7 +100,7 @@ class FrmProFileField {
 	}
 
 	private static function add_mock_files( $media_ids, &$mock_files ) {
-		$media_ids = maybe_unserialize( $media_ids );
+		FrmProAppHelper::unserialize_or_decode( $media_ids );
 		if ( ! empty( $media_ids ) ) {
 			foreach ( (array) $media_ids as $media_id ) {
 				$file = self::get_mock_file( $media_id );
@@ -823,7 +823,7 @@ class FrmProFileField {
 			return;
 		}
 
-		$media_ids = maybe_unserialize( $media_ids );
+		FrmProAppHelper::unserialize_or_decode( $media_ids );
 		foreach ( (array) $media_ids as $m ) {
 			if ( is_numeric( $m ) ) {
 				wp_delete_attachment( $m, true );
@@ -919,7 +919,8 @@ class FrmProFileField {
 		include_once( ABSPATH . 'wp-admin/includes/file.php' );
 
 		foreach ( $upload_fields as $field ) {
-			$attachments = maybe_unserialize( self::get_previous_file_ids( $field, $old_entry_id ) );
+			$attachments = self::get_previous_file_ids( $field, $old_entry_id );
+			FrmProAppHelper::unserialize_or_decode( $attachments );
 			if ( empty( $attachments ) ) {
 				continue;
 			}

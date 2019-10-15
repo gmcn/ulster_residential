@@ -780,8 +780,10 @@ class FrmProGraphsController {
 		}
 
 		if ( $atts['sort_column'] >= 0 ) {
-			$options['sortColumn']    = (int) $atts['sort_column'];
-			$options['sortAscending'] = $atts['sort_ascending'];
+			$options['sortColumn'] = (int) $atts['sort_column'];
+			if ( isset( $atts['sort_ascending'] ) ) {
+				$options['sortAscending'] = $atts['sort_ascending'] ? true : false;
+			}
 		}
 	}
 

@@ -317,6 +317,9 @@ class FrmProFieldCreditCard extends FrmFieldType {
 		}
 	}
 
+	/**
+	 * @param string|array $value This may be a serialized value set before inserting into database.
+	 */
 	public function set_value_before_save( $value ) {
 		if ( empty( $value ) ) {
 			return $value;
@@ -324,7 +327,7 @@ class FrmProFieldCreditCard extends FrmFieldType {
 
 		$serialized = false;
 		if ( ! is_array( $value ) ) {
-			$value = maybe_unserialize( $value );
+			FrmProAppHelper::unserialize_or_decode( $value );
 			$serialized = true;
 		}
 

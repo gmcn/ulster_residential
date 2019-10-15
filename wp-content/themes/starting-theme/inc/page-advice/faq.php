@@ -1,4 +1,4 @@
-<div class="col-md-6 faqs">
+<div class="col-md-6 faqs bordermatch">
   <div class="row">
     <h2>Frequently asked Questions</h2>
   </div>

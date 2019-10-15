@@ -38,7 +38,92 @@ class AAM_Shared_Manager {
      * 
      * @return void
      */
-    protected function __construct() {}
+    protected function __construct() {
+        // Plugin updates check
+        add_filter('http_response', array($this, 'checkForUpdates'), 10, 3);
+
+        // Plugin release details
+        add_filter('self_admin_url', array($this, 'pluginUpdateDetails'), 10, 3);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $response
+     * @param [type] $r
+     * @param [type] $url
+     * @return void
+     */
+    public function checkForUpdates($response, $r, $url) {
+        static $execute = true;
+
+        if (strpos($url, 'api.wordpress.org/plugins/update-check') !== false && $execute) {
+            $execute = false;
+            $list    = array();
+
+            foreach(AAM_Core_API::getOption('aam-extensions', array()) as $id => $data) {
+                if (!empty($data['license'])) {
+                    $list[$id] = $data['license'];
+                }
+            }
+
+            $raw = wp_remote_post(
+                AAM_Core_Server::getEndpoint('V2') . '/registry',
+                array(
+                    'headers' => array(
+                        'Accept'       => 'application/json',
+                        'Content-Type' => 'application/json'
+                    ),
+                    'body'    => wp_json_encode($list)
+                )
+            );
+
+            if (!is_wp_error($raw) && (intval(wp_remote_retrieve_response_code($raw)) === 200)) {
+                $original = json_decode($response['body'], true);
+                $repo     = json_decode(wp_remote_retrieve_body($raw), true);
+
+                foreach ($repo['products'] as $item) {
+                    $c = AAM_Extension_Repository::version($item['plugin']);
+
+                    if (!empty($c) && (version_compare($c, $item['new_version']) === -1)) {
+                        $original['plugins'][$item['plugin']] = $item;
+                    }
+                }
+                $response['body'] = json_encode($original);
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $url
+     * @param [type] $path
+     * @param [type] $scheme
+     * @return void
+     */
+    public function pluginUpdateDetails($url, $path, $scheme) {
+        if (strpos($url, 'plugin-install.php?') !== false) {
+            $args  = parse_url($url);
+            $query = array();
+
+            parse_str($args['query'], $query);
+
+            $plugin = !empty($query['plugin']) ? $query['plugin'] : null;
+
+            if (in_array($plugin, array('aam-plus-package', 'aam-role-hierarchy', 'aam-complete-package', 'aam-ip-check'))) {
+                $url = add_query_arg(array(
+                    'TB_iframe' => true,
+                    'width'     => (isset($query['width']) ? $query['width'] : 640),
+                    'height'    => (isset($query['height']) ? $query['height'] : 662),
+                ), 'https://aamplugin.com/addon/' . $plugin . '/changelog');
+            }
+        }
+
+        return $url;
+    }
     
     /**
      * Initialize core hooks

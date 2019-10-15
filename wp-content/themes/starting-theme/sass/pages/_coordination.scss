@@ -1,0 +1,416 @@
+.brochure {
+  &_thumb {
+    min-height: 400px;
+  }
+  &_content {
+    background: #343A40;
+    color: #fff;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 25px;
+    @include md {
+      padding-bottom: 100px;
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+    h2 {
+      font-family: $font-family-serif;
+      font-size: 40px;
+      font-weight: 300;
+      padding-top: 25px;
+      margin: 0;
+    }
+    p:last-of-type {
+      margin-bottom: 100px;
+    }
+    &_download {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .4);
+      @include md {
+        margin-top: 25px;
+        position: absolute;
+        bottom: 15px;
+        left: 40px;
+        width: calc(100% - 80px);
+        hr {
+          margin-top: 0;
+          margin-bottom: 15px;
+        }
+      }
+    }
+  }
+}
+
+.trends {
+  background: #A39C8B !important;
+  h3 {
+    color: #fff;
+    text-align: left;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 50px;
+  }
+}
+
+.brochures {
+  background: #F0F0F0;
+  padding: 25px 15px 30px 15px;
+  margin-bottom: 30px;
+  text-align: center;
+  &_link {
+    @include lg {
+      width: 20% !important;
+    }
+    &__links {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+    &_wrapper {
+      background: #fff;
+      padding: 20px;
+      color: #2D353C;
+      margin-bottom: 15px;
+      img {
+        max-height: 220px;
+      }
+      h4 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 25px;
+      }
+      a {
+        font-size: 11px;
+        border-radius: 5px;
+        width: 100%;
+        display: block;
+        padding: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+      }
+      a.view {
+        background: #0F304E;
+        color: #fff;
+        border: 2px solid #0F304E;
+        transition: .5s;
+        &:hover {
+          background: #fff;
+          // border: 2px solid #0F304E;
+          color: #0F304E;
+        }
+      }
+      a.download {
+        border: 2px solid #0F304E;
+        color: #0F304E;
+        transition: .5s;
+        &:hover {
+          background: #0F304E;
+          color: #fff;
+          // border: 2px solid #0F304E;
+        }
+      }
+    }
+  }
+}
+
+.mood-boards {
+  padding: 25px 15px;
+  @include md {
+    padding: 50px 15px;
+  }
+  background: url(images/mood-boards_bg.jpg) center center;
+  h3 {
+    color: #101510;
+    text-align: left;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 25px;
+  }
+  &_board {
+    margin-bottom: 15px;
+    padding: 0 2.5px;
+    @include md {
+      margin-bottom: 0;
+    }
+    @include lg {
+      width: 20% !important;
+    }
+    a, a:visited {
+      color: #101510;
+    }
+    .hover {
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      background: rgba(255,255,255,.75);
+      @include md {
+        opacity: 0;
+        background: rgba(255,255,255,0);
+      }
+      transition: .5s;
+      position: absolute;
+      left: 0;
+      top: 0;
+      &_date {
+        font-size: 13px;
+        font-weight: 200;
+        position: absolute;
+        // top: 10px;
+        margin: 10px;
+        border-bottom: 1px dotted #101510;
+        width: calc(100% - 20px);
+        padding: 5px;
+      }
+      .vert-align {
+        text-align: left;
+        font-size: 20px;
+        padding-left: 10px;
+      }
+      &_view {
+        font-size: 13px;
+        position: absolute;
+        bottom: 0;
+        margin: 10px;
+        border-top: 1px dotted #101510;
+        width: calc(100% - 20px);
+        padding: 5px;
+        font-weight: 600;
+      }
+    }
+    &:hover {
+      .hover {
+        opacity: 1;
+        background: rgba(255,255,255,.75);
+      }
+    }
+  }
+}
+
+.related-articles {
+  margin-bottom: 15px;
+  padding: 25px 15px;
+  @include md {
+    padding: 50px 15px;
+  }
+  background: #BECACC;
+  font-weight: 300;
+  h3 {
+    color: #fff;
+    text-align: left;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 25px;
+  }
+  &_board {
+    margin-bottom: 15px;
+    padding: 0 2.5px;
+    @include md {
+      margin-bottom: 0;
+    }
+    @include lg {
+      // width: 20% !important;
+    }
+    a, a:visited {
+      color: #fff;
+    }
+    .hover {
+      width: calc(100% - 2.5px);
+      height: 100%;
+      background: rgba(0,0,0,.5);
+      transition: .5s;
+      position: absolute;
+      left: 2.5px;
+      top: 0;
+      &_date {
+        font-size: 13px;
+        font-weight: 200;
+        position: absolute;
+        // top: 10px;
+        margin: 10px;
+        border-bottom: 1px dotted #fff;
+        width: calc(100% - 20px);
+        padding: 5px;
+      }
+      .vert-align {
+        text-align: left;
+        font-size: 20px;
+        padding-left: 10px;
+      }
+      &_view {
+        font-size: 13px;
+        position: absolute;
+        bottom: 0;
+        margin: 10px;
+        border-top: 1px dotted #fff;
+        width: calc(100% - 20px);
+        padding: 5px;
+        font-weight: 600;
+      }
+    }
+    &:hover {
+      .hover {
+        opacity: 1;
+        background: rgba(0,0,0,.75);
+      }
+    }
+  }
+}
+
+.page-template-page-mood-board {
+  .site-content {
+    background: #E5E0E0;
+  }
+}
+
+.inspiration {
+
+  &_img {
+    @include md {
+      padding: 0;
+    }
+    img {
+      width: 100%;
+    }
+  }
+
+  &_features {
+    margin-bottom: 15px;
+    margin-top: 30px;
+    &_count {
+      position: relative;
+      background: #182B3E;
+      text-align: center;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 600;
+      height: 60px;
+      width: 60px;
+      max-width: 100%;
+      @include xs {
+        height:70px;
+        width: 70px;
+      }
+      @include lg {
+        height: 80px;
+        width: 80px;
+      }
+
+      .vert-align {
+        width: 100%;
+      }
+    }
+    p {
+      float: left;
+    }
+  }
+
+
+
+  &_ranges {
+    margin-bottom: 50px;
+    h3 {
+      background: #fff;
+      color: #606467;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-style: italic;
+      margin: 0;
+      padding: 20px;
+      font-size: 16px;
+    }
+    &_range {
+    position: relative;
+    background-color: #fff;
+    margin-bottom: 15px;
+    padding: 0 2.5px;
+    @include md {
+      margin-bottom: 0;
+    }
+    a, a:visited {
+      color: #101510;
+    }
+    .hover {
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      background: rgba(0,0,0,.75);
+      transition: .5s;
+      // position: absolute;
+      .vert-align {
+        font-weight: 600;
+        color: #fff;
+        font-size: 20px;
+        padding-left: 10px;
+      }
+      &_view {
+        font-size: 13px;
+        color: #fff;
+        position: absolute;
+        bottom: 0;
+        text-align: center;
+        margin: 10px;
+        border-bottom: 1px dotted #fff;
+        border-top: 1px dotted #fff;
+        width: calc(100% - 20px);
+        padding: 5px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+    }
+    &:hover {
+      .hover {
+        background: rgba(0,0,0,.5);
+      }
+    }
+  }
+}
+
+  &_action {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: 0;
+    margin-right: 0;
+    text-transform: uppercase;
+    border-bottom: 1px dotted #14212C;
+    border-top: 1px dotted #14212C;
+
+    a {
+      color: #000;
+      font-weight: 600;
+    }
+    a[rel="popover"]{
+    display: inline-block;
+    margin: 20px;
+}
+    .share {
+      text-align: center;
+      @include md {
+        text-align: left;
+      }
+      padding-top: 30px;
+      ul {
+        margin: 0;
+        list-style: none;
+        padding: 0;
+        li {
+          float: left;
+          margin-right: 10px;
+        }
+      }
+      .dropdown-menu {
+        display: none;
+      }
+    }
+    .back {
+      background: none;
+      text-align: center;
+    }
+    .next {
+      padding-top: 30px;
+      text-align: right;
+    }
+  }
+
+}

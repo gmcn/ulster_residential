@@ -32,7 +32,6 @@ figure {
 
 .vert-align {
 	position: absolute;
-	text-align: center;
 	top: 50%;
 	width: calc(100% - 30px);
 	-webkit-transform: translateY(-50%);
@@ -58,18 +57,30 @@ a.policy:hover, a.policy:focus {
 @import "tables";
 
 .container-fluid.stockists {
-	padding-left: 50px !important;
-  padding-right: 50px !important;
+	padding-left: 20px !important;
+  padding-right: 20px !important;
+	@include md {
+		padding-left: 50px !important;
+	  padding-right: 50px !important;
+	}
+
 }
 
 .stockists {
-	padding-top: 100px;
-	padding-bottom: 100px;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	@include md {
+		padding-top: 100px;
+		padding-bottom: 100px;
+	}
 	background: url(images/stockists_bg.jpg) center center no-repeat fixed;
 	background-size: cover;
 	position: relative;
 	margin-bottom: 15px;
 	color: #fff;
+	.container {
+		max-width: 100%;
+	}
 	h2 {
 		text-transform: lowercase;
 		text-align: center;
@@ -96,13 +107,39 @@ a.policy:hover, a.policy:focus {
 		position: relative;
 		text-align: center;
 		margin-bottom: 15px;
-		// margin: 100px 50px;
 		border-style: solid;
 		border-width: 26px 26px 27px 27px;
 		-moz-border-image: url(images/border.png) 26 26 27 27 repeat;
 		-webkit-border-image: url(images/border.png) 26 26 27 27 repeat;
 		-o-border-image: url(images/border.png) 26 26 27 27 repeat;
 		border-image: url(images/border.png) 26 26 27 27 fill repeat;
+		&__location {
+			margin-bottom: 40px;
+			@include md {
+				margin-bottom: 0;
+			}
+		}
+		.bh-sl-container {
+			input[type="text"] {
+				width: 100%;
+				margin-bottom: 15px;
+				@include md {
+					width: 80%;
+					margin-bottom: 0;
+				}
+				float: left;
+				padding: 9px;
+			}
+			button {
+				float: left;
+				margin-top: 0;
+				width: 100%;
+				@include md {
+					width: 15%;
+					margin-left: 4%;
+				}
+			}
+		}
 		h4 {
 			font-family: $font-family-serif;
 			font-size: 32px;
@@ -120,6 +157,9 @@ a.policy:hover, a.policy:focus {
 		a {
 			color: #fff;
 			font-weight: 600;
+			&:visited {
+				color: #fff;
+			}
 		}
 		button {
 			margin-top: 15px;
@@ -165,7 +205,15 @@ a.policy:hover, a.policy:focus {
 			}
 		}
 		.wpcf7-submit {
-			float: right;
+			display: block;
+			width: 100%;
+			margin-top: 25px;
+			@include md {
+				float: right;
+				display: inline-block;
+				margin-top: 0;
+				width: 200px;
+			}
 			background: #A1BEDE;
 			color: #fff;
 			text-transform: uppercase;
@@ -196,7 +244,64 @@ a.policy:hover, a.policy:focus {
 	}
 }
 
-	#map {
-	  height: 600px;
+.bh-sl-container {
+	.bh-sl-loc-list {
+		background: #A1BEDE;
+		color: #fff;
+		padding: 25px;
 		margin-bottom: 15px;
+		h1 {
+			font-family: $font-family-serif;
+			font-size: 40px;
+			text-align: center;
+			margin-bottom: 50px;
+			font-weight: 300;
+		}
+		.th {
+			font-size: 11px;
+			font-weight: 600;
+			span {
+				font-weight: 300;
+				display: block;
+			}
+		}
+		ul {
+			margin: 25px 0 0 0;
+			padding: 0;
+			list-style: none;
+			font-size: 15px;
+			li {
+				&:first-of-type {
+					border-top: 1px dotted #fff;
+				}
+				background: transparent !important;
+				border-bottom: 1px dotted #fff;
+				padding: 25px 0;
+				a {
+					color: #fff;
+					transition: .5s;
+					&:hover {
+						color: #006CE3;
+					}
+				}
+			}
+		}
+		.loc-directions {
+			padding-top: 15px;
+			padding-bottom: 15px;
+			@include md {
+				padding-top: 0;
+				padding-bottom: 0;
+				text-align: center;
+			}
+			font-size: 12px;
+			img {
+				margin-top: 0;
+			}
+		}
+		.loc-addr {
+			font-size: 14px;
+		}
 	}
+
+}

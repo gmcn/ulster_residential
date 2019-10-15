@@ -1,4 +1,4 @@
-<div class="col-md-6 terms">
+<div class="col-md-6 terms bordermatch">
   <div class="row">
   <h2>Carpet Terms</h2>
   </div>

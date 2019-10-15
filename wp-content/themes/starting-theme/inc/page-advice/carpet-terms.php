@@ -4,7 +4,7 @@
 
  ?>
 
-<div class="container-fluid">
+<div class="container-fluid terms-faq">
   <div class="row">
     <?php
       include(locate_template("inc/page-advice/faq.php"));

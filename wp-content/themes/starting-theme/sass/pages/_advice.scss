@@ -1,20 +1,36 @@
 .advice {
-  background: url(images/advice_content_bg.jpg) top left #E7E8EB;
-  background-size: cover;
-  padding: 25px 15px;
+  background: #E7E8EB;
   @include md {
-    padding: 50px 0 50px 150px;
+    background: url(images/advice_content_bg.jpg) top left #E7E8EB;
+    background-size: cover;
+    padding: 50px;
+    margin-bottom: 15px;
   }
+  padding: 15px 15px;
   color: rgba(20,22,44, .7);
-  .row:first-of-type {
-    margin-bottom: 25px;
-    padding-top: 25px;
+  h2 {
+    font-family: $font-family-serif;
+    font-size: 22px;
+    @include md {
+      font-size: 40px;
+    }
+    font-weight: 300;
     padding-bottom: 25px;
-    border-top: 1px dotted #343A40;
+    padding-top: 25px;
+    margin: 0;
+    color: #031A2F;
+  }
+  .row:first-of-type {
     border-bottom: 1px dotted #343A40;
+    padding-top: 25px;
+    margin-bottom: 15px;
   }
   .intro {
-    font-size: 25px;
+    font-size: 18px;
+    margin-bottom: 15px;
+    @include md {
+      font-size: 25px;
+    }
     line-height: 1.5em;
   }
   .content {
@@ -27,9 +43,17 @@
     }
   }
   &_children {
-    padding-bottom: 25px;
+    padding: 25px 0;
+    border-top: 1px dotted #343A40;
+    @include md {
+      border-bottom: 1px dotted #343A40;
+    }
     img {
       width: 100%;
+      margin-bottom: 15px;
+      @include md {
+        margin-bottom: 0;
+      }
       transition: .5s;
       &:hover {
         transform: scale(1.05);
@@ -64,6 +88,7 @@
   background: #E7E8EB;
   padding: 50px 15px 0;
   color: #707070;
+  margin-top: -15px;
   p:first-of-type {
     font-size: 25px;
     line-height: 1.5em;
@@ -74,10 +99,10 @@
     background: url(images/multiwidth_bg.svg) top center no-repeat;
   }
   .multiwidth_benefit {
-    margin-bottom: 15px;
-    border-bottom: 1px dotted #343A40;
-    padding-bottom: 15px;
-    margin-top: 15px;
+    border-top: 1px dotted #343A40;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    // margin-top: 15px;
     p {
       font-size: 15px;
     }
@@ -103,6 +128,7 @@
   background-size: cover;
   color: rgba(20,22,44, .7);
   padding: 15px;
+  margin-top: -15px;
   h2 {
     font-family: $font-family-serif;
     font-size: 40px;
@@ -119,21 +145,40 @@
     padding: 50px;
   }
   .intro {
-    font-size: 25px;
+    font-size: 22px;
+    margin-bottom: 15px;
+    @include md {
+      font-size: 25px;
+      margin-bottom: 0;
+    }
     line-height: 1.5em;
   }
   .content {
     font-size: 15px;
+    .wp-block-file {
+      font-weight: 600;
+      img {
+        margin-bottom: 10px;
+      }
+    }
+    a {
+      font-weight: 600;
+    }
   }
+}
+
+.terms-faq {
+  margin-top: -15px;
 }
 
 .faqs {
   color: #fff;
   h2 {
     background: #585757;
-    font-size: 22px;
+    padding: 22px;
     @include md {
       font-size: 35px;
+      padding: 30px 20px;
     }
     padding: 20px;
     margin-bottom: 0;
@@ -171,10 +216,11 @@
   h2 {
     background: #6F949C;
     font-size: 22px;
+    padding: 20px;
     @include md {
       font-size: 35px;
+      padding: 30px 20px;
     }
-    padding: 20px;
     margin-bottom: 0;
     margin-top: 0;
     font-weight: 600;
@@ -209,6 +255,13 @@
     font-weight: 600;
     h2 {
       background: #393555;
+      color: #fff;
+      font-size: 22px;
+      padding: 20px;
+      @include md {
+        font-size: 35px;
+        padding: 30px 20px;
+      }
     }
     &_details_border {
       background: #393555;
@@ -219,12 +272,26 @@
     a {
       color: #393555;
       font-weight: 300;
-      font-size: 30px;
+      font-size: 16px;
+      @include md {
+        font-size: 26px;
+      }
+      @include lg {
+        font-size: 30px;
+      }
     }
     &_icons {
       border-top: 1px dotted #343A40;
       padding: 25px 0;
       margin-top: 25px;
+      img {
+        max-width: 33px;
+        max-height: 33px;
+        @include md {
+          max-width: 44px;
+          max-height: 44px;
+        }
+      }
     }
   }
 }

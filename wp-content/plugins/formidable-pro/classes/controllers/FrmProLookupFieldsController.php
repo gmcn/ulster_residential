@@ -946,7 +946,7 @@ class FrmProLookupFieldsController {
 		$final_values = array();
 		foreach ( $meta_values as $meta_val ) {
 
-			$meta_val = maybe_unserialize( $meta_val );
+			FrmProAppHelper::unserialize_or_decode( $meta_val );
 			if ( is_array( $meta_val ) ) {
 				$final_values = array_merge( $final_values, $meta_val );
 			} else {

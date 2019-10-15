@@ -1,0 +1,218 @@
+.page-template-page-rugs {
+  .site-content {
+    margin-top: -20px;
+  }
+}
+
+.rugs_head_rotate {
+  width: 100%;
+  height: 1000px;
+  position: absolute;
+  top: -60%;
+  right: -40%;
+  @include xxl {
+    top: -80%;
+    right: -40%;
+  }
+  // background: url(images/rugs_rotate_bg.png) center center / cover;
+  // @include xl {
+    // top: -60%;
+    // right: -40%;
+  // }
+}
+
+.rugs {
+  margin-top: 0;
+  padding-top: 100px;
+  padding-bottom: 50px;
+  @include md {
+    padding-top: 150px;
+    padding-bottom: 250px;
+  }
+  background: #7F7D84;
+  overflow: hidden;
+  color: #fff;
+  &_head {
+    &_title {
+      text-align: right;
+    }
+    &_content {
+      font-size: 25px;
+      @include md {
+        font-size: 35px;
+      }
+      position: absolute;
+      bottom: 0;
+      z-index: 99999;
+      left: 15px;
+      width: 100%;
+    }
+  }
+
+}
+
+.rugs_info.row {
+  margin-left: -30px !important;
+  margin-right: -30px !important;
+}
+
+
+.rugs_info {
+  // background: url(images/rugs_bg.jpg) center top / cover;
+  color: #fff;
+  h2 {
+    font-size: 40px;
+    margin-top: 0;
+  }
+  .row {
+    // border-top: 1px solid #fff;
+  }
+  p.counter {
+    @include lg {
+      display: none;
+    }
+  }
+  .count, .counter {
+    font-size: 68px;
+    font-weight: 600;
+    line-height: .75em;
+    @include xldown {
+      // width: 100%;
+    }
+    p {
+      @include xldown {
+        // display: none;
+      }
+    }
+    @include xl {
+      display: block;
+    }
+    &_mobile {
+
+    }
+  }
+  .valign {
+    @include xs {
+      position: absolute;
+      width: 100%;
+      top: 35%;
+    }
+    @include lg {
+      top: 45%;
+    }
+
+  }
+  &__left {
+    width: 100%;
+    overflow: hidden;
+    @include xs {
+      float: right;
+      width: 650px;
+      // max-width: 100%;
+      text-align: right;
+      background-color: transparent !important;
+      height: 1470px;
+      overflow: visible;
+    }
+    svg {
+      display: none;
+      @include xs {
+        display: block;
+      }
+      // height: 100%;
+    }
+    // padding: 400px 0 0 0;
+    position: relative;
+    @include lg {
+      padding-top: 40%;
+      margin-top: -42%;
+    }
+    @include xldown {
+      // padding-top: 400px;
+      // width: 45%;
+    }
+  }
+  .row {
+    position: relative;
+    margin-left: -30px;
+    margin-right: -30px;
+  }
+  .wrapper {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    right: 0;
+    margin-top: 35%;
+    z-index: 1;
+  }
+  &__right {
+    width: 100%;
+    overflow: hidden;
+    padding: 15px;
+    &:first-of-type {
+      // margin-top: -25%;
+    }
+    @include xs {
+      float: left;
+      width: 650px;
+      overflow: visible;
+      // max-width: 100%;
+    }
+    svg {
+      display: none;
+      @include xs {
+        display: block;
+      }
+      height: 100%;
+    }
+    @include xs {
+      background-color: transparent !important;
+      height: 1470px;
+    }
+    padding: 20px;
+    position: relative;
+    @include lg {
+      padding-top: 35%;
+      margin-top: -42%;
+    }
+    @include xldown {
+      // padding-top: 400px;
+      // width: 45%;
+    }
+  }
+}
+
+.rugs_info_bottom {
+  margin-bottom: 15px;
+  margin-left: -30px !important;
+  margin-right: -30px !important;
+  color: #262622;
+  img.stretch {
+    width: 100%;
+  }
+  &_point {
+    // margin-left: 0 !important;
+    // margin-right: 0 !important;
+    &_wrapper {
+      background: #BAAF6E;
+      padding: 20px 20px 50px 20px;
+      margin-top: -1px;
+      h3 {
+        font-size: 35px;
+        font-weight: 600;
+        margin-top: 0;
+      }
+      a {
+        color: inherit;
+        font-weight: 600;
+      }
+      .icon {
+        text-align: center;
+      }
+      .content {
+        padding-bottom: 50px;
+        border-bottom: 1px solid #414029;
+      }
+    }
+  }
+}

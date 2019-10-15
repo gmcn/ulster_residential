@@ -328,6 +328,28 @@ class AAM_Extension_Repository {
         
         return $status;
     }
+
+    /**
+     * Get plugin version
+     * 
+     * @return string
+     * 
+     * @access public
+     */
+    public static function version($id) {
+        if (file_exists(ABSPATH . 'wp-admin/includes/plugin.php')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+        
+        $path = realpath(WP_PLUGIN_DIR . '/' . $id);
+
+        if (function_exists('get_plugin_data') && file_exists($path)) {
+            $data = get_plugin_data($path);
+            $version = (isset($data['Version']) ? $data['Version'] : null);
+        }
+        
+        return (!empty($version) ? $version : null);
+    }
     
     /**
      * 

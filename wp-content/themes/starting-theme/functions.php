@@ -49,8 +49,8 @@ function starting_theme_setup() {
 		'footer-choose' => esc_html__( 'Choose a carpet (Footer)', 'starting-theme' ),
 		'footer-blog' => esc_html__( 'Blog (Footer)', 'starting-theme' ),
 		'footer-advice' => esc_html__( 'Advice (Footer)', 'starting-theme' ),
-		'footer-stockists' => esc_html__( 'Find a stockist (Footer)', 'starting-theme' ),
-		'footer-about' => esc_html__( 'Advice (Footer)', 'starting-theme' ),
+		'footer-stockist' => esc_html__( 'Find a stockist (Footer)', 'starting-theme' ),
+		'footer-about' => esc_html__( 'About (Footer)', 'starting-theme' ),
 		'footer-gallery' => esc_html__( 'Gallery (Footer)', 'starting-theme' ),
 	) );
 
@@ -117,7 +117,12 @@ function starting_theme_scripts() {
 	wp_enqueue_script( 'starting-theme-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20151215', true );
 	wp_enqueue_script( 'fancybox', get_template_directory_uri() . '/js/jquery.fancybox.js', array(), '2.1.7', true );
 	wp_enqueue_script( 'fancybox-pack', get_template_directory_uri() . '/js/jquery.fancybox.pack.js', array(), '2.1.7', true );
+	wp_enqueue_script( 'cookieconsent', get_template_directory_uri() . '/js/cookieconsent.min.js', array(), '3.1.1', true );
 	wp_enqueue_script( 'bxslider-js', get_template_directory_uri() . '/js/jquery.bxslider.min.js', array(), '4.2.12', true );
+
+	wp_enqueue_script( 'handlebars', get_template_directory_uri() . '/js/libs/handlebars.min.js', array(), '3.0.1', true );
+	wp_enqueue_script( 'storelocator', get_template_directory_uri() . '/js/plugins/storeLocator/jquery.storelocator.js', array(), '3.0.1', true );
+
 	wp_enqueue_script( 'functions-js', get_template_directory_uri() . '/js/functions.js', array(), '0.1', true );
 	wp_enqueue_script( 'wow-js', get_template_directory_uri() . '/js/wow.min.js', array(), '0.1', true );
 	wp_enqueue_script( 'matchHeight-js', get_template_directory_uri() . '/js/jquery.matchHeight.js', array(), '0.7.2', true );
@@ -237,7 +242,10 @@ add_action('login_head', 'my_custom_login');
 // 	acf_add_options_page();
 // }
 
-include( get_template_directory() . '/functions/cpt.php' );
+include(get_template_directory() . '/functions/cpt.php' );
+include(get_template_directory() . '/functions/ranges.php');
+include(get_template_directory() . '/functions/uc_helper_functions.php');
+include(get_template_directory() . '/functions/cart.php');
 
 // deregister contact form 7 styles
 add_action( 'wp_print_styles', 'wps_deregister_styles', 100 );
@@ -245,17 +253,47 @@ function wps_deregister_styles() {
     wp_deregister_style( 'contact-form-7' );
 }
 
+function wpa_cpt_tags( $query ) {
+    if ( $query->is_tag() && $query->is_main_query() ) {
+        $query->set( 'post_type', array( 'post', 'gallery', 'ulsterathome', 'ranges' ) );
+    }
+}
+add_action( 'pre_get_posts', 'wpa_cpt_tags' );
+
 // Move Yoast to bottom
 function yoasttobottom() {
 	return 'low';
 }
 add_filter( 'wpseo_metabox_prio', 'yoasttobottom');
 
+// Add style for dashboard, overlap meta boxes on posts(editor)
+add_action('admin_head', 'custom_metabox_style');
+
+function custom_metabox_style()
+{
+echo '<style>
+.editor-writing-flow{
+overflow: auto;
+}
+</style>';
+}
+
 // excerpt support on pages
 add_action( 'init', 'wpse325327_add_excerpts_to_pages' );
 function wpse325327_add_excerpts_to_pages() {
     add_post_type_support( 'page', 'excerpt' );
 }
+
+add_action( 'pre_get_posts', 'my_change_sort_order');
+    function my_change_sort_order($query){
+        if(is_archive()):
+         //If you wanted it for the archive of a custom post type use: is_post_type_archive( $post_type )
+           //Set the order ASC or DESC
+           $query->set( 'order', 'ASC' );
+           //Set the orderby
+           $query->set( 'orderby', 'menu_order' );
+        endif;
+	};
 
 //* Enqueue script to activate WOW.js
 add_action('wp_enqueue_scripts', 'sk_wow_init_in_footer');

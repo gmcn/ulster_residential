@@ -6,7 +6,17 @@
   <div class="container-fluid loggedin">
     <div class="row">
 
-    <div class="col-md-12 loggedin_account_no">
+    <div class="col-md-6 loggedin_account_no hidden-xs hidden-sm">
+      Account # <?php echo $current_user->account_no ?>
+    </div>
+
+    <div class="col-md-6">
+      <h2>Retailer Utilities</h2>
+    </div>
+
+    <hr />
+
+    <div class="col-md-6 loggedin_account_no hidden-md hidden-lg">
       Account # <?php echo $current_user->account_no ?>
     </div>
 
@@ -20,7 +30,7 @@
     <div class="col-md-3">
       <p>Address</p>
       <div class="input">
-        <?php echo $current_user->user_email ?>
+        <?php echo $current_user->company_address ?>
       </div>
 
     </div>
@@ -32,8 +42,15 @@
       </div>
     </div>
 
+    </div>
+    <p class="edit">To edit your details please email: <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a></p>
 
+    <hr />
 
+    <div class="row">
+      <div class="col-md-5 col-md-offset-6 pre-reailer_children">
+        CLICK AN AREA BELOW TO FIND OUT MORE
+      </div>
     </div>
   </div>
 <?php endif; ?>

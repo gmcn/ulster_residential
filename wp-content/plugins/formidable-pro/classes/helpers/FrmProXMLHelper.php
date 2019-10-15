@@ -450,7 +450,7 @@ class FrmProXMLHelper {
 	 */
 	public static function convert_imported_value_to_array( $imported_value ) {
 		if ( is_string( $imported_value ) && strpos( $imported_value, ',' ) !== false ) {
-			$imported_value = maybe_unserialize( $imported_value );
+			FrmProAppHelper::unserialize_or_decode( $imported_value );
 
 			if ( ! is_array( $imported_value ) ) {
 				$imported_value = explode( ',', $imported_value );
@@ -594,7 +594,7 @@ class FrmProXMLHelper {
 	public static function add_in_section_value_to_field_ids( $field_ids, $section_id ) {
 		foreach ( $field_ids as $child_id ) {
 			$child_field_options = FrmDb::get_var( 'frm_fields', array( 'id' => $child_id ), 'field_options' );
-			$child_field_options = maybe_unserialize( $child_field_options );
+			FrmProAppHelper::unserialize_or_decode( $child_field_options );
 			$child_field_options['in_section'] = $section_id;
 
 			// Update now

@@ -591,7 +591,8 @@ class FrmProEntryMeta {
 
         // Maybe unserialize
         foreach ( $metas as $k => $v ) {
-			$metas[ $k ] = maybe_unserialize( $v );
+			$metas[ $k ] = $v;
+			FrmProAppHelper::unserialize_or_decode( $metas[ $k ] );
             unset($k, $v);
         }
 

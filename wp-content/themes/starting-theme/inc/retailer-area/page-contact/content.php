@@ -31,7 +31,7 @@ if ( is_user_logged_in() ) : ?>
 <div class="container-fluid back">
   <div class="row">
     <div class="col-12">
-      <a href="/retailer-area">Back to retailer area</a> 
+      <a href="<?php echo site_url(); ?>/retailer-area">Back to retailer area</a> 
     </div>
   </div>
 </div>

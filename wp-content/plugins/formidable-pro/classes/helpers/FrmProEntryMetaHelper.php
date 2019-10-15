@@ -76,7 +76,7 @@ class FrmProEntryMetaHelper {
 	 */
 	private static function convert_non_post_taxonomy_ids_to_names( $field, $atts, &$value ) {
 		if ( isset( $field->field_options['post_field'] ) && $field->field_options['post_field'] == 'post_category' && ! empty( $value ) && $atts['truncate'] ) {
-			$value = maybe_unserialize( $value );
+			FrmProAppHelper::unserialize_or_decode( $value );
 
 			$new_value = array();
 			foreach ( (array) $value as $tax_id ) {
@@ -110,7 +110,8 @@ class FrmProEntryMetaHelper {
         $value = '';
 		if ( $atts['type'] == 'tag' ) {
 			if ( isset( $atts['field']->field_options ) ) {
-                $field_options = maybe_unserialize($atts['field']->field_options);
+				$field_options = $atts['field']->field_options;
+				FrmProAppHelper::unserialize_or_decode( $field_options );
                 $tax = isset($field_options['taxonomy']) ? $field_options['taxonomy'] : 'frm_tag';
 				$tags = get_the_terms( $post_id, $tax );
 
