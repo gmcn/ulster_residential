@@ -228,6 +228,15 @@ function cc_mime_types($mimes) {
 }
 add_filter('upload_mimes', 'cc_mime_types');
 
+//remove pages from search, add page ID to array
+function exclude_search_filter( $query ) {
+	if ( $query->is_search && $query->is_main_query() ) {
+	$query->set( 'post__not_in', array( 4510, 947 ) );
+	}
+}
+
+add_action( 'pre_get_posts', 'exclude_search_filter' );
+
 /**
  * Code to add the custom login css file to the theme
  * - file is "/login/custom-login-styles.css"
