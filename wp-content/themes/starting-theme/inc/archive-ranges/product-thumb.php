@@ -15,7 +15,17 @@ $range_types = (get_the_terms(get_the_ID(), 'ranges_type'));
 <div class="l-thumbGrid__item">
     <div class="l-thumbGrid__item--overlay" href="<?php the_permalink(); ?>">
         <div class="singleRange--title">
-            <h2><?php the_title(); ?></h2>
+
+          <?php if ( (get_the_title()) == $range_types[0]->name ) : ?>
+            <h2><?php echo the_field('colour') ?></h2>
+          <?php elseif ((get_field('colour') == get_the_title() ) && (get_the_title()) == get_the_title() ) : ?>
+            <h2><?php echo the_field('colour') ?></h2>
+          <?php else : ?>
+            <h2><?php the_title(); ?> <?php echo the_field('colour') ?></h2>
+          <?php endif; ?>
+
+
+
             <h3><?php echo $range_types[0]->name; ?></h3>
         </div>
         <div class="singleRange--buttons">

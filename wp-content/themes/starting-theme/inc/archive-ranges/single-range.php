@@ -39,17 +39,14 @@
                           </div>
 
                             <div class="row">
-
-                              <div class="col-sm-4 u-text--600">Colour</div>
-                              <div class="col-sm-8 u-text--large">
-                                <?php if (get_field('colour')) {
-                                  the_field('colour');
-                                } else {
-                                  listRangeColors($colors);
-                                } ?>
-                              </div>
-                              
+                              <?php if (get_field('colour')) : ?>
+                                <div class="col-sm-4 u-text--600">Colour</div>
+                                <div class="col-sm-8 u-text--large">
+                                  <?php the_field('colour'); ?>
+                                </div>
+                              <?php endif; ?>
                             </div>
+
                             <div class="row">
                                 <div class="col-sm-4 u-text--600">Design No.</div>
                                 <div class="col-sm-8 u-text--large"><?php the_field('design_no'); ?></div>
