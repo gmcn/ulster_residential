@@ -152,7 +152,7 @@ function cartProcessOrder()
         wp_reset_postdata();
     endif;
 
-    $to = 'ucm.orders@ulstercarpets.com, gary@cornellstudios.com';
+    $to = 'uceurope@ulstercarpets.com, ucm.orders@ulstercarpets.com, gary@cornellstudios.com';
     $subject = 'Request for samples from the Ulster Carpets Website';
     $headers = array('Content-Type: text/html; charset=UTF-8', 'From: rachel@ulstercarpets.com');
     wp_mail($to, $subject, $emailContent, $headers);
