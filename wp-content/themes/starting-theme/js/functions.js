@@ -75,6 +75,16 @@
     jQuery('.collapse').collapse('hide');
 });
 
+// $('a[href*=\\#]').click(function (event)
+// {
+//     let hashValue = $(this).attr('href');
+//     let name = hashValue.substring(1);
+//     let target = $('[name="' + name + '"]');
+//     $('html, body').animate({ scrollTop: target.offset().top }, 500);
+//     event.preventDefault();
+//     history.pushState(null, null, hashValue);
+// });
+
 } ) (jQuery);
 
 function showform() {

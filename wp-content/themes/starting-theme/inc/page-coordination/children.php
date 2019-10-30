@@ -9,7 +9,7 @@ $args = array(
 $child_query = new WP_Query( $args ); ?>
 
   <?php if ($child_query->have_posts()) : ?>
-
+    <a name="mood"></a>
     <div class="container-fluid mood-boards">
 
       <h3>Designers Mood Board</h3>

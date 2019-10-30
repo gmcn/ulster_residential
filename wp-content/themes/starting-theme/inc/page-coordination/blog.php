@@ -1,5 +1,5 @@
 <?php if (is_page( 'colour-coordination' )): ?>
-  
+
   <?php
   $args = array(
   'post_type' => 'post',
@@ -11,7 +11,7 @@
   $blog_query = new WP_Query( $args ); ?>
 
     <?php if ($blog_query->have_posts()) : ?>
-
+      <a name="coordination"></a>
       <div class="container-fluid related-articles">
 
         <h3>Related Articles</h3>

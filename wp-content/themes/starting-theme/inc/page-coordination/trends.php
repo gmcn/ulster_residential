@@ -1,9 +1,8 @@
 <?php if( have_rows('seasonal_trends') ): ?>
     <div class="container-fluid trends brochures">
+      <a name="trends"></a>
       <h3>Seasonal Trends</h3>
     	<div class="row">
-
-
 
     	<?php while( have_rows('seasonal_trends') ): the_row();
 
@@ -22,10 +21,10 @@
             <h4><?php echo $trends_title ?></h4>
 
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-lg-6 brochures_link__links">
                 <a class="view" href="<?php echo $trends_file ?>" target="_blank">View Now</a>
               </div>
-              <div class="col-md-6">
+              <div class="col-lg-6 brochures_link__links">
                 <a class="download" href="<?php echo $trends_file ?>" download>Download</a>
               </div>
             </div>
