@@ -291,10 +291,6 @@
       padding-left: 0;
       padding-right: 15px;
     }
-    &__wrapper {
-      background: url(images/range_bg@2x.jpg) center center;
-      background-size: cover;
-    }
     a {
       background-color: #55757B;
     }
@@ -303,10 +299,6 @@
     color: #505050;
     padding-left: 0;
     padding-right: 0;
-    &__wrapper {
-      background: url(images/style_bg@2x.jpg) center center;
-      background-size: cover;
-    }
     a {
       background-color: #505050;
     }
@@ -317,10 +309,6 @@
     @include md {
       padding-right: 0;
       padding-left: 15px;
-    }
-    &__wrapper {
-      background: url(images/colour_bg@2x.jpg) center center;
-      background-size: cover;
     }
     a {
       background-color: #53194F;
