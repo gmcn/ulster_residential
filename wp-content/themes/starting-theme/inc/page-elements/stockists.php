@@ -1,6 +1,9 @@
-<div class="container-fluid stockists">
+<?php $page = get_page_by_title( 'Find A Stockist' ); ?>
+
+<div class="container-fluid stockists" style="background: url(<?php echo get_the_post_thumbnail_url($page->ID) ?>)center center no-repeat fixed; background-size: cover;">
 
     <h2>find a stockist</h2>
+
     <p>Ulster Carpets is stocked across the world. Simply click on your region below and enter a few simple details to find your nearest stockist.</p>
 
     <div class="collapse" id="collapseUK">
@@ -51,8 +54,8 @@
       <div class="collapse hidden-md hidden-lg" id="collapseEU_mobile">
         <div class="row">
           <div class="stockists_locations">
-            <p class="">Email us now to find out how to purchase on <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a> or using the form below.</p>
-            <?php echo do_shortcode('[contact-form-7 id="98" title="Find A Stockist"]'); ?>
+            <p class="">Email us now to find out how to purchase on <a href="mailto:uceurope@ulstercarpets.com">uceurope@ulstercarpets.com</a> or using the form below.</p>
+            <?php echo do_shortcode('[contact-form-7 id="4648" title="Find A Stockist EU"]'); ?>
             <div style="clear:both"></div>
           </div>
         </div>
@@ -113,8 +116,8 @@
   <div class="collapse hidden-xs hidden-sm" id="collapseEU">
     <div class="row">
       <div class="stockists_locations">
-        <p class="">Email us now to find out how to purchase on <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a> or using the form below.</p>
-        <?php echo do_shortcode('[contact-form-7 id="98" title="Find A Stockist"]'); ?>
+        <p class="">Email us now to find out how to purchase on <a href="mailto:uceurope@ulstercarpets.com">uceurope@ulstercarpets.com</a> or using the form below.</p>
+        <?php echo do_shortcode('[contact-form-7 id="4648" title="Find A Stockist EU"]'); ?>
         <div style="clear:both"></div>
       </div>
     </div>
