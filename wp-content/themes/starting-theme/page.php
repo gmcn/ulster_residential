@@ -17,6 +17,9 @@ get_header(); ?>
 <?php
   include(locate_template("inc/page-elements/title.php"));
   include(locate_template("inc/page-elements/content.php"));
+  if (is_page('environment')) :
+  include(locate_template("inc/page-about/back.php"));
+  endif;
 ?>
 
 <?php
