@@ -18,135 +18,112 @@
 
 </div>
 
-<div class="rugs_info">
+<div class="rugs_steps">
 
   <?php if( have_rows('rugs_info') ): ?>
 
-    <div class="container-fluid">
+    <?php $i = 1; while( have_rows('rugs_info') ): the_row();
 
-    	<?php $i = 1; while( have_rows('rugs_info') ): the_row();
+        // vars
+        $section_image = get_sub_field('section_image');
+        $section_title = get_sub_field('section_title');
+        $section_text = get_sub_field('section_text');
+        $section_bg_colour = get_sub_field('section_bg_colour');
+        $section_call_to_action_title = get_sub_field('section_call_to_action_title');
+        $section_cta_link = get_sub_field('section_cta_link');
 
-      		// vars
-          $section_image = get_sub_field('section_image');
-      		$section_title = get_sub_field('section_title');
-      		$section_text = get_sub_field('section_text');
-      		$section_bg_colour = get_sub_field('section_bg_colour');
-          $section_call_to_action_title = get_sub_field('section_call_to_action_title');
-          $section_cta_link = get_sub_field('section_cta_link');
+    ?>
 
-  		?>
+    <div class="row step step<?php echo $i ?>" style="background: url(<?php echo $section_image; ?>) no-repeat center center / cover; margin-bottom: 15px; ">
 
-        <div class="row" style="background: url(<?php echo $section_image; ?>) no-repeat center center / cover; margin-bottom: 15px; padding-top: 100px; padding-bottom: 100;">
+      <style media="screen">
+        .step<?php echo $i ?> .st0 {
+          fill: <?php echo $section_bg_colour ?> !important;
+        }
+      </style>
 
-          <!-- <div class="col-md-4 <?php if ($i % 2) : ?>rugs_info__right rugs_info__right_<?php echo $i ?> wow fadeInLeft<?php else : ?>col-md-offset-8 rugs_info__left rugs_info__left_<?php echo $i ?> wow fadeInRight<?php endif; ?>" style="background-color: <?php echo $section_bg_colour ?>;"> -->
+      <?php if ($i % 2) : ?>
+        <?php
 
-          <div class="<?php if ($i % 2) : ?>rugs_info__right rugs_info__right_<?php echo $i ?><?php else : ?>rugs_info__left rugs_info__left_<?php echo $i ?> <?php endif; ?>" style="background-color: <?php echo $section_bg_colour ?>;">
+          $svgLeft = file_get_contents(get_template_directory_uri() . '/images/left_arrow_bg.svg');
 
-            <style media="screen">
-              .rugs_info__right_<?php echo $i ?> .st0 {
-                fill: <?php echo $section_bg_colour ?> !important;
-              }
-              .rugs_info__left_<?php echo $i ?> .st0 {
-                fill: <?php echo $section_bg_colour ?> !important;
-              }
-            </style>
+         ?>
+
+         <div class="row" style="width: 750px;  height: 1470px;  float: left">
+           <?php echo $svgLeft ?>
+           <img class="step_scroll_left animated bounce" src="<?php echo get_template_directory_uri() ?>/images/scroll-icon.svg" alt="<?php echo $section_title ?>">
+           <div class="valign">
+             <hr class="hidden-xs hidden-sm hidden-md" />
+           <div class="col-xs-8 col-sm-6">
+
+             <p class="hidden-lg counter">#0<?php echo $i; ?></p>
+
+             <h2><?php echo $section_title ?></h2>
+             <?php echo $section_text ?>
+
+             <?php if ($section_cta_link): ?>
+               <a href="<?php echo $section_cta_link ?>">
+                 <?php echo $section_call_to_action_title ?>
+               </a>
+             <?php endif; ?>
+
+           </div>
+           <div class="col-sm-6 col-lg-5 col-lg-offset-1 count" style="text-align: right">
+
+             <p class="hidden-xs hidden-sm hidden-md">#0<?php echo $i; ?></p>
+
+           </div>
+         </div>
+         </div>
+
+      <?php else : ?>
+
+        <?php
+
+          $svgRight = file_get_contents(get_template_directory_uri() . '/images/right_arrow_bg.svg');
+
+         ?>
+
+         <div class="row" style="width: 750px; height: 50px; float: right">
+           <img class="step_scroll_right animated bounce" src="<?php echo get_template_directory_uri() ?>/images/scroll-icon.svg" alt="<?php echo $section_title ?>">
+           <?php echo $svgRight ?>
+           <div class="valign right">
+             <hr class="hidden-xs hidden-sm hidden-md" />
+             <div class="col-sm-6 col-lg-5 count">
+
+               <p class="hidden-xs hidden-sm hidden-md">#0<?php echo $i; ?></p>
 
 
-            <?php if ($i % 2) : ?>
+             </div>
+             <div class="col-xs-8 col-xs-offset-4 col-sm-7 col-sm-offset-5 col-md-7 col-md-offset-5 col-lg-7 col-lg-offset-0" style="text-align: right;">
 
-              <div class="row" style="z-index: 99">
+               <p class="hidden-lg counter">#0<?php echo $i; ?></p>
 
-              <?php
+               <h2><?php echo $section_title ?></h2>
+               <?php echo $section_text ?>
 
-                $svgLeft = file_get_contents(get_template_directory_uri() . '/images/left_arrow_bg.svg');
+               <?php if ($section_cta_link): ?>
+                 <a href="<?php echo $section_cta_link ?>">
+                   <?php echo $section_call_to_action_title ?>
+                 </a>
+               <?php endif; ?>
 
-               ?>
-
-                <?php echo $svgLeft ?>
-
-
-                <div class="valign">
-                <div class="col-xs-8 col-sm-6">
-
-                  <p class="counter">#0<?php echo $i; ?></p>
-
-                  <h2><?php echo $section_title ?></h2>
-                  <?php echo $section_text ?>
-
-                  <?php if ($section_cta_link): ?>
-                    <a href="<?php echo $section_cta_link ?>">
-                      <?php echo $section_call_to_action_title ?>
-                    </a>
-                  <?php endif; ?>
-
-                </div>
-                <div class="col-sm-6 col-lg-5 col-lg-offset-1 count">
-
-                  <p class="hidden-xs hidden-sm">#0<?php echo $i; ?></p>
-
-                </div>
-              </div>
+             </div>
+           </div>
+         </div>
 
 
-            </div>
-
-            <?php else : ?>
-
-              <?php
-
-                $svgRight = file_get_contents(get_template_directory_uri() . '/images/right_arrow_bg.svg');
-
-               ?>
-
-              <style media="screen">
-                .st0 {
-                  fill: <?php echo $section_bg_colour ?> !important;
-                }
-              </style>
-
-              <div class="row" style="z-index: 99">
-                <?php
-
-                  echo $svgRight;
-
-                 ?>
-                <div class="valign">
-                  <div class="col-lg-4 count">
-
-                    <p class="hidden-xs hidden-sm">#0<?php echo $i; ?></p>
-
-                  </div>
-                  <div class="col-xs-8 col-xs-offset-3 col-sm-6 col-sm-offset-5 col-lg-6 col-lg-offset-1">
-
-                    <p class="counter">#0<?php echo $i; ?></p>
-
-                    <h2><?php echo $section_title ?></h2>
-                    <?php echo $section_text ?>
-
-                    <?php if ($section_cta_link): ?>
-                      <a href="<?php echo $section_cta_link ?>">
-                        <?php echo $section_call_to_action_title ?>
-                      </a>
-                    <?php endif; ?>
-
-                  </div>
-                </div>
-              </div>
-
-            <?php endif; ?>
-
-          </div>
-        </div>
-
-    	<?php $i++; endwhile; ?>
+      <?php endif; ?>
 
     </div>
 
-<?php endif; ?>
+    <?php $i++; endwhile; ?>
 
-<div class="container-fluid">
+  <?php endif; ?>
 
 </div>
+
+<div class="container-fluid">
 
     <?php if( have_rows('rugs_info_bottom') ):
 
@@ -157,6 +134,10 @@
       <div class="rugs_info_bottom" style="background: url(<?php echo $rugs_info_bottom_background_image ?>) no-repeat center center / cover">
 
         <img class="stretch" src="<?php echo get_template_directory_uri() ?>/images/rugs_info_bottom.svg" alt="">
+
+        <?php $arrowTop = file_get_contents(get_template_directory_uri() . '/images/rugs_info_bottom.svg'); ?>
+
+        <?php //echo $arrowTop ?>
 
         <?php $i = 1; while( have_rows('rugs_info_bottom') ): the_row();
 
