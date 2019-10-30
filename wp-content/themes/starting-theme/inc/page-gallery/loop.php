@@ -14,7 +14,7 @@ if ( have_posts() ) :  ?>
 
     <div class="col-sm-6 col-md-3 col-lg-2 gallery_board wow fadeInUp">
 
-      <div class="wrapper" style="background: url(<?php the_post_thumbnail_url('medium') ?>) center center; height:320px; background-size: cover;">
+      <div class="wrapper" style="background: url(<?php the_post_thumbnail_url('large') ?>) center center; height:320px; background-size: cover;">
         <a href="<?php echo the_permalink(); ?>">
           <div class="hover">
 

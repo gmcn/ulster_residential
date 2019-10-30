@@ -20,12 +20,12 @@
             <div class="col-md-12">
               <h2><?php echo $office_name; ?></h2>
             </div>
-            <div class="col-md-4 office_address matchheight">
+            <div class="col-sm-5 col-lg-5 office_address matchheight">
               Ulster Carpets<br />
               <span><?php echo $office_name; ?></span>
               <?php echo $office_address; ?>
             </div>
-            <div class="col-md-7 office_phone matchheight">
+            <div class="col-sm-6 col-lg-6 office_phone matchheight">
               <?php if ($office_email) : ?>
               <span>Email:</span><br  /> <a href="mailto:<?php echo $office_email ?>"><?php echo $office_email ?></a><br  />
               <?php endif; ?>
