@@ -14,7 +14,6 @@ global $wp;
 $thumbnail = get_the_post_thumbnail_url();
 
 ?>
-
 <div class="container-fluid inspiration">
   <div class="row">
     <div class="col-md-8 inspiration_img">
