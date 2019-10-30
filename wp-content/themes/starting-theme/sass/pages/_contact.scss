@@ -158,6 +158,18 @@
       }
     }
     &__map {
+      iframe {
+        &:first-of-type {
+          @include md {
+            padding-right: 7.5px;
+          }
+        }
+        &:last-of-type {
+          @include md {
+            padding-left: 7.5px;
+          }
+        }
+      }
       padding-right: 0;
       padding-left: 0;
       @include md {
