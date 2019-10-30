@@ -69,11 +69,11 @@
         <p id="breadcrumbs">
           <span>
             <span>
-              <a href="http://staging.ulster.cornellstudios.com/">Home</a> |
+              <a href="/">Home</a> |
               <span>
-                <a href="http://staging.ulster.cornellstudios.com/choose-a-carpet/">Choose A Carpet</a> |
+                <a href="/choose-a-carpet/">Choose A Carpet</a> |
                 <span>
-                  <a href="http://staging.ulster.cornellstudios.com/choose-a-carpet/style/">Style</a> |
+                  <a href="/choose-a-carpet/style/">Style</a> |
                   <span class="breadcrumb_last" aria-current="page">
                     <?php echo $thiscat_id; ?>
                   </span>
@@ -97,17 +97,17 @@
          <p id="breadcrumbs">
            <span>
              <span>
-               <a href="http://staging.ulster.cornellstudios.com/">Home</a> |
+               <a href="/">Home</a> |
                <span>
-                 <a href="http://staging.ulster.cornellstudios.com/choose-a-carpet/">Choose A Carpet</a> |
+                 <a href="choose-a-carpet/">Choose A Carpet</a> |
                  <span>
-                   <a href="http://staging.ulster.cornellstudios.com/choose-a-carpet/colour/">Colour</a> |
+                   <a href="/choose-a-carpet/colour/">Colour</a> |
                    <span class="breadcrumb_last" aria-current="page">
                      <?php echo $thiscat_id; ?>
                    </span>
                  </span>
              </span>
-           </span>Style
+           </span>
           </span>
        </p>
 
@@ -117,11 +117,11 @@
           <p id="breadcrumbs">
             <span>
               <span>
-                <a href="http://staging.ulster.cornellstudios.com/">Home</a> |
+                <a href="/">Home</a> |
                 <span>
-                  <a href="http://staging.ulster.cornellstudios.com/choose-a-carpet/">Choose A Carpet</a> |
+                  <a href="/choose-a-carpet/">Choose A Carpet</a> |
                   <span class="breadcrumb_last" aria-current="page">
-                    <a href="http://staging.ulster.cornellstudios.com/ranges/">Range</a> |
+                    <a href="/choose-a-carpet/ranges/">Range</a> |
                     <span class="breadcrumb_last" aria-current="page">
                       <?php echo $thiscat_id; ?>
                     </span>
@@ -137,18 +137,38 @@
           <p id="breadcrumbs">
             <span>
               <span>
-                <a href="http://staging.ulster.cornellstudios.com/">Home</a> |
+                <a href="/">Home</a> |
                 <span>
-                  <a href="http://staging.ulster.cornellstudios.com/choose-a-carpet/">Choose A Carpet</a> |
+                  <a href="/choose-a-carpet/">Choose A Carpet</a> |
                   <span class="breadcrumb_last" aria-current="page">
                     Ranges
                   </span>
               </span>
              </span>
            </span>
-        </p>
+         </p>
 
 
+      <?php elseif (is_singular('ranges')) : ?>
+
+        <p id="breadcrumbs">
+          <span>
+            <span>
+              <a href="/">Home</a> |
+              <span>
+                <a href="/choose-a-carpet/">Choose A Carpet</a> |
+                <span class="breadcrumb_last" aria-current="page">
+                  <a href="/choose-a-carpet/ranges/">Range</a> |
+                  <span class="breadcrumb_last" aria-current="page">
+                    <?php $range_types = (get_the_terms(get_the_ID(), 'ranges_type')); if (isset($range_types)) : ?>
+                      <a href="/ranges_type/<?php echo $range_types[0]->slug; ?>"><?php echo $range_types[0]->name; ?></a>
+                    <?php endif;?>
+                  </span>
+                </span>
+            </span>
+           </span>
+         </span>
+      </p>
 
       <?php else : ?>
 
