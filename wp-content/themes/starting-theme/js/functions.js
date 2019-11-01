@@ -27,7 +27,8 @@
     $('#bh-sl-map-container').storeLocator();
   });
 
-  $(document).ready(function() {
+
+
     $(".fancybox").fancybox({
       infobar: true,
       helpers : {
@@ -37,8 +38,6 @@
        this.title = this.title + ' <p> ' + $(this.element).find('img').attr('alt');
       }
       }); // fancybox
-
-    }); // ready
 
     $(".image-show").fancybox({
       infobar: true,

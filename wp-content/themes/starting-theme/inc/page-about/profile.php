@@ -7,7 +7,7 @@
 <div class="container-fluid company-profile">
   <div class="row">
     <div class="col-md-6 col-md-offset-6">
-      <h2>Behind The Brand The History</h2>
+      <h2>Behind The Brand</h2>
     </div>
     <hr />
   </div>
@@ -82,12 +82,11 @@
 
           <?php elseif($mediaType == 'video') : ?>
             <img src="<?php echo get_template_directory_uri(); ?>/images/video_icon.svg" alt="<?php echo $mediaTitle; ?>"><br />
-            <a style="background:<?php echo $linkBg; ?>" class="various fancybox" data-fancybox-type="iframe" alt="<?php echo $mediaTitle; ?>" title="<?php echo $mediaTitle; ?>" href="https://www.youtube.com/embed/<?php echo $video ?>?autoplay=1&amp;rel=0">
+            <a style="background:<?php echo $linkBg; ?>" class="various fancybox fancybox.iframe" data-fancybox-type="iframe" alt="<?php echo $mediaTitle; ?>" title="<?php echo $mediaTitle; ?>" href="<?php echo $video ?>">
             <?php echo $mediaTitle ?>
             <img src="" alt="<?php echo $video_description; ?>" style="display:none;">
             </a>
           <?php endif; ?>
-
 
         </div>
       </div>
