@@ -62,6 +62,7 @@
              <?php echo $section_text ?>
 
              <?php if ($section_cta_link): ?>
+               <br />
                <a href="<?php echo $section_cta_link ?>">
                  <?php echo $section_call_to_action_title ?>
                </a>
@@ -103,6 +104,7 @@
                <?php echo $section_text ?>
 
                <?php if ($section_cta_link): ?>
+                 <br />
                  <a href="<?php echo $section_cta_link ?>">
                    <?php echo $section_call_to_action_title ?>
                  </a>
