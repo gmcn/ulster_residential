@@ -39,6 +39,17 @@
     z-index: 100;
 }
 
+.text-left {
+
+  a {
+    color: #525c65;
+    &:hover {
+      color: #525c65;
+    }
+  }
+
+}
+
 
 .lala-alert {
     position: relative;
