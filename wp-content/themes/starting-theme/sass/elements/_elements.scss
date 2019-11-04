@@ -69,12 +69,16 @@ a.policy:hover, a.policy:focus {
 .stockists {
 	padding-top: 50px;
 	padding-bottom: 50px;
+	background-color: #000;
+	background-repeat: none;
+	background-size: cover;
 	@include md {
 		padding-top: 100px;
 		padding-bottom: 100px;
+		background-position: center center;
+		background-attachment: fixed;
 	}
-	background: url(images/stockists_bg.jpg) center center no-repeat fixed;
-	background-size: cover;
+	background-repeat: none;
 	position: relative;
 	margin-bottom: 15px;
 	color: #fff;

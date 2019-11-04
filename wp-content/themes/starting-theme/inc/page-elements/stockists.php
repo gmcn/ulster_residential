@@ -1,6 +1,6 @@
 <?php $page = get_page_by_title( 'Find A Stockist' ); ?>
 
-<div class="container-fluid stockists" style="background: url(<?php echo get_the_post_thumbnail_url($page->ID) ?>)center center no-repeat fixed; background-size: cover;">
+<div class="container-fluid stockists" style="background-image: url(<?php echo get_the_post_thumbnail_url($page->ID) ?>);">
 
     <h2>find a stockist</h2>
 
