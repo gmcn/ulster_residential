@@ -6194,15 +6194,19 @@ table {
 .stockists {
   padding-top: 50px;
   padding-bottom: 50px;
-  background: url(images/stockists_bg.jpg) center center no-repeat fixed;
+  background-color: #000;
+  background-repeat: none;
   background-size: cover;
+  background-repeat: none;
   position: relative;
   margin-bottom: 15px;
   color: #fff; }
   @media screen and (min-width: 992px) {
     .stockists {
       padding-top: 100px;
-      padding-bottom: 100px; } }
+      padding-bottom: 100px;
+      background-position: center center;
+      background-attachment: fixed; } }
   .stockists .container {
     max-width: 100%; }
   .stockists h2 {
@@ -10710,6 +10714,11 @@ footer {
   top: 2em;
   right: 1em;
   z-index: 100; }
+
+.text-left a {
+  color: #525c65; }
+  .text-left a:hover {
+    color: #525c65; }
 
 .lala-alert {
   position: relative;
