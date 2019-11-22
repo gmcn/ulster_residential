@@ -34,14 +34,14 @@ $thumbnail = get_the_post_thumbnail_url();
 
               $term_obj_list = get_the_terms( $post->ID, 'ranges_type' );
               $terms_string = join(', ', wp_list_pluck($term_obj_list, 'name'));
-
+              $terms_slug = join(', ', wp_list_pluck($term_obj_list, 'slug'));
               $terms_desc = join(', ', wp_list_pluck($term_obj_list, 'description'));
 
               ?>
                 <?php setup_postdata($post); ?>
                 <div class="col-md-3 col-sm-6 inspiration_ranges_range wow fadeInLeft">
                   <div class="wrapper" style="background: url(<?php echo $terms_desc ?>) center center; height:288px; background-size: cover;">
-                    <a href="<?php echo site_url(); ?>/ranges_type/<?php echo $terms_string; ?>">
+                    <a href="<?php echo site_url(); ?>/ranges_type/<?php echo $terms_slug; ?>">
                       <div class="hover">
 
                         <div class="vert-align">
@@ -118,7 +118,7 @@ $thumbnail = get_the_post_thumbnail_url();
 
     </div>
     <div class="col-md-4 back">
-      <a href="<?php echo site_url(); ?>/choose-a-carpet/colour-coordination/">Back to colour coordination</a>
+      <a href="<?php echo site_url(); ?>/choose-a-carpet/inspiration/">Back to Inspiration</a>
     </div>
     <div class="col-md-4 next">
 

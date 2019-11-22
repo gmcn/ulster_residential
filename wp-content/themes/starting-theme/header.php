@@ -12,13 +12,22 @@
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54372407-4"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'UA-54372407-4');
+</script>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="profile" href="http://gmpg.org/xfn/11">
 <link rel="icon" href="<?php echo get_template_directory_uri(); ?>/images/favicon.ico">
 <link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/images/favicon.ico">
-<link type="text/plain" rel="robots" href="/robots.txt" />
-<link type="text/plain" rel="author" href="/humans.txt" />
+<link type="text/plain" rel="robots" href="<?php echo site_url(); ?>/robots.txt" />
+<link type="text/plain" rel="author" href="<?php echo site_url(); ?>/humans.txt" />
 <?php wp_head(); ?>
 </head>
 
@@ -56,7 +65,7 @@
 								</span>
 							</div>
 							<div class="col-xs-12">
-								<a class="site-branding" href="/"><img src="<?php echo get_template_directory_uri() ?>/images/logo.svg" alt="<?php bloginfo( 'name' ); ?> | <?php echo $description; /* WPCS: xss ok. */ ?>">	</a>
+								<a class="site-branding" href="<?php echo get_site_url(); ?>"><img src="<?php echo get_template_directory_uri() ?>/images/logo.svg" alt="<?php bloginfo( 'name' ); ?> | <?php echo $description; /* WPCS: xss ok. */ ?>">	</a>
 							</div>
 						</div>
 
@@ -64,7 +73,7 @@
 							<div class="col-xs-5 col-md-4 col-lg-2">
 								<div class="navbar-header">
 									<?php $description = get_bloginfo( 'description', 'display' ); ?>
-									<a class="site-branding" href="/"><img src="<?php echo get_template_directory_uri() ?>/images/logo.svg" alt="<?php bloginfo( 'name' ); ?> | <?php echo $description; /* WPCS: xss ok. */ ?>">	</a>
+									<a class="site-branding" href="<?php echo get_site_url(); ?>"><img src="<?php echo get_template_directory_uri() ?>/images/logo.svg" alt="<?php bloginfo( 'name' ); ?> | <?php echo $description; /* WPCS: xss ok. */ ?>">	</a>
 			          </div>
 							</div>
 							<div class="col-lg-6 hidden-xs hidden-sm hidden-md" style="text-align: center">
@@ -180,7 +189,7 @@
 
 								<!-- </div> -->
 							</form>
-							<a class="policy" href="<?php echo site_url() ?>/data-policy">View our privacy policy</a>
+							<a class="policy" href="<?php echo get_site_url(); ?>/privacy-policy">View our privacy policy</a>
 						</div>
 
 						<!--End mc_embed_signup-->
@@ -214,45 +223,53 @@
 	 						<?php echo get_search_form(); ?>
 
 
+							<?php $retainerShowHide = get_field('retailer_area_showhide', 'option'); ?>
 
-							<div class="login_wrapper">
-								<p class="intro">Retailer Area</p>
-								<?php if (is_user_logged_in()) : ?>
+							<?php if ($retainerShowHide == 1) : ?>
 
-									<div class="logout">
-										<a href="/retailer-area">View our retailer area</a>
-										<button type="button" name="button"><a id="wp-submit" class="logout" href="<?php echo wp_logout_url(); ?>" title="Logout">Logout</a></button>
-									</div>
+								<div class="login_wrapper">
+									<p class="intro">Retailer Area</p>
+									<?php if (is_user_logged_in()) : ?>
 
-								<?php else : ?>
+										<div class="logout">
+											<a href="<?php echo get_site_url(); ?>/retailer-area">View our retailer area</a>
+											<button type="button" name="button"><a id="wp-submit" class="logout" href="<?php echo wp_logout_url(); ?>" title="Logout">Logout</a></button>
+										</div>
 
-									<?php
-										$args = array(
-											'echo'           => true,
-											'redirect'       => '/retailer-area/',
-											'label_log_in'   => __( 'Continue' ),
-											'label_username' => __( 'Username' ),
-											'label_password' => __( 'Password' ),
-											'label_remember' => __( 'Remember Me' ),
-											'id_username'    => 'user_login',
-											'id_password'    => 'user_pass',
-											'id_submit'      => 'wp-submit',
-											'remember'       => true,
-											'placeholder_username' => __( 'Username/ID' ),
-											'placeholder_password' => __( 'Password' ),
-											'value_username' => NULL,
-											'value_remember' => true
-									);
+									<?php else : ?>
 
-									wp_login_form($args); ?>
+										<?php
+											$args = array(
+												'echo'           => true,
+												'redirect'       => '/retailer-area/',
+												'label_log_in'   => __( 'Continue' ),
+												'label_username' => __( 'Username' ),
+												'label_password' => __( 'Password' ),
+												'label_remember' => __( 'Remember Me' ),
+												'id_username'    => 'user_login',
+												'id_password'    => 'user_pass',
+												'id_submit'      => 'wp-submit',
+												'remember'       => true,
+												'placeholder_username' => __( 'Username/ID' ),
+												'placeholder_password' => __( 'Password' ),
+												'value_username' => NULL,
+												'value_remember' => true
+										);
 
-									<span>Forgot <a href="<?php echo wp_lostpassword_url( $redirect ); ?>">Username/Password</a></span>
+										wp_login_form($args); ?>
+
+										<span>Forgot <a href="<?php echo wp_lostpassword_url( $redirect ); ?>">Username/Password</a></span>
 
 
 
-								<?php endif; ?>
+									<?php endif; ?>
 
-							</div>
+								</div>
+
+							<?php endif; ?>
+
+
+
 
 
 

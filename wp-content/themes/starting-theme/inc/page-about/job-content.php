@@ -33,9 +33,9 @@
         Required Documents
       </div>
       <?php if( get_field('job_payment_cycle') == 'weekly' ) : ?>
-        <a href="/wp-content/uploads/jobs_application-form.docx" download>Application Form <img style="width: 20px;" src="<?php echo get_template_directory_uri() ?>/images/dl_icon.svg" alt="Download Application Form">  </a><br />
+        <a href="<?php echo get_site_url(); ?>/wp-content/uploads/jobs_application-form.docx" download>Application Form <img style="width: 20px;" src="<?php echo get_template_directory_uri() ?>/images/dl_icon.svg" alt="Download Application Form">  </a><br />
       <?php endif; ?>
-      <a href="/wp-content/uploads/jobs_monitoring-form.docx" download>Monitoring Form <img style="width: 20px;" src="<?php echo get_template_directory_uri() ?>/images/dl_icon.svg" alt="Download Application Form">  </a>
+      <a href="<?php echo get_site_url(); ?>/wp-content/uploads/jobs_monitoring-form.docx" download>Monitoring Form <img style="width: 20px;" src="<?php echo get_template_directory_uri() ?>/images/dl_icon.svg" alt="Download Application Form">  </a>
 
 
       <div class="buttons">

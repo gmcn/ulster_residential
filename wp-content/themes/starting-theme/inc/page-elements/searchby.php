@@ -14,7 +14,7 @@
     background-size: cover;">
         <h3>Range</h3>
         <div class="clear"></div>
-        <a href="/choose-a-carpet/ranges/">Search by</a>
+        <a href="<?php echo get_site_url(); ?>/choose-a-carpet/ranges/">Search by</a>
       </div>
     </div>
     <div class="col-md-4 style">
@@ -22,7 +22,7 @@
     background-size: cover;">
         <h3>Style</h3>
         <div class="clear"></div>
-        <a href="/choose-a-carpet/style/">Search by</a>
+        <a href="<?php echo get_site_url(); ?>/choose-a-carpet/style/">Search by</a>
       </div>
     </div>
     <div class="col-md-4 colour">
@@ -30,7 +30,7 @@
     background-size: cover;">
         <h3>Colour</h3>
         <div class="clear"></div>
-        <a href="/choose-a-carpet/colour/">Search by</a>
+        <a href="<?php echo get_site_url(); ?>/choose-a-carpet/colour/">Search by</a>
       </div>
     </div>
   </div>

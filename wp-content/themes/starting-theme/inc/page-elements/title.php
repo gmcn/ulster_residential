@@ -71,9 +71,9 @@
             <span>
               <a href="/">Home</a> |
               <span>
-                <a href="/choose-a-carpet/">Choose A Carpet</a> |
+                <a href="<?php echo get_site_url(); ?>/choose-a-carpet/">Choose A Carpet</a> |
                 <span>
-                  <a href="/choose-a-carpet/style/">Style</a> |
+                  <a href="<?php echo get_site_url(); ?>/choose-a-carpet/style/">Style</a> |
                   <span class="breadcrumb_last" aria-current="page">
                     <?php echo $thiscat_id; ?>
                   </span>
@@ -97,11 +97,11 @@
          <p id="breadcrumbs">
            <span>
              <span>
-               <a href="/">Home</a> |
+               <a href="<?php echo get_site_url(); ?>/">Home</a> |
                <span>
-                 <a href="choose-a-carpet/">Choose A Carpet</a> |
+                 <a href="<?php echo get_site_url(); ?>/choose-a-carpet/">Choose A Carpet</a> |
                  <span>
-                   <a href="/choose-a-carpet/colour/">Colour</a> |
+                   <a href="<?php echo get_site_url(); ?>/choose-a-carpet/colour/">Colour</a> |
                    <span class="breadcrumb_last" aria-current="page">
                      <?php echo $thiscat_id; ?>
                    </span>
@@ -117,11 +117,11 @@
           <p id="breadcrumbs">
             <span>
               <span>
-                <a href="/">Home</a> |
+                <a href="<?php echo get_site_url(); ?>/">Home</a> |
                 <span>
-                  <a href="/choose-a-carpet/">Choose A Carpet</a> |
+                  <a href="<?php echo get_site_url(); ?>/choose-a-carpet/">Choose A Carpet</a> |
                   <span class="breadcrumb_last" aria-current="page">
-                    <a href="/choose-a-carpet/ranges/">Range</a> |
+                    <a href="<?php echo get_site_url(); ?>/choose-a-carpet/ranges/">Range</a> |
                     <span class="breadcrumb_last" aria-current="page">
                       <?php echo $thiscat_id; ?>
                     </span>
@@ -137,9 +137,9 @@
           <p id="breadcrumbs">
             <span>
               <span>
-                <a href="/">Home</a> |
+                <a href="<?php echo get_site_url(); ?>/">Home</a> |
                 <span>
-                  <a href="/choose-a-carpet/">Choose A Carpet</a> |
+                  <a href="<?php echo get_site_url(); ?>/choose-a-carpet/">Choose A Carpet</a> |
                   <span class="breadcrumb_last" aria-current="page">
                     Ranges
                   </span>
@@ -156,12 +156,12 @@
             <span>
               <a href="/">Home</a> |
               <span>
-                <a href="/choose-a-carpet/">Choose A Carpet</a> |
+                <a href="<?php echo get_site_url(); ?>/choose-a-carpet/">Choose A Carpet</a> |
                 <span class="breadcrumb_last" aria-current="page">
-                  <a href="/choose-a-carpet/ranges/">Range</a> |
+                  <a href="<?php echo get_site_url(); ?>/choose-a-carpet/ranges/">Range</a> |
                   <span class="breadcrumb_last" aria-current="page">
                     <?php $range_types = (get_the_terms(get_the_ID(), 'ranges_type')); if (isset($range_types)) : ?>
-                      <a href="/ranges_type/<?php echo $range_types[0]->slug; ?>"><?php echo $range_types[0]->name; ?></a>
+                      <a href="<?php echo get_site_url(); ?>/ranges_type/<?php echo $range_types[0]->slug; ?>"><?php echo $range_types[0]->name; ?></a>
                     <?php endif;?>
                   </span>
                 </span>
@@ -260,7 +260,7 @@
   </div>
   <div class="ulsterathome_intro">
     <h3>Do you have a beautiful Ulster carpet at home?</h3>
-    <p>Inspire others with your own interior design style by adding your images to our gallery. <br />Tag us on Instagram, Facebook, Twitter or Pinstgram by using <a href="https://www.instagram.com/explore/tags/ulsterathome" target="_blank">#ulsterathome</a> or email your snaps to <a href="mailto:ulsterathome@ulstercarpets.com" target="_blank">ulsterathome@ulstercarpets.com</a> to feature in our excluse gallery and help inspire others.</p>
+    <p>Inspire others with your own interior design style by adding your images to our gallery. <br />Tag us on Instagram, Facebook, Twitter or Pinterest by using <a href="https://www.instagram.com/explore/tags/ulsterathome" target="_blank">#ulsterathome</a> or email your snaps to <a href="mailto:ulsterathome@ulstercarpets.com" target="_blank">ulsterathome@ulstercarpets.com</a> to feature in our exclusive gallery and help inspire others.</p>
   </div>
 <?php endif ?>
 

@@ -61,7 +61,7 @@
 		</div>
 		<div class="container-fluid signature clear">
 			<div class="col-md-2">
-				<a class="site-branding" href="/"><img src="<?php echo get_template_directory_uri() ?>/images/logo.svg" alt="<?php bloginfo( 'name' ); ?>">	</a>
+				<a class="site-branding" href="<?php site_url(); ?>"><img src="<?php echo get_template_directory_uri() ?>/images/logo.svg" alt="<?php bloginfo( 'name' ); ?>">	</a>
 				<div class="social hidden-md hidden-lg">
 					<a href="https://www.instagram.com/ulstercarpets/" target="_blank"><img src="<?php echo get_template_directory_uri() ?>/images/instagram_icon.svg" alt="Instagram"></a>
 					<a href="https://www.facebook.com/UlsterCarpets" target="_blank"> <img src="<?php echo get_template_directory_uri() ?>/images/facebook_icon.svg" alt="Facebook"></a>
@@ -72,7 +72,7 @@
 			</div>
 
 			<div class="col-md-4 col-lg-6 copyright hidden-xs hidden-sm">
-				© <?php echo date('Y'); ?> Ulster Carpets  |  <a href="/modern-slavery-statement/">Modern Slavery Statement</a> | <a href="/gender-pay-gap/">Gender Pay Gap</a> | <a href="/terms-and-conditions/">Terms & Conditions</a> | <a href="/data-policy/">Privacy Policy</a> | <a href="/cookie-policy/">Cookie Policy</a>
+				© <?php echo date('Y'); ?> Ulster Carpets  |  <a href="<?php echo get_site_url(); ?>/modern-slavery-statement/">Modern Slavery Statement</a> | <a href="<?php echo get_site_url(); ?>/gender-pay-gap/">Gender Pay Gap</a> | <a href="<?php echo get_site_url(); ?>/terms-and-conditions/">Terms & Conditions</a> | <a href="<?php echo get_site_url(); ?>/privacy-policy/">Privacy Policy</a> | <a href="<?php echo get_site_url(); ?>/cookie-policy/">Cookie Policy</a>
 				<p class="byline">
 					Website by <a href="https://cornellstudios.com" target="_blank">Cornell</a>
 				</p>
@@ -81,7 +81,7 @@
 			<div class="col-md-6 col-lg-4 links">
 
 				<a class="hidden-xs hidden-sm" href="https://ulstercarpets.com/contract">Contract Site</a>
-				<a href="/contact">Contact Us</a>
+				<a href="<?php echo get_site_url(); ?>/contact">Contact Us</a>
 
 				<div class="social hidden-xs hidden-sm">
 					<a href="https://www.instagram.com/ulstercarpets/" target="_blank">
@@ -104,7 +104,7 @@
 			</div>
 
 			<div class="col-md-4 col-lg-6 copyright hidden-md hidden-lg">
-				© <?php echo date('Y'); ?> Ulster Carpets  |  <a href="modern-slavery-statement">Modern Slavery Statement</a> | <a href="/gender-pay-report">Gender Pay Gap</a> | <a href="/terms-and-conditions/">Terms & Conditions</a> | <a href="/data-policy/">Privacy Policy</a> | <a href="/cookie-policy/">Cookie Policy</a>
+				© <?php echo date('Y'); ?> Ulster Carpets  |  <a href="<?php echo get_site_url(); ?>/modern-slavery-statement">Modern Slavery Statement</a> | <a href="<?php echo get_site_url(); ?>/gender-pay-report">Gender Pay Gap</a> | <a href="<?php echo get_site_url(); ?>/terms-and-conditions/">Terms & Conditions</a> | <a href="<?php echo get_site_url(); ?>/privacy-policy/">Privacy Policy</a> | <a href="<?php echo get_site_url(); ?>/cookie-policy/">Cookie Policy</a>
 
 				<p class="byline">
 					Website by <a href="https://cornellstudios.com" target="_blank">Cornell</a>
