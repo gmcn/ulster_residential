@@ -11,17 +11,39 @@ add_image_size('product_image-retina', 2048, 99999, false);
 
 function restOfRange($postid)
 {
-    $post_terms = wp_get_object_terms($postid, 'ranges_type', array('fields' => 'ids'));
+
+
+  if (false !== stripos($_SERVER['HTTP_REFERER'], "ranges_type")) {
+
+    $type = "ranges_type";
+
+  } elseif (false !== stripos($_SERVER['HTTP_REFERER'], "colour")) {
+
+    $type = "ranges_colour";
+
+  } elseif (false !== stripos($_SERVER['HTTP_REFERER'], "style")) {
+
+    $type = "ranges_style";
+
+  } else {
+
+    $type = "ranges_type";
+
+  }
+
+    $post_terms = wp_get_object_terms($postid, $type, array('fields' => 'ids'));
     $args = array(
         'post_type' => 'ranges',
         'limit' => -1,
         'tax_query' => array(
             array(
-                'taxonomy' => 'ranges_type',
+                'taxonomy' => $type,
                 'field' => 'term_id',
                 'terms' => $post_terms,
             )
         ),
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
         'post__not_in' => array($postid)
 
     );
