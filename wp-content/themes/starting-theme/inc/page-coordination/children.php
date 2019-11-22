@@ -2,7 +2,7 @@
 $args = array(
 'post_parent' => $post->ID,
 'post_type' => 'page',
-'posts_per_page' => 5,
+'posts_per_page' => -1,
 'orderby' => 'menu_order',
 'order' => 'ASC'
 );
@@ -12,7 +12,7 @@ $child_query = new WP_Query( $args ); ?>
     <a name="mood"></a>
     <div class="container-fluid mood-boards">
 
-      <h3>Designers Mood Board</h3>
+      <h3>Mood Boards</h3>
 
       <div class="row">
 

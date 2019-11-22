@@ -213,9 +213,9 @@
   }
   &_share {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    // bottom: 0;
+    // left: 0;
+    width: calc(100% - 15px);
     li {
       display: inline-block;
     }

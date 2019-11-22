@@ -35,6 +35,10 @@
   }
   .content {
     font-size: 15px;
+    a {
+      font-weight: 600;
+      color: #14212c;
+    }
     &_instruction {
       font-weight: 600;
       text-transform: uppercase;
@@ -155,6 +159,10 @@
   }
   .content {
     font-size: 15px;
+    a {
+      font-weight: 600;
+      color: #14212c;
+    }
     .wp-block-file {
       font-weight: 600;
       img {
@@ -196,6 +204,10 @@
   &_content {
     color: #14212C;
     padding: 15px 25px 15px 15px;
+    a {
+      font-weight: 600;
+      color: #14212c;
+    }
     p:first-of-type {
       font-size: 25px;
       font-weight: 600;
@@ -236,6 +248,10 @@
   &_content {
     color: #14212C;
     padding: 15px 25px 15px 15px;
+    a {
+      font-weight: 600;
+      color: #14212c;
+    }
     p:first-of-type {
       color: #6F949C;
       font-size: 25px;

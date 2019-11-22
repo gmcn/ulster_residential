@@ -1,4 +1,4 @@
-<?php if (is_page( 'colour-coordination' )): ?>
+<?php if (is_page( 492 )): ?>
 
   <?php
   $args = array(
@@ -14,7 +14,7 @@
       <a name="coordination"></a>
       <div class="container-fluid related-articles">
 
-        <h3>Related Articles</h3>
+        <h3>Design Articles</h3>
 
         <div class="row">
 

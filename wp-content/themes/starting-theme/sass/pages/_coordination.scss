@@ -175,7 +175,7 @@
 }
 
 .mood-boards {
-  padding: 25px 15px;
+  padding: 25px 15px 15px;
   @include md {
     padding: 50px 15px;
   }
@@ -190,9 +190,6 @@
   &_board {
     margin-bottom: 15px;
     padding: 0 2.5px;
-    @include md {
-      margin-bottom: 0;
-    }
     @include lg {
       width: 20% !important;
     }

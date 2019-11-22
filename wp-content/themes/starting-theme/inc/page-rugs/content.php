@@ -34,7 +34,7 @@
 
     ?>
 
-    <div class="row step step<?php echo $i ?>" style="background: url(<?php echo $section_image; ?>) no-repeat center center / cover; margin-bottom: 15px; ">
+    <div class="row step step<?php echo $i ?>" style="background: url(<?php echo $section_image; ?>) fixed; margin-bottom: 15px; background-size: cover">
 
       <style media="screen">
         .step<?php echo $i ?> .st0 {

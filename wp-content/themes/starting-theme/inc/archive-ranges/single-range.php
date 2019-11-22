@@ -100,14 +100,61 @@
                                     <?php if (inCart($_SESSION['cart'], get_the_ID())) : ?>
                                         <a href="javascript:void(0);" class="e-btn e-btn--black e-btn--addToCart" data-id="<?php the_ID(); ?>">This Sample is Already Added</a>
                                     <?php else : ?>
+
+                                      <?php if ( is_object_in_term( $post->ID, 'ranges_type', 'rug-bindings' ) ) : ?>
+
+                                      <?php else: ?>
+
                                         <a href="#" class="e-btn e-btn--primary js-addToCart e-btn--addToCart" data-id="<?php the_ID(); ?>">Add this sample to my basket</a>
+
+                                      <?php endif ?>
+
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-md-7 text-right l-singleRange--shareBack">
 
                                     <span class="e-scrollDown"><img src="<?php asset('/images/scroll-icon_neutral.svg'); ?>"></span>
-                                    <div class="e-btn c-shareThis u-text-up u-text--neutral">Share This</div>
-                                    <a href="<?php echo site_url('ranges'); ?>" class="e-btn e-btn--neutral u-text-up e-btn--has-radius">Back to results</a>
+                                    <div class="e-btn c-shareThis u-text-up u-text--neutral">
+
+
+                                      <div class="dropdown">
+                                      <a class="toplevel" href="#" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        + Share
+                                      </a>
+                                      <ul class="dropdown-menu" aria-labelledby="dLabel">
+                                        <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo home_url($wp->request) ?>" onclick="return !window.open(this.href, '', 'width=550,height=400')" class="fb-xfbml-parse-ignore"><img src="<?php echo get_template_directory_uri() ?>/images/facebook_icon.svg" alt="Facebook"></a></li>
+
+                                        <li><a class="twitter-share-button" href="https://twitter.com/intent/tweet?tweet?original_referer=<?php echo home_url($wp->request) ?>&text=<?php echo the_title(); ?> <?php echo home_url($wp->request) ?>" onclick="return !window.open(this.href, '', 'width=550,height=400')" target="_blank"><img src="<?php echo get_template_directory_uri() ?>/images/twitter_icon.svg" alt="Twitter"></a></li>
+
+                                        <li>
+                                          <a data-pin-do="buttonPin" href="https://www.pinterest.com/pin/create/button/?url=<?php echo home_url($wp->request) ?>&media=<?php echo $thumbnail ?>!" onclick="return !window.open(this.href, '', 'width=550,height=400')" data-pin-custom="true"><img src="<?php echo get_template_directory_uri() ?>/images/pinterest_icon.svg" alt="Pinterest"></a>
+                                        </li>
+
+                                      </ul>
+                                    </div>
+
+
+                                    </div>
+
+                                    <?php if (false !== stripos($_SERVER['HTTP_REFERER'], "ranges_type")) : ?>
+
+                                      <a href="<?php echo site_url('/choose-a-carpet/ranges/'); ?>" class="e-btn e-btn--neutral u-text-up e-btn--has-radius">Back to results</a>
+
+                                    <?php elseif (false !== stripos($_SERVER['HTTP_REFERER'], "colour")) : ?>
+
+                                      <a href="<?php echo site_url('/choose-a-carpet/colour/'); ?>" class="e-btn e-btn--neutral u-text-up e-btn--has-radius">Back to results</a>
+
+                                    <?php elseif (false !== stripos($_SERVER['HTTP_REFERER'], "style")) : ?>
+
+                                      <a href="<?php echo site_url('/choose-a-carpet/style/'); ?>" class="e-btn e-btn--neutral u-text-up e-btn--has-radius">Back to results</a>
+
+                                    <?php else : ?>
+
+                                      <a href="<?php echo site_url('/choose-a-carpet/ranges/'); ?>" class="e-btn e-btn--neutral u-text-up e-btn--has-radius">Back to results</a>
+
+                                    <?php endif; ?>
+
+
                                 </div>
                             </div>
                         </div>

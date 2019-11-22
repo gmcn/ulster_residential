@@ -14,7 +14,7 @@
   		?>
       <div class="row faq">
       	<div class="col-xs-3 col-md-2 faqs_count matchheight">
-          #<?php if($i < 9) : ?>0<?php endif; ?><?php echo $i ?>
+          #<?php if($i < 10) : ?>0<?php endif; ?><?php echo $i ?>
         </div>
 
         <div class="col-xs-9 col-md-10 faqs_content matchheight">

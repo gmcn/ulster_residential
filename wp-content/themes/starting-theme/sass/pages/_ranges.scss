@@ -532,4 +532,25 @@ $weights: (300, 400, 500, 600, 700);
         }
 
     }
+
+    .dropdown-menu {
+
+      li {
+
+        float: left;
+        width: 33%;
+        // padding: 3px 10px;
+
+        a:visited {
+          color: #606467;
+        }
+
+        > a {
+          color: #606467;
+          padding: 3px 17px;
+        }
+
+      }
+
+    }
 }

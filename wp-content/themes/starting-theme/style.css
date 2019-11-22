@@ -7092,6 +7092,8 @@ footer {
         font-size: 10px;
         color: rgba(88, 84, 77, 0.4);
         font-weight: 600; }
+        footer .signature .byline a:hover {
+          font-size: 10px; }
     @media screen and (min-width: 992px) {
       footer .signature .links {
         text-align: right; } }
@@ -7770,7 +7772,7 @@ footer {
         color: #fff; }
 
 .mood-boards {
-  padding: 25px 15px;
+  padding: 25px 15px 15px;
   background: url(images/mood-boards_bg.jpg) center center; }
   @media screen and (min-width: 992px) {
     .mood-boards {
@@ -7784,9 +7786,6 @@ footer {
   .mood-boards_board {
     margin-bottom: 15px;
     padding: 0 2.5px; }
-    @media screen and (min-width: 992px) {
-      .mood-boards_board {
-        margin-bottom: 0; } }
     @media screen and (min-width: 1200px) {
       .mood-boards_board {
         width: 20% !important; } }
@@ -8176,9 +8175,7 @@ footer {
         color: #77D3E4; }
   .ulsterathome-single_share {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%; }
+    width: calc(100% - 15px); }
     .ulsterathome-single_share li {
       display: inline-block; }
     .ulsterathome-single_share a.toplevel:first-of-type {
@@ -8259,6 +8256,9 @@ footer {
         font-size: 25px; } }
   .advice .content {
     font-size: 15px; }
+    .advice .content a {
+      font-weight: 600;
+      color: #14212c; }
     .advice .content_instruction {
       font-weight: 600;
       text-transform: uppercase;
@@ -8359,6 +8359,9 @@ footer {
         margin-bottom: 0; } }
   .aftercare .content {
     font-size: 15px; }
+    .aftercare .content a {
+      font-weight: 600;
+      color: #14212c; }
     .aftercare .content .wp-block-file {
       font-weight: 600; }
       .aftercare .content .wp-block-file img {
@@ -8392,6 +8395,9 @@ footer {
   .faqs_content {
     color: #14212C;
     padding: 15px 25px 15px 15px; }
+    .faqs_content a {
+      font-weight: 600;
+      color: #14212c; }
     .faqs_content p:first-of-type {
       font-size: 25px;
       font-weight: 600; }
@@ -8425,6 +8431,9 @@ footer {
   .terms_content {
     color: #14212C;
     padding: 15px 25px 15px 15px; }
+    .terms_content a {
+      font-weight: 600;
+      color: #14212c; }
     .terms_content p:first-of-type {
       color: #6F949C;
       font-size: 25px;
@@ -10545,6 +10554,14 @@ footer {
       left: 0;
       right: 0;
       bottom: 0; } }
+  .l-singleRange .dropdown-menu li {
+    float: left;
+    width: 33%; }
+    .l-singleRange .dropdown-menu li a:visited {
+      color: #606467; }
+    .l-singleRange .dropdown-menu li > a {
+      color: #606467;
+      padding: 3px 17px; }
 
 .l-filter_pagination {
   margin-top: -15px;

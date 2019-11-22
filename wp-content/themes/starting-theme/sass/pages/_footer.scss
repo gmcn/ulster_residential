@@ -84,6 +84,9 @@ footer {
         font-size: 10px;
         color: rgba(88, 84, 77, .4);
         font-weight: 600;
+        &:hover {
+          font-size: 10px;
+        }
       }
     }
     .links {

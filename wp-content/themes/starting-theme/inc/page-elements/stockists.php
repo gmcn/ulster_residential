@@ -102,7 +102,7 @@
       <div class="collapse hidden-md hidden-lg" id="collapseROW_mobile">
         <div class="row">
           <div class="stockists_locations">
-            <p class="">Email us now to find out how to purchase on <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a> or using the form below.</p>
+            <p class="">Email us now to find out how to purchase on <a href="mailto:samples@ulstercarpets.com">samples@ulstercarpets.com</a> or using the form below.</p>
             <?php echo do_shortcode('[contact-form-7 id="98" title="Find A Stockist"]'); ?>
             <div style="clear:both"></div>
           </div>
@@ -136,8 +136,8 @@
   <div class="collapse" id="collapseROW">
     <div class="row">
       <div class="stockists_locations">
-        <p class="">Email us now to find out how to purchase on <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a> or using the form below.</p>
-        <?php echo do_shortcode('[contact-form-7 id="98" title="Find A Stockist"]'); ?>
+        <p class="">Email us now to find out how to purchase on <a href="mailto:samples@ulstercarpets.com">samples@ulstercarpets.com</a> or using the form below.</p>
+        <?php echo do_shortcode('[contact-form-7 id="5533" title="Find A Stockist ROW"]'); ?>
         <div style="clear:both"></div>
       </div>
     </div>
@@ -149,8 +149,6 @@
 
 
 <div class="bh-sl-container">
-
-
 
   <div id="bh-sl-map-container" class="bh-sl-map-container">
     <div id="bh-sl-map" class="bh-sl-map" style="display: none;"></div>

@@ -13,7 +13,7 @@
 
     		?>
 
-        <div class="col-md-3 col-lg-2 col-xs-6 brochures_link wow fadeInDown">
+        <div class="col-sm-6 col-md-3 col-lg-2 brochures_link wow fadeInDown">
           <div class="brochures_link_wrapper matchheight">
 
             <img src="<?php echo $trends_cover ?>" alt="<?php echo $trends_title ?>">

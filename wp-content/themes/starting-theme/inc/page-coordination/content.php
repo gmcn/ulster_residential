@@ -22,7 +22,7 @@
         </div>
         <div class="col-sm-4 col-lg-3 link">
           <a href="#mood">
-            Designers <span>Mood</span> <span>Board</span>
+            Mood <span>Boards</span>
           </a>
           <div class="link_shadow">
 
@@ -30,7 +30,7 @@
         </div>
         <div class="col-sm-4 col-lg-3 link">
           <a href="#coordination">
-            Colour <span>Coordination</span> <span>Articles</span>
+            Design <span>Articles</span>
           </a>
           <div class="link_shadow">
 
