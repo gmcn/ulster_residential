@@ -17,6 +17,7 @@ include(locate_template("inc/page-elements/title.php"));
   <div class="row">
     <div class="col-sm-12 u-mb--4  ">
       <h1>My Samples</h1>
+      <p>A maximum of 5 samples can be ordered.</p>
     </div>
     <div class="col-sm-4">
       <?php the_content(); ?>
@@ -72,7 +73,7 @@ include(locate_template("inc/page-elements/title.php"));
   <?php endif; ?>
   <div class="row js-basketEmpty" <?php if ($cart && $cart->have_posts()) { ?>style="display:none;" <?php } ?>>
     <div class="col-sm-12 u-mt--6 u-mb--6">
-      <h2>Your basket is empty, <a href="/ranges">click here</a> to explore our ranges to choose your samples.</h2>
+      <h2>Your basket is empty, <a href="<?php echo get_site_url(); ?>/choose-a-carpet/ranges/">click here</a> to explore our ranges to choose your samples.</h2>
     </div>
   </div>
 

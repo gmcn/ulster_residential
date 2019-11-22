@@ -162,7 +162,7 @@ function cartProcessOrder()
 function cartValidation()
 {
     // validation rules
-    $required = array('form_address_1', 'form_first_name', 'form_last_name', 'form_city');
+    $required = array('form_address_1', 'form_first_name', 'form_last_name', 'form_city', 'form_email');
     $validation = array();
     foreach ($_POST as $key => $post_value) {
         if (in_array($key, $required) && ($post_value == '')) {

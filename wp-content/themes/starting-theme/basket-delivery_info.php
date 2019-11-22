@@ -67,7 +67,7 @@ $featured_img_url = get_the_post_thumbnail_url(get_the_ID(), 'full');
           <input type="text" class="form-control form-control <?php isValid('form_telephone', $validation); ?>" name="form_telephone" id="telephone" placeholder="Telephone">
         </div>
         <div class="form_group">
-          <input type="email" class="form-control form-control <?php isValid('form_email', $validation); ?>" name="form_email" id="email" placeholder="Email">
+          <input type="email" class="form-control form-control <?php isValid('form_email', $validation); ?>" name="form_email" id="email" placeholder="Email" required>
         </div>
       </div>
 
@@ -103,7 +103,7 @@ $featured_img_url = get_the_post_thumbnail_url(get_the_ID(), 'full');
             </div>
           </div>
           <div class="col-sm-3">
-            <a href="<?php echo site_url('data-policy'); ?>" class="u-text--700 u-text--dark_grey u-text--small">View our data policy</a>
+            <a href="<?php echo site_url('privacy-policy'); ?>" class="u-text--700 u-text--dark_grey u-text--small">View our data policy</a>
           </div>
         </div>
       </div>
