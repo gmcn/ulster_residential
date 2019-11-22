@@ -1,7 +1,7 @@
 /* TEAM */
 
-  Project Manager: Sharon Williamson
-  Contact: Sharon [at] ourface.co.uk
+  Project Manager: Victoria Gray
+  Contact: victoria [at] cornellstudios.com
   Website: https://www.cornellstudios.com
   From: Portadown, Northern Ireland
 
@@ -10,15 +10,19 @@
   Website: https://www.cornellstudios.com
   From: Portadown, Northern Ireland
 
-
   Web Developer: Gary McNally
   Contact: gary [at] cornellstudios.com
   Twitter: @garymcnally
   Website: https://www.cornellstudios.com
   From: Ireland/Northern Ireland
 
+  Web Developer: Stephen Hewitt
+  Contact: steve [at] station-studio.com
+  Website: https://station-studio.com/
+  From: Ireland/Northern Ireland
+
 /* SITE */
 
-  Last update: xx/xx/xx
+  Site Live: 19/11/2019
   Doctype: HTML5
   IDE: Atom, FileZilla, Adobe XD, Wordpress, Bootstrap, SASS, matchheight.js, bxslider.js, fancybox.js
