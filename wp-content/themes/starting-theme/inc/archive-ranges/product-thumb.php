@@ -28,14 +28,14 @@ $range_types = (get_the_terms(get_the_ID(), 'ranges_type'));
 
             <h3><?php echo $range_types[0]->name; ?></h3>
         </div>
-        <div class="singleRange--buttons">
+        <!--<div class="singleRange--buttons">
             <?php if (inCart($_SESSION['cart'], get_the_ID())) : ?>
                 <a href="javascript:void(0);" class="e-btn e-btn--black e-btn--addToCart" data-id="<?php the_ID(); ?>">This Sample is Already Added</a>
             <?php else : ?>
                 <a href="#" class="e-btn e-btn--primary js-addToCart e-btn--addToCart" data-id="<?php the_ID(); ?>">Add this sample to My Basket</a>
             <?php endif; ?>
             <a href="<?php echo site_url('basket'); ?>" class="e-btn e-btn--grey e-btn--viewCart">View Cart &amp; Order Samples</a>
-        </div>
+        </div>-->
         <div class="singleRange--info">
             <a href="<?php the_permalink(); ?>" class="e-btn e-btn--productInfo text-uppercase hidden-xs hidden-sm">
                 <div>View product information</div><img src="<?php asset('/images/plus_sign.svg'); ?>">
