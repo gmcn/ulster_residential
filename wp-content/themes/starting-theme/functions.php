@@ -247,9 +247,9 @@ echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('stylesheet_
 add_action('login_head', 'my_custom_login');
 
 //add sitewide ACF
-// if( function_exists('acf_add_options_page') ) {
-// 	acf_add_options_page();
-// }
+if( function_exists('acf_add_options_page') ) {
+	acf_add_options_page();
+}
 
 include(get_template_directory() . '/functions/cpt.php' );
 include(get_template_directory() . '/functions/ranges.php');
