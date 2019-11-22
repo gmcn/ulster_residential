@@ -1,5 +1,6 @@
 .login #loginform {
 	background: rgba(0,0,0,0.7) !important;
+	color: #fff;
 }
 
 .login h1 a {
