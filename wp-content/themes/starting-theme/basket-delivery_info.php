@@ -99,7 +99,7 @@ $featured_img_url = get_the_post_thumbnail_url(get_the_ID(), 'full');
         <div class="row">
           <div class="col-sm-3">
             <div class="form_group">
-              <div class="frm_checkbox"><label for="form_marketing"><input type="checkbox" name="form_city" id="marketing" value="Please tick this if you would like us to contact you by email for updates and marketing material." data-invmsg="Checkboxes is invalid"> Please tick this if you would like us to contact you by email for updates and marketing material.</label></div>
+              <div class="frm_checkbox"><label for="form_marketing"><input type="checkbox" name="form_marketing" id="marketing" value="Please tick this if you would like us to contact you by email for updates and marketing material." data-invmsg="Checkboxes is invalid"> Please tick this if you would like us to contact you by email for updates and marketing material.</label></div>
             </div>
           </div>
           <div class="col-sm-3">
