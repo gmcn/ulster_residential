@@ -74,7 +74,7 @@
 		'sessionStorage'             : false,
 		'slideMap'                   : true,
 		'sortBy'                     : null,
-		'storeLimit'                 : 5,
+		'storeLimit'                 : 15,
 		'taxonomyFilters'            : null,
 		'visibleMarkersList'         : false,
 		'xmlElement'                 : 'marker',
