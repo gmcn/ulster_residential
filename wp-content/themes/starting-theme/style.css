@@ -9746,6 +9746,9 @@ footer {
     color: #fff;
     position: relative;
     height: 1470px; }
+    @media screen and (min-width: 992px) {
+      .rugs_steps .step {
+        background-size: cover !important; } }
     .rugs_steps .step_scroll_left {
       position: absolute;
       top: 350px;
