@@ -1,5 +1,8 @@
 <?php
 
+// return in JSON format
+header( 'Content-type: application/json' );
+
 // WP_Query arguments
 $args = array (
 
@@ -19,10 +22,14 @@ $locations = array();
 //the loop
 while ( $loop->have_posts() ) : $loop->the_post();
 
+$title = html_entity_decode(get_the_title($post->ID),ENT_QUOTES,'UTF-8');
+
+$titleConvert = $title;
+
    // Add in your custom fields or WP fields that you want
    $locations[] = array(
      'id' => get_the_ID(),
-     'name' => get_the_title(),
+     'name' => $title,
      'address1' => get_field('address1'),
      'address2' => get_field('address2'),
      'address3' => get_field('address3'),
@@ -42,7 +49,11 @@ wp_reset_query();
 
 // output
 
-echo json_encode( $locations, JSON_PRETTY_PRINT );
+//echo json_encode( $locations, JSON_PRETTY_PRINT );
+
+$myJSON = json_encode( $locations, true);
+
+echo $myJSON;
 
 
 
