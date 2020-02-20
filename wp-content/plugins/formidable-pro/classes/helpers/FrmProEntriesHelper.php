@@ -359,13 +359,13 @@ class FrmProEntriesHelper {
 	 * @param int $form_id
 	 */
 	private static function delete_all_button( $form_id ) {
-		if ( ! apply_filters( 'frm_show_delete_all', current_user_can( 'frm_edit_entries' ), $form_id ) ) {
+		if ( ! apply_filters( 'frm_show_delete_all', current_user_can( 'frm_delete_entries' ), $form_id ) ) {
 			return;
 		}
 
 		?>
 		<span class="frm_uninstall">
-			<a href="?page=formidable-entries&amp;frm_action=destroy_all<?php echo esc_attr( $form_id ? '&form=' . absint( $form_id ) : '' ); ?>" class="button frm-button-secondary" data-frmverify="<?php esc_attr_e( 'Do you want to permanently delete ALL entries in this form?', 'formidable-pro' ); ?>">
+			<a href="<?php echo esc_url( wp_nonce_url( '?page=formidable-entries&frm_action=destroy_all' . ( $form_id ? '&form=' . absint( $form_id ) : '' ) ) ); ?>" class="button frm-button-secondary" data-frmverify="<?php esc_attr_e( 'Do you want to permanently delete ALL entries in this form?', 'formidable-pro' ); ?>">
 				<?php esc_html_e( 'Delete All Entries', 'formidable-pro' ); ?>
 			</a>
 		</span>

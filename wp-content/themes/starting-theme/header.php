@@ -241,7 +241,7 @@
 										<?php
 											$args = array(
 												'echo'           => true,
-												'redirect'       => '/retailer-area/',
+												'redirect'       => get_site_url() . '/retailer-area/',
 												'label_log_in'   => __( 'Continue' ),
 												'label_username' => __( 'Username' ),
 												'label_password' => __( 'Password' ),

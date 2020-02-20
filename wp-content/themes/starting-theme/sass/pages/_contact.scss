@@ -111,6 +111,118 @@
   }
 }
 
+.retailercontact {
+  background: #BAC2C6;
+  color: #fff;
+  padding: 15px;
+  @include md {
+    padding: 0 50px 0 0;
+  }
+
+  &__content {
+    font-weight: 600;
+    padding: 25px 15px;
+    @include lg {
+      padding: 40px 40px;
+    }
+  }
+  h2 {
+    font-family: $font-family-serif;
+    font-size: 22px;
+    @include md {
+      font-size: 35px;
+    }
+    font-weight: 300;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    margin: 0;
+  }
+  span {
+    font-weight: 300;
+  }
+  a {
+    color: #fff;
+    transition: .5s;
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
+.container-fluid.retailerform {
+  background: #BAC2C6;
+  padding: 25px 50px;
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+  ::placeholder {
+    font-size: 14px;
+    color: #525C65;
+  }
+  p {
+    font-weight: 600;
+    margin-top: 40px;
+    opacity: .5;
+  }
+  .contact__content {
+    padding: 30px 0 0;
+    .col-md-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  .frm_checkbox {
+    padding-left: 15px;
+    input {
+      margin-left: -15px;
+    }
+  }
+  input {
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: #525C65;
+  }
+  .frm_checkbox {
+    font-size: 12px;
+    font-weight: 300;
+  }
+  input[type="checkbox"] {
+    margin-bottom: 0;
+  }
+  textarea {
+    padding-right: 180px;
+  }
+  .frm_submit {
+    button {
+      background: #2D353C;
+      color: #fff;
+      text-transform: uppercase;
+      width: 100%;
+      font-size: 13px;
+      border-radius: 5px;
+      border: none;
+      padding: 15px;
+    }
+    @include md {
+      position: absolute;
+      top: 10px;
+      right: 25px;
+      text-align: right;
+      height: 100%;
+      button {
+        background: #2D353C;
+        color: #fff;
+        text-transform: uppercase;
+        width: 120px;
+        height: calc(100% - 35px);
+        font-size: 13px;
+        border-radius: 5px;
+        border: none;
+      }
+    }
+  }
+}
+
 .offices {
   .office {
     margin-bottom: 15px;

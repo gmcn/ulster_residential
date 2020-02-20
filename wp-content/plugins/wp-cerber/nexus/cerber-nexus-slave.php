@@ -33,6 +33,8 @@
 
 if ( ! defined( 'WPINC' ) ) { exit; }
 
+require_once( dirname( cerber_plugin_file() ) . '/cerber-maintenance.php' );
+
 add_action( 'plugins_loaded', function () {
 	if ( ! $key = cerber_get_get( 'cerber_magic_key', '[\d\w\-_]+' ) ) {
 		return;

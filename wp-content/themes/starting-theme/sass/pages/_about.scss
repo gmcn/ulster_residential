@@ -151,6 +151,69 @@
   }
 }
 
+.search-results {
+  background: #F0F0F0;
+}
+
+.search {
+  &_children {
+    margin-bottom: 30px;
+    color: #2D353C;
+    position: relative;
+    &__wrapper {
+      background: #fff;
+    }
+    hr {
+      position: absolute;
+      bottom: 0;
+      width: 90%;
+      border-top: 1px dotted #000;
+      margin: 0;
+    }
+    &_1 {
+      .about_children_count {
+        background: #3E5879;
+      }
+      h2 {
+        color: #2D353C !important;
+      }
+    }
+    h2 {
+      color: #2D353C;
+      padding-left: 15px;
+      padding-right: 15px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    img {
+      max-height: 280px;
+      width: 100%;
+    }
+    p {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    a {
+      margin-left: 15px;
+      margin-right: 15px;
+      background-color: #465C77;
+      color: #fff;
+      border-radius: 5px;
+      padding: 15px 40px;
+      display: inline-block;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 12px;
+      transition: .5s;
+      &:hover {
+        background-color: #BAC2C6;
+      }
+    }
+  }
+}
+
 .page-template-page-company-profile {
   .fancybox-desktop {
     @include md {

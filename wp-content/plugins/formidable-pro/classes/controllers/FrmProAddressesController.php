@@ -44,7 +44,7 @@ class FrmProAddressesController extends FrmProComboFieldsController {
 				'classes' => 'frm_third frm_first',
 				'label'   => 1,
 				'atts'    => array(
-					'autocomplete'   => 'city',
+					'autocomplete'   => 'address-level2',
 				),
 			),
 			'state' => array(
@@ -52,7 +52,7 @@ class FrmProAddressesController extends FrmProComboFieldsController {
 				'classes' => 'frm_third',
 				'label'   => 1,
 				'atts'    => array(
-					'autocomplete'   => 'state',
+					'autocomplete'   => 'address-level1',
 				),
 			),
 			'zip'   => array(
@@ -60,7 +60,7 @@ class FrmProAddressesController extends FrmProComboFieldsController {
 				'classes' => 'frm_third',
 				'label'   => 1,
 				'atts'   => array(
-					'autocomplete'   => 'postal-zip',
+					'autocomplete'   => 'postal-code',
 				),
 			),
 		);

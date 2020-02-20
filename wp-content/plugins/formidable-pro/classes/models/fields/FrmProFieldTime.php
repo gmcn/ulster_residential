@@ -404,7 +404,7 @@ class FrmProFieldTime extends FrmFieldType {
 
 		$options[] = '';
 		while ( $time <= $end_time ) {
-			$options[] = date( $format, $time );
+			$options[] = gmdate( $format, $time );
 			$time += $values['step'];
 		}
 	}

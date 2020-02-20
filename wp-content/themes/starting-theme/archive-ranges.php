@@ -31,7 +31,7 @@ switch ($slug) {
 }
 
 //override the_title() since we are in a taxonomy
-$custom_title = 'Choose A Range';
+// $custom_title = 'Choose A Range';
 include(locate_template("inc/page-elements/title.php"));
 include(locate_template("inc/archive-ranges/filter_pagination.php"));
 ?>

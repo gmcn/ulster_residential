@@ -18,6 +18,7 @@
   function startMatchHeight() {
     $('.matchheight').matchHeight();
     $('.imgmatchheight').matchHeight();
+    $('.pmatchheight').matchHeight();
     $('.hmatchheight').matchHeight();
     $('.bordermatch').matchHeight();
   }
@@ -27,7 +28,10 @@
     $('#bh-sl-map-container').storeLocator();
   });
 
-
+  $("#bh-sl-submit").click(function(){
+    $(".loadingDiv").addClass("display");
+    $(".loadingDiv").removeClass("hidden");
+  });
 
     $(".fancybox").fancybox({
       infobar: true,

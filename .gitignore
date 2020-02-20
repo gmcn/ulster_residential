@@ -3,9 +3,10 @@ wp-config.php
 wp-admin/
 wp-content/*
 !wp-content/mu-plugins/
-!wp-content/plugins/
+wp-content/plugins/
 !wp-content/themes/
 wp-includes/
+wp-content/themes/starting-theme/data/
 .sass-cache/*
 
 /.htaccess

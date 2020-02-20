@@ -381,6 +381,9 @@ class FrmProFieldFile extends FrmFieldType {
 			unset( $repeat_meta );
 		}
 
+		$aria = '';
+		$this->add_aria_description( $args, $aria );
+
 		ob_start();
 		include( FrmProAppHelper::plugin_path() . '/classes/views/frmpro-fields/front-end/file.php' );
 		$input_html = ob_get_contents();

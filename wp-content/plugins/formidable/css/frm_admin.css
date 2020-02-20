@@ -998,7 +998,7 @@ h2 .frm-button-primary {
 .frm-white-body .button-primary,
 .frm-white-body .button-secondary,
 .wp-core-ui.frm-white-body .button:not(.button-small),
-.frm-white-body button:not(.wp-switch-editor) {
+.frm-white-body button:not(.wp-switch-editor):not(.dropdown-toggle) {
 	text-shadow: none;
 	box-shadow: none;
 	border-radius: 30px;
@@ -1573,8 +1573,18 @@ div.frm_updated_message {
 	text-align: right;
 }
 
-.upgrade_to_pro a,
-.upgrade_to_pro .frm-checked {
+.frm-yes {
+	color: var(--green);
+	font-size: 21px;
+	font-weight: 500;
+}
+
+.frm-nope {
+	color: #d2e0f2;
+	font-size: 21px;
+}
+
+.upgrade_to_pro a {
 	color: var(--orange);
 }
 
@@ -1583,14 +1593,23 @@ div.frm_updated_message {
 	width: 20px;
 }
 
-.widefat.frm_pricing thead th,
-.widefat.frm_pricing td {
+.upgrade_to_pro table.widefat {
+	background-color: #fff;
+	border-collapse: collapse;
+}
+
+.upgrade_to_pro table th,
+.upgrade_to_pro table td {
+	padding: 10px 15px;
+	border: 1px solid #d2e0f2;
+}
+
+.upgrade_to_pro table th.frmcenter {
 	text-align: center;
 }
 
 .widefat th.frm_table_break {
-	background-color: #f3f4f5;
-	text-align: center;
+	background-color: #f6f7fb;
 }
 
 h2.frm-h2 + .howto {
@@ -1680,7 +1699,7 @@ h2.frm-h2 + .howto {
 }
 
 .frm-addon-active .addon-status-label {
-	color: var(--orange);
+	color: var(--green);
 	opacity: 1;
 }
 
@@ -2160,7 +2179,6 @@ h1 .fa-caret-down {
 .btn {
 	border: 1px solid #ddd;
 	background: #fff;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07) inset;
 	height: 28px;
 	line-height: 1.5;
 }
@@ -2541,6 +2559,18 @@ a.frm_option_icon:hover::before {
 	left: 25%
 }
 
+.frm-summary-message {
+	top: 50%;
+	left: 50%;
+	padding: 15px 0;
+	font-size: 16px;
+	transform: translate(-50%, -50%);
+}
+
+.frm-summary-learn-more {
+	font-size: inherit !important;
+}
+
 .frm-single-settings .frm-embed-message {
 	width: 100%;
 	position: static;
@@ -2643,6 +2673,10 @@ input[type="checkbox"] {
 .frm_wrap .frm-fields .auto_width,
 .frm_form_fields input.auto_width, .frm_form_fields select.auto_width, .frm_form_fields textarea.auto_width {
 	width: auto !important;
+}
+
+.frm_form_fields select.auto_width {
+	min-width: 60px;
 }
 
 .frm_form_fields input:focus, .frm_form_fields select:focus,
@@ -3563,6 +3597,7 @@ label.frm-example-icon {
 	margin-top: 0;
 }
 
+.frm_authorized_box .frm-show-unauthorized,
 .frm_unauthorized_box .frm-show-authorized {
 	display: none;
 }
@@ -4178,20 +4213,20 @@ table td, .form-table tr td {
 }
 
 .frm-single-settings .frm_logic_row > select {
-	max-width: 32.5%;
+	max-width: 32.5% !important;
 }
 
 .frm-single-settings .frm_logic_row select:nth-child(2) {
-	max-width: 20%;
+	max-width: 20% !important;
 }
 
 .frm-single-settings .frm_logic_row span input,
 .frm-single-settings .frm_logic_row span select {
-	max-width: 36%;
+	max-width: 36% !important;
 }
 
 .frm-single-settings .frm_logic_row input {
-	max-width: 118px;
+	max-width: 118px !important;
 }
 
 .advanced_settings .frm_logic_row {
@@ -4200,7 +4235,7 @@ table td, .form-table tr td {
 
 .advanced_settings .frm_logic_row select,
 .advanced_settings .frm_logic_row input {
-	max-width: 30%;
+	max-width: 30% !important;
 }
 
 .frm_form_action_settings .frm_logic_row p {
@@ -4706,6 +4741,10 @@ ul.start_divider {
 .frm-section-collapsed .frm_delete_field {
 	opacity: .5;
 	cursor: not-allowed;
+}
+
+.edit_field_type_summary .frm_clone_field {
+	display: none !important;
 }
 
 .frm_no_section_fields:not(.frm_block) + ul.start_divider {
@@ -5300,7 +5339,7 @@ i.frm-show-inline-modal,
 .frm-with-left-icon .frmsvg,
 .frm-with-right-icon .frmsvg,
 .frm-search > .frmsvg,
-.frm-search span {
+.frm-search span:not(.multiselect-selected-text) {
 	position: absolute;
 	padding: 7px 10px;
 	pointer-events: none;
@@ -5374,6 +5413,7 @@ i.frm-show-inline-modal {
 	line-height: normal;
 }
 
+.frm-search .dropdown-toggle,
 .frm-search input.frm-search-input {
 	border-radius: var(--border-radius);
 	padding-left: 33px !important;
@@ -5387,11 +5427,26 @@ i.frm-show-inline-modal {
 	padding-left: 33px;
 }
 
+.frm-search .dropdown-toggle,
 .frm-search input.frm-auto-search {
 	width: 100%;
 	border-right-width: 1px;
 	border-radius: var(--border-radius) !important;
 	float: none;
+}
+
+.frm-search .dropdown-toggle {
+	max-width: 200px;
+	background: transparent;
+	padding: 7px;
+	min-height: 32px;
+	text-align: inherit;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.frm-search span.multiselect-selected-text {
+	white-space: nowrap;
 }
 
 .frm-search #search-submit {
@@ -5792,6 +5847,7 @@ ul .frm_col_two {
 	padding: 5px 20px;
 	box-sizing: border-box;
 	cursor: pointer;
+	opacity: .5;
 }
 
 #frm-insert-fields li a span {
@@ -5802,8 +5858,16 @@ ul .frm_col_two {
 	border-radius: var(--border-radius) 0 0 var(--border-radius);
 }
 
-#frm-insert-fields li a:hover {
+#frm-insert-fields li a:not(.disabled):hover {
 	background: var(--sidebar-hover);
+}
+
+#frm-insert-fields li a.disabled:hover {
+	cursor: not-allowed;
+}
+
+#frm-insert-fields li.ui-draggable-disabled {
+	opacity: 0.5;
 }
 
 .frm_code_list {
@@ -5876,8 +5940,8 @@ input[disabled],
 	font-size: inherit;
 }
 
-#frm-insert-fields li a:hover .frmsvg,
-#frm-insert-fields li a:hover i {
+#frm-insert-fields li a:not(.disabled):hover .frmsvg,
+#frm-insert-fields li a:not(.disabled):hover i {
 	color: var(--dark-grey);
 }
 
@@ -6028,6 +6092,10 @@ h2 .frm-sub-label {
 	width: 35px;
 	color: #c4c4c4;
 	padding-bottom: 20px;
+}
+
+#frm-upgrade-message img {
+	max-width: 100%;
 }
 
 a.frm-link-secondary {
@@ -6329,6 +6397,7 @@ iframe#dyncontent_ifr {
 .frm_wrap input[type="text"],
 .frm_wrap input[type="number"],
 .frm_wrap select,
+.wp-admin .frm_wrap select,
 .field-group textarea,
 .field-group input[type="text"],
 .field-group select {
@@ -6340,7 +6409,14 @@ iframe#dyncontent_ifr {
 	color: var(--dark-grey);
 	font-size: 15px;
 	margin: 0;
-	background: #fff;
+	background-color: #fff;
+	line-height: 1;
+}
+
+#postbox-container-2 textarea,
+.frm_wrap textarea,
+.field-group textarea {
+	line-height: 2;
 }
 
 .frm_wrap input[type="number"] {
@@ -6349,6 +6425,10 @@ iframe#dyncontent_ifr {
 
 .frm_wrap select {
 	padding: 2px;
+}
+
+.wp-admin .frm_wrap select {
+	max-width: 100%;
 }
 
 .frm_form_field.frm_scroll_box .frm_opt_container,
@@ -6387,6 +6467,7 @@ iframe#dyncontent_ifr {
 	padding-top: 0 !important;
 }
 
+.wp-admin .frm_wrap .form-table select,
 #postbox-container-2 select,
 .wp-admin .frm_wrap select {
 	line-height: 32px;
@@ -6398,6 +6479,20 @@ iframe#dyncontent_ifr {
 	line-height: 40px;
 	height: 40px;
 	width: 100%;
+}
+
+/** TODO: After 5.5, remove the branch clases **/
+.branch-5-5 #postbox-container-2 select,
+.branch-5-5.wp-admin .frm_wrap select,
+.branch-5-5 .frm_wrap .frm_form_builder select,
+.branch-5-4 #postbox-container-2 select,
+.branch-5-4.wp-admin .frm_wrap select,
+.branch-5-4 .frm_wrap .frm_form_builder select,
+.branch-5-3 #postbox-container-2 select,
+.branch-5-3.wp-admin .frm_wrap select,
+.branch-5-3 .frm_wrap .frm_form_builder select {
+	height: auto;
+	padding: 0 24px 0 12px;
 }
 
 .frm-fields button.btn,

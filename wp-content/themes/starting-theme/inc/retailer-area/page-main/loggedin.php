@@ -28,9 +28,9 @@
     </div>
 
     <div class="col-md-3">
-      <p>Address</p>
+      <p>Reps Name</p>
       <div class="input">
-        <?php echo $current_user->company_address ?>
+        <?php echo $current_user->reps_name ?>
       </div>
 
     </div>
@@ -38,12 +38,12 @@
     <div class="col-md-6">
       <p>Email</p>
       <div class="input">
-        <?php echo $current_user->user_email  ?>
+        <?php echo $current_user->reps_email  ?>
       </div>
     </div>
 
     </div>
-    <p class="edit">To edit your details please email: <a href="mailto:info@ulstercarpets.com">info@ulstercarpets.com</a></p>
+    <p class="edit">To edit your details please contact your Rep</p>
 
     <hr />
 

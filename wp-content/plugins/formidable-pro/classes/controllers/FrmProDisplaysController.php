@@ -651,11 +651,11 @@ class FrmProDisplaysController {
 		$month_names = $wp_locale->month;
 
 		$this_time = strtotime( $year . '-' . $month . '-01' );
-		$prev_month = date( 'm', strtotime( '-1 month', $this_time ) );
-		$prev_year = date( 'Y', strtotime( '-1 month', $this_time ) );
+		$prev_month = gmdate( 'm', strtotime( '-1 month', $this_time ) );
+		$prev_year  = gmdate( 'Y', strtotime( '-1 month', $this_time ) );
 
-		$next_month = date( 'm', strtotime( '+1 month', $this_time ) );
-		$next_year = date( 'Y', strtotime( '+1 month', $this_time ) );
+		$next_month = gmdate( 'm', strtotime( '+1 month', $this_time ) );
+		$next_year  = gmdate( 'Y', strtotime( '+1 month', $this_time ) );
 
 		ob_start();
 		include( FrmProAppHelper::plugin_path() . '/classes/views/displays/calendar-header.php' );
@@ -684,13 +684,13 @@ class FrmProDisplaysController {
 		$current_month = date_i18n( 'm' );
 
 		//4 digit year
-		$year = FrmAppHelper::get_param( 'frmcal-year', date( 'Y' ), 'get', 'absint' );
+		$year = FrmAppHelper::get_param( 'frmcal-year', gmdate( 'Y' ), 'get', 'absint' );
 
 		//Numeric month with leading zeros
 		$month = FrmAppHelper::get_param( 'frmcal-month', $current_month, 'get', 'sanitize_title' );
 
 		$timestamp = mktime( 0, 0, 0, $month, 1, $year );
-		$maxday = date( 't', $timestamp ); //Number of days in the given month
+		$maxday = gmdate( 't', $timestamp ); //Number of days in the given month
 		$this_month = getdate( $timestamp );
 		$startday = $this_month['wday'];
 		unset( $this_month );
@@ -776,7 +776,7 @@ class FrmProDisplaysController {
 		if ( $i18n ) {
 			$date = FrmAppHelper::get_localized_date( 'Y-m-d', $date );
 		} else {
-			$date = date( 'Y-m-d', strtotime( $date ) );
+			$date = gmdate( 'Y-m-d', strtotime( $date ) );
 		}
 
 		unset( $i18n );
@@ -787,7 +787,7 @@ class FrmProDisplaysController {
 				$edate = FrmProEntryMetaHelper::get_post_or_meta_value( $entry, $args['efield'] );
 
 				if ( $args['efield'] && $args['efield']->type == 'number' && is_numeric( $edate ) ) {
-					$edate = date( 'Y-m-d', strtotime( '+' . ( $edate - 1 ) . ' days', strtotime( $date ) ) );
+					$edate = gmdate( 'Y-m-d', strtotime( '+' . ( $edate - 1 ) . ' days', strtotime( $date ) ) );
 				}
 			} else if ( $display->frm_edate_field_id == 'updated_at' ) {
 				$edate = FrmAppHelper::get_localized_date( 'Y-m-d', $entry->updated_at );
@@ -801,7 +801,7 @@ class FrmProDisplaysController {
 
 				if ( ! empty( $from_date ) && $from_date < $to_date ) {
 					for ( $current_ts = $from_date; $current_ts <= $to_date; $current_ts += ( 60 * 60 * 24 ) ) {
-						$dates[] = date( 'Y-m-d', $current_ts );
+						$dates[] = gmdate( 'Y-m-d', $current_ts );
 					}
 					unset( $current_ts );
 				}
@@ -819,7 +819,7 @@ class FrmProDisplaysController {
 		for ( $i = 0; $i < ( $args['maxday'] + $args['startday'] ); $i++ ) {
 			$day = $i - $args['startday'] + 1;
 
-			if ( in_array( date( 'Y-m-d', strtotime( $args['year'] . '-' . $args['month'] . '-' . $day ) ), $dates ) ) {
+			if ( in_array( gmdate( 'Y-m-d', strtotime( $args['year'] . '-' . $args['month'] . '-' . $day ) ), $dates ) ) {
 				$daily_entries[ $i ][] = $entry;
 			}
 
@@ -899,7 +899,7 @@ class FrmProDisplaysController {
 				$last_i = $i;
 
 				//Add to dates array
-				$temp_dates[] = date( 'Y-m-d', $i );
+				$temp_dates[] = gmdate( 'Y-m-d', $i );
 			}
 			unset( $last_i, $d );
 		}
@@ -2618,7 +2618,7 @@ class FrmProDisplaysController {
 					$args['count'] = $count;
 
 					$new_content = apply_filters( 'frm_display_entry_content', $unfiltered_content, $entry, $shortcodes, $view, 'all', $odd, $args );
-					self::replace_entry_position_shortcode( compact( 'entry', 'view' ), $args, $new_content );
+					FrmProContent::replace_entry_position_shortcode( compact( 'entry', 'view' ), $args, $new_content );
 
 					$inner_content .= $new_content;
 
@@ -2632,18 +2632,6 @@ class FrmProDisplaysController {
 		FrmProFieldsHelper::replace_non_standard_formidable_shortcodes( array(), $inner_content );
 
 		return $inner_content;
-	}
-
-	/**
-	 * Filter out entry_number shortcode when we have the entry position in the view
-	 *
-	 * @since 2.05.06
-	 */
-	private static function replace_entry_position_shortcode( $entry_args, $args, &$content ) {
-		preg_match_all( "/\[(if )?(entry_position)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?/s", $content, $shortcodes, PREG_PATTERN_ORDER );
-		foreach ( $shortcodes[0] as $short_key => $tag ) {
-			FrmProContent::replace_single_shortcode( $shortcodes, $short_key, $tag, $entry_args['entry'], $entry_args['view'], $args, $content );
-		}
 	}
 
 	/**

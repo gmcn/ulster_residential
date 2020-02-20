@@ -734,7 +734,7 @@ class FrmProStatisticsController {
 
 		if ( in_array( $filter_args['field'], array( 'created_at', 'updated_at' ) ) ) {
 			$filter_args['value'] = str_replace( array( '"', "'" ), '', $filter_args['value'] );
-			$filter_args['value'] = date( 'Y-m-d H:i:s', strtotime( $filter_args['value'] ) );
+			$filter_args['value'] = gmdate( 'Y-m-d H:i:s', strtotime( $filter_args['value'] ) );
 			$filter_args['value'] = get_gmt_from_date( $filter_args['value'] );
 		} else {
 			$filter_args['value'] = trim( trim( $filter_args['value'], "'" ), '"' );

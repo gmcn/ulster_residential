@@ -10,8 +10,8 @@
 get_header(); ?>
 
 <?php
-include(locate_template("inc/page-elements/title.php"));
-include(locate_template("inc/page-gallery/content.php"));
+  include(locate_template("inc/page-elements/title.php"));
+  include(locate_template("inc/page-gallery/content.php"));
 ?>
 
 <?php

@@ -4,7 +4,7 @@
     <div class="row">
 
       <div class="col-md-6 col-md-offset-6 hidden-xs hidden-sm installation_multiwidth_logo">
-        <img src="/wp-content/uploads/2019/08/multiwidth-brand_black.svg" alt="Multiwidth">
+        <img src="<?php echo site_url(); ?>/wp-content/uploads/2019/08/multiwidth-brand_black.svg" alt="Multiwidth">
       </div>
 
     	<?php while( have_rows('multiwidth_benefits') ): the_row();
@@ -31,6 +31,46 @@
     </div>
     <div class="row installation_multiwidth_branding">
 
+        <div class="col-md-6 col-md-offset-6">
+          <?php if( have_rows('multiwidth_downloads') ): ?>
+
+            <?php while( have_rows('multiwidth_downloads') ): the_row();
+
+              // vars
+              $multiwidth_dl_file = get_sub_field('multiwidth_dl_file');
+              $multiwidth_dl_name = get_sub_field('multiwidth_dl_name');
+              $multiwidth_dl_img = get_sub_field('multiwidth_dl_img');
+
+              ?>
+
+              <div class="col-sm-6 installation_download wow fadeInDown">
+
+                <div class="installation_download_wrapper matchheight">
+
+                  <div class="imgmatchheight">
+                    <img src="<?php echo $multiwidth_dl_img ?>" alt="<?php echo $multiwidth_dl_name ?>">
+                  </div>
+
+                  <h4 class="hmatchheight"><?php echo $multiwidth_dl_name ?></h4>
+
+                  <div class="row">
+                    <div class="col-lg-6 brochures_link__links">
+                      <a class="view" href="<?php echo $multiwidth_dl_file ?>" target="_blank">View Now</a>
+                    </div>
+                    <div class="col-lg-6 brochures_link__links">
+                      <a class="download" href="<?php echo $multiwidth_dl_file ?>" download>Download</a>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            <?php endwhile; ?>
+
+          <?php endif; ?>
+
+      </div>
     </div>
   </div>
 
@@ -61,36 +101,11 @@
       </div>
       <div class="col-md-6">
         <?php echo $installationContent; ?>
-        <?php
-        if ($counter > 1) : ?>
+
+
 
         <div class="row">
-          <div class="col-md-7">
 
-            <?php if( have_rows('installation_video') ): ?>
-
-            	<?php while( have_rows('installation_video') ): the_row();
-
-            		// vars
-            		$installation_yt_link = get_sub_field('installation_yt_link');
-            		$installation_video_title = get_sub_field('installation_video_title');
-            		$installation_video_description = get_sub_field('installation_video_description');
-
-            		?>
-
-            		<iframe width="100%" height="280" src="https://www.youtube.com/embed/<?php echo $installation_yt_link ?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-                <strong><?php echo $installation_video_title ?></strong> <br />
-
-                <?php echo $installation_video_description ?>
-
-            	<?php endwhile; ?>
-
-            <?php endif; ?>
-
-
-          </div>
-          <div class="col-md-5">
             <?php if( have_rows('installation_download') ): ?>
 
             	<?php while( have_rows('installation_download') ): the_row();
@@ -98,144 +113,41 @@
             		// vars
             		$installation_dl_file = get_sub_field('installation_dl_file');
             		$installation_dl_name = get_sub_field('installation_dl_name');
-            		$installation_dl_description = get_sub_field('installation_dl_description');
+            		$installation_dl_img = get_sub_field('installation_dl_img');
 
             		?>
 
-                <a href="<?php echo $installation_dl_file ?>" download>
-                  <img class="download hidden-xs hidden-sm" src="/wp-content/uploads/2019/08/download_icon.svg" alt="Download">
-                </a> <br />
+                <div class="col-sm-6 installation_download wow fadeInDown">
 
-                <strong><?php echo $installation_dl_name ?></strong> <br />
+                  <div class="installation_download_wrapper matchheight">
 
-                <?php echo $installation_dl_description ?>
+                    <div class="imgmatchheight">
+                      <img src="<?php echo $installation_dl_img ?>" alt="<?php echo $installation_dl_name ?>">
+                    </div>
+
+                    <h4 class="hmatchheight"><?php echo $installation_dl_name ?></h4>
+
+                    <div class="row">
+                      <div class="col-lg-6 brochures_link__links">
+                        <a class="view" href="<?php echo $installation_dl_file ?>" target="_blank">View Now</a>
+                      </div>
+                      <div class="col-lg-6 brochures_link__links">
+                        <a class="download" href="<?php echo $installation_dl_file ?>" download>Download</a>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
 
             	<?php endwhile; ?>
 
             <?php endif; ?>
-          </div>
-        </div>
 
-        <?php endif; ?>
+        </div>
       </div>
     </div>
   </div>
-
-  <?php if ($counter == 1) : ?>
-
-
-  <div class="container-fluid installation_calc">
-    <div class="row">
-      <div class="col-md-6 hidden-xs hidden-sm installation_calc_form matchheight">
-        <h3>Area Calculator</h3>
-        <form oninput="x.value=(parseInt(a.value)*parseInt(b.value)/parseInt(c.value)).toFixed(4)">
-          <div class="row">
-            <div class="col-md-6">
-              <label for="a">Width (mm)</label>
-              <input class="form-control" placeholder="Width (mm)" type="number" id="a" min="0" value="00">
-            </div>
-            <div class="col-md-6">
-              <label for="b">Length (mm)</label>
-              <input class="form-control" placeholder="Length (mm)" type="number" id="b" min="0" value="00">
-            </div>
-            <div class="col-md-6 result">
-              <p>Required:</p>
-              <input style="display: none" type="number" id="c" value="92903.04">
-            </div>
-            <div class="col-md-6 result">
-              <div class="row">
-                <div class="col-md-12">
-                  <output name="x" for="a b c">0.0000</output> <span>SQFT</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-6 matchheight">
-        <div class="row">
-          <div class="col-sm-8">
-
-            <?php if( have_rows('installation_video') ): ?>
-
-            	<?php while( have_rows('installation_video') ): the_row();
-
-            		// vars
-            		$installation_yt_link = get_sub_field('installation_yt_link');
-            		$installation_video_title = get_sub_field('installation_video_title');
-            		$installation_video_description = get_sub_field('installation_video_description');
-
-            		?>
-
-            		<iframe width="100%" height="280" src="https://www.youtube.com/embed/<?php echo $installation_yt_link ?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-                <strong><?php echo $installation_video_title ?></strong> <br />
-
-                <?php echo $installation_video_description ?>
-
-            	<?php endwhile; ?>
-
-            <?php endif; ?>
-
-
-          </div>
-          <div class="col-sm-4">
-            <?php if( have_rows('installation_download') ): ?>
-
-            	<?php while( have_rows('installation_download') ): the_row();
-
-            		// vars
-            		$installation_dl_file = get_sub_field('installation_dl_file');
-            		$installation_dl_name = get_sub_field('installation_dl_name');
-            		$installation_dl_description = get_sub_field('installation_dl_description');
-
-            		?>
-
-                <a href="<?php echo $installation_dl_file ?>" download>
-                  <img class="download" src="/wp-content/uploads/2019/08/download_icon_white.svg" alt="Download">
-                </a> <br />
-
-                <strong><?php echo $installation_dl_name ?></strong> <br />
-
-                <?php echo $installation_dl_description ?>
-
-            	<?php endwhile; ?>
-
-            <?php endif; ?>
-          </div>
-        </div>
-
-      </div>
-      <div class="col-md-6 hidden-md hidden-lg installation_calc_form matchheight">
-        <h3>Area Calculator</h3>
-        <form oninput="x.value=(parseInt(a.value)*parseInt(b.value)/parseInt(c.value)).toFixed(4)">
-          <div class="row">
-            <div class="col-md-6">
-              <label for="a">Width (mm)</label>
-              <input class="form-control" placeholder="Width (mm)" type="number" id="a" min="0" value="00">
-            </div>
-            <div class="col-md-6">
-              <label for="b">Length (mm)</label>
-              <input class="form-control" placeholder="Length (mm)" type="number" id="b" min="0" value="00">
-            </div>
-            <div class="col-md-6 result">
-              <p>Required:</p>
-              <input style="display: none" type="number" id="c" value="92903.04">
-            </div>
-            <div class="col-md-6 result">
-              <div class="row">
-                <div class="col-md-12">
-                  <output name="x" for="a b c">0.0000</output> <span>SQFT</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <?php endif ?>
 
   <?php endwhile; ?>
 

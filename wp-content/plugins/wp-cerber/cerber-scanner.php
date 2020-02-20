@@ -60,6 +60,7 @@ define( 'CERBER_USF', 18 );
 define( 'CERBER_EXC', 20 );
 define( 'CERBER_DIR', 26 );
 define( 'CERBER_UXT', 30 );
+define( 'CERBER_MOD', 50 );
 define( 'CERBER_NEW', 51 );
 
 define( 'CERBER_FDUN', 300 );
@@ -169,7 +170,6 @@ function cerber_show_scanner() {
 
 add_action( 'wp_ajax_cerber_scan_control', 'cerber_manual_scan' );
 function cerber_manual_scan() {
-	global $cerber_db_errors;
 
 	cerber_check_ajax_permissions();
 
@@ -193,9 +193,7 @@ function cerber_manual_scan() {
 
 	$next_do = ( ! empty( $scanner['cerber_scan_do'] ) ) ? $scanner['cerber_scan_do'] : 'stop';
 
-	if ( $cerber_db_errors ) {
-		$console_log = array_merge( $console_log, $cerber_db_errors );
-	}
+	$console_log = array_merge( $console_log, cerber_db_get_errors() );
 
 	$console_log[] = 'PHP MEMORY ' . @ini_get( 'memory_limit' );
 
@@ -329,7 +327,7 @@ function cerber_scanner( $control, $mode ) {
 	if ( crb_get_settings( 'scan_debug' ) ) {
 		register_shutdown_function( function () {
 			if ( http_response_code() != 200 ) {
-				crb_scan_debug( 'SERVER ERROR! The scan is not completed.' );
+				crb_scan_debug( 'ERROR: Unexpected software errors detected. Check the server error log.' );
 				if ( $err = error_get_last() ) {
 					crb_scan_debug( print_r( $err, 1 ) );
 				}
@@ -1323,14 +1321,12 @@ function cerber_push_issues( $section, $issues = array(), $container = '', $sec_
 			$data['name']  = $file['file_name'];
 			$data['type']  = $file['file_type'];
 
-			if ( $file['file_status'] > 0 ) {
-				$extra_issue = $file['file_status'];
-				if ( $extra_issue == $issue[0] ) {
-					$extra_issue = 0;
-				}
+			$status = crb_array_get( $file, 'file_status', 0 );
+			if ( 0 < $status && $status != $issue[0] ) {
+				$extra_issue = $status;
 			}
 
-			// Is file can be deleted safely
+			// Can the file be deleted safely?
 
 			$allowed = 0;
 			if ( $file['file_type'] != CERBER_FT_CONF ) {
@@ -1598,7 +1594,7 @@ function cerber_get_issue_label( $id = null ) {
 		CERBER_DIR => __( 'Suspicious directives found', 'wp-cerber' ),
 		CERBER_UXT => __( 'Unwanted file extension', 'wp-cerber' ),
 
-		50         => __( 'Content has been modified', 'wp-cerber' ), // Previous scan
+		CERBER_MOD => __( 'Content has been modified', 'wp-cerber' ), // Previous scan
 		CERBER_NEW => __( 'New file', 'wp-cerber' ),
 
 		CERBER_FDUN => __( 'Unable to delete', 'wp-cerber' ),
@@ -1805,7 +1801,7 @@ function cerber_verify_plugins() {
 
 		if ( $vuln ) {
 			foreach ( $vuln as $v ) {
-				$issues[] = array( CERBER_VULN, $v['n'].'. '.$v['f'] );
+				$issues[] = array( CERBER_VULN, $v['vu_info'] );
 			}
 		}
 
@@ -3529,16 +3525,16 @@ function cerber_cmp_scans( $prev_id, $scan_id ) {
 function cerber_cmp_files( $prev, $new ) {
 	if ( ! empty( $prev['file_hash'] ) && ! empty( $new['file_hash'] ) ) {
 		if ( $prev['file_hash'] != $new['file_hash'] ) {
-			return 50;
+			return CERBER_MOD;
 		}
 	}
     elseif ( ! empty( $prev['file_md5'] ) && ! empty( $new['file_md5'] ) ) {
 		if ( $prev['file_md5'] != $new['file_md5'] ) {
-			return 50;
+			return CERBER_MOD;
 		}
 	}
     elseif ( $prev['file_size'] != $new['file_size'] ) {
-		return 50;
+		return CERBER_MOD;
 	}
 
 	return 0;
@@ -3958,40 +3954,44 @@ function cerber_scanner_dashboard( $msg = '' ) {
                     </tr>
                 </table>
             </div>
-            <div class="crb-scan-info scan-tile">
+            <div id="crb-scan-filter" class="crb-scan-info scan-tile">
                 <table>
-                    <tr>
-                        <td><?php _e( 'Vulnerabilities', 'wp-cerber' ); ?></td>
-                        <td id="crb-numbers-4" data-init="-">-</td>
+                    <!--<tr id="crb-numbers-4">
+                        <td><span><?php _e( 'Vulnerabilities', 'wp-cerber' ); ?></span></td>
+                        <td class="crb-scan-number" data-init="-">-</td>
+                    </tr> -->
+                    <tr id="crb-numbers-51">
+                        <td><span data-itype-list="[51]"><?php _e( 'New files', 'wp-cerber' ); ?></span></td>
+                        <td class="crb-scan-number" data-init="-">-</td>
                     </tr>
-                    <tr>
-                        <td><?php _e( 'New files', 'wp-cerber' ); ?></td>
-                        <td id="crb-numbers-51" data-init="-">-</td>
+                    <tr id="crb-numbers-50">
+                        <td><span data-itype-list="[50]"><?php _e( 'Changed files', 'wp-cerber' ); ?></span></td>
+                        <td class="crb-scan-number" data-init="-">-</td>
                     </tr>
-                    <tr>
-                        <td><?php _e( 'Changed files', 'wp-cerber' ); ?></td>
-                        <td id="crb-numbers-50" data-init="-">-</td>
+                    <tr id="crb-numbers-15">
+                        <td><span data-itype-list="[15]"><?php _e( 'Checksum mismatch', 'wp-cerber' ); ?></span></td>
+                        <td class="crb-scan-number" data-init="-">-</td>
                     </tr>
-                    <tr>
-                        <td><?php _e( 'Unwanted extensions', 'wp-cerber' ); ?></td>
-                        <td id="crb-numbers-30" data-init="-">-</td>
+                    <tr id="crb-numbers-30">
+                        <td><span data-itype-list="[30]"><?php _e( 'Unwanted extensions', 'wp-cerber' ); ?></span></td>
+                        <td class="crb-scan-number" data-init="-">-</td>
                     </tr>
-                    <tr>
-                        <td><?php _e( 'Unattended files', 'wp-cerber' ); ?></td>
-                        <td id="crb-numbers-18" data-init="-">-</td>
+                    <tr id="crb-numbers-18">
+                        <td><span data-itype-list="[18]" data-setype-list="[21]"><?php _e( 'Unattended files', 'wp-cerber' ); ?></span></td>
+                        <td class="crb-scan-number" data-init="-">-</td>
                     </tr>
                 </table>
             </div>
             <div class="scan-tile">
-                <div><p><span id="crb-scanned-files" data-init="-">0</span> / <span id="crb-total-files"
-                                                                                    data-init="-">0</span>
+                <div><p><span id="crb-scanned-files" data-init="0">0</span> / <span id="crb-total-files"
+                                                                                    data-init="0">0</span>
                     </p>
                     <p><?php echo __( 'Scanned', 'wp-cerber' ) . ' / ' . __( 'Files to scan', 'wp-cerber' ); ?></p>
                 </div>
             </div>
 
             <div class="scan-tile">
-                <div><p><span id="crb-critical" data-init="-">0</span> / <span id="crb-warning" data-init="-">0</span>
+                <div><p><span id="crb-critical" data-init="0">0</span> / <span id="crb-warning" data-init="0">0</span>
                     </p>
                     <p><?php _e( 'Critical issues', 'wp-cerber' ); ?> / <?php _e( 'Issues total', 'wp-cerber' ); ?></p>
                 </div>
@@ -3999,77 +3999,6 @@ function cerber_scanner_dashboard( $msg = '' ) {
 
         </div>
 
-        <div id="crb-scan-progress">
-            <div>
-                <div id="the-scan-bar"></div>
-            </div>
-        </div>
-
-        <p id="crb-scan-message"><?php echo $msg; ?></p>
-
-    </div>
-    <div id="crb-scan-details">
-        <table class="crb-table" id="crb-browse-files">
-			<?php
-			$rows = array();
-			$rows[] = '<tr class="crb-scan-container" id="crb-wordpress" style=""><td colspan="6">WordPress</td></tr>';
-			$rows[] = '<tr class="crb-scan-container" id="crb-muplugins" style=""><td colspan="6">Must use plugins</td></tr>';
-			$rows[] = '<tr class="crb-scan-container" id="crb-dropins" style=""><td colspan="6">Drop-ins</td></tr>';
-			$rows[] = '<tr class="crb-scan-container" id="crb-plugins" style=""><td colspan="6">Plugins</td></tr>';
-
-			/*
-			$plugins = get_plugins();
-			foreach ( $plugins as $plugin ) {
-				$rows[] = '<tr class="crb-scan-section" id="' . sha1( $plugin['Name'] ) . '" style="display:none;"></tr>';
-			}
-			*/
-			$rows[] = '<tr class="crb-scan-container" id="crb-themes" style=""><td colspan="6">Themes</td></tr>';
-
-			/*$themes = wp_get_themes();
-			foreach ( $themes as $theme_folder => $theme ) {
-				$rows[] = '<tr class="crb-scan-section" id="' . sha1( $theme->get( 'Name' ) ) . '" style="display:none;"></tr>';
-			}*/
-
-			$rows[] = '<tr class="crb-scan-container" id="crb-uploads" style=""><td colspan="6">Uploads folder</td></tr>';
-			$rows[] = '<tr class="crb-scan-container" id="crb-unattended" style=""><td colspan="6">Unattended files</td></tr>';
-			echo implode("\n",$rows);
-			?>
-        </table>
-    </div>
-
-	<?php
-
-	cerber_ref_upload_form();
-}
-
-function cerber_scanner_dashboardold( $msg = '' ) {
-	?>
-    <div id="crb-scan-display">
-        <div id="" class="scan-tile">
-            <table>
-                <tr><td>Started</td><td id="crb-started" data-init="-">-</td></tr>
-                <tr><td>Finished</td><td id="crb-finished" data-init="-">-</td></tr>
-                <tr><td>Duration</td><td id="crb-duration" data-init="-">-</td></tr>
-                <tr><td>Performance</td><td id="crb-performance" data-init="-">-</td></tr>
-                <tr><td>Mode</td><td id="crb-smode" data-init="-">-</td></tr>
-            </table>
-        </div>
-        <div class="scan-tile">
-            <div><p id="crb-total-files" data-init="-">0</p>
-                <p><?php _e( 'Files to scan', 'wp-cerber' ); ?></p></div>
-        </div>
-        <div class="scan-tile">
-            <div><p><span id="crb-scanned-files" data-init="-">0</span><span id="crb-scanned-percentage" data-init=""></span></p>
-                <p>Scanned</p></div>
-        </div>
-        <div class="scan-tile">
-            <div><p id="crb-critical" data-init="-">0</p>
-                <p><?php _e( 'Critical issues', 'wp-cerber' ); ?></p></div>
-        </div>
-        <div class="scan-tile">
-            <div><p id="crb-warning" data-init="-">0</p>
-                <p><?php _e( 'Issues total', 'wp-cerber' ); ?></p></div>
-        </div>
         <div id="crb-scan-progress">
             <div>
                 <div id="the-scan-bar"></div>
@@ -5386,7 +5315,7 @@ function cerber_scan_report( $scan ) {
 
 
 	// Some KPI numbers
-	$inc = array( CERBER_VULN, CERBER_NEW, 50, 18, 30 );
+	$inc = array( CERBER_VULN, CERBER_NEW, CERBER_MOD, CERBER_USF, CERBER_UXT );
 	foreach ( $inc as $id ) {
 		if ( isset( $scan['numbers'][ $id ] ) ) {
 			$css = '';
@@ -5531,66 +5460,59 @@ function cerber_check_vulnerabilities( $plugin_slug, $plugin ) {
  * @return array|bool|WP_Error
  */
 function cerber_get_vulnerabilities( $plugin_slug, $plugin ) {
-	$ret = false;
 
-	$key = 'crb_vuln_' . sha1( $plugin_slug );
-	$vu = cerber_get_set( $key );
-
-	if ( ! $vu ) {
-		crb_scan_debug( 'Retrieving vulnerabilities for ' . $plugin_slug );
-
-		if ( ! $json = @file_get_contents( CERBER_VULNDB_API . $plugin_slug ) ) {
-			cerber_update_set( $key, array( 'negative_result' ), null, true, time() + 3600 );
-
-			return new WP_Error( 'network_error', 'Unable to get the list of vulnerabilities' );
-		}
-
-		if ( ! $vu = json_decode( $json, true ) ) {
-			if ( JSON_ERROR_NONE != json_last_error() ) {
-				return new WP_Error( 'json_error', json_last_error_msg() );
-			}
-
-			return $ret;
-		}
-
-		cerber_update_set( $key, $vu, null, true, time() + 8 * 3600 );
+	if ( ! lab_lab() ) {
+		return false;
 	}
 
-	if ( isset( $vu['negative_result'] ) ) {
+	$key = '_crb_vu_plugins';
+	$vu_list = cerber_get_set( $key );
+
+	if ( ! $vu_list
+	     || ( ! isset( $vu_list['plugins'][ $plugin_slug ] ) && ! isset( $vu_list['cloud_error'] ) ) ) {
+		crb_scan_debug( 'Getting vulnerability data from the cloud.' );
+
+		$plugins = array_keys( get_plugins() );
+		array_walk( $plugins, function ( &$e ) {
+			$e = dirname( $e );
+		} );
+		$plugins = array_filter( $plugins, function ( $e ) {
+			return ( false === strpos( $e, '.' ) );
+		} );
+
+		if ( ! $vu_list = lab_api_send_request( array(
+			'get_vu_list' => array(
+				'plugins' => $plugins,
+			)
+		), 'vu_list' ) ) {
+			$vu_list = array( 'cloud_error' => 1 );
+			$t  = 120; // Network error
+		}
+		else {
+			$t = 3600; // OK
+		}
+
+		cerber_update_set( $key, $vu_list, null, true, time() + $t );
+	}
+
+	if ( isset( $vu_list['cloud_error'] ) ) {
 		return new WP_Error( 'network_error', 'Unable to get the list of vulnerabilities' );
 	}
 
-	$v_list = false;
+	$ret = array();
+	$lst = crb_array_get( $vu_list['plugins'], $plugin_slug );
 
-	if ( !empty( $vu[ $plugin_slug ]['vulnerabilities'] ) ) {
-		$v_list = $vu[ $plugin_slug ]['vulnerabilities'];
-	}
-
-	if ( ! is_array( $v_list ) ) {
+	if ( empty( $lst ) ) {
 		return $ret;
 	}
 
-	$ret = array();
-	foreach ( $v_list as $v ) {
-		$r = array();
+	foreach ( $lst as $v ) {
 		if ( version_compare( $v['fixed_in'], $plugin['Version'], '>' ) ) {
-			$r['n'] = $v['title'];
-			$r['l'] = 'https://wpvulndb.com/vulnerabilities/' . $v['id'] . '/';
-			$r['t'] = "Type: ".$v['vuln_type'];
-			$r['p'] = 'Published: ' . date( get_option( 'date_format' ), strtotime( $v['published_date'] ) );
-			$r['f'] = "Fixed in version: " . $v['fixed_in'];
-			if ( ! empty( $v['references']['url'] ) ) {
-				$r['r'] = $v['references']['url'];
-			}
-		}
-		if ( ! empty( $r ) ) {
-			$ret[] = $r; //implode( '<br/>', $r );
+			$ret[] = array(
+				'vu_info' => $v['short_desc'] . ' ' . 'Fixed in version: ' . $v['fixed_in']
+			);
 		}
 	}
-
-	/*if ( ! empty( $report ) ) {
-		$ret = '<h3 style="color:#FF0000">Vulnerability found!</h3>You need to update this plugin immediately! <ol><li>' . implode( '</li><li>', $report ) . '</li></ol><p>Information provided by <a href="https://wpvulndb.com/">WPScan Vulnerability Database</a></p>';
-	}*/
 
 	return $ret;
 }

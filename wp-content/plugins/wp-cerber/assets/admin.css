@@ -32,6 +32,14 @@
     vertical-align: middle;
 }
 
+#crb-admin .select2-search__field {
+    width: 300px !important;
+}
+
+#crb-admin .wp-list-table td {
+    color: #222;
+}
+
 .crb-main a:focus,
 #crb-aside a:focus {
     -webkit-box-shadow: none !important;
@@ -107,6 +115,17 @@
 
 #crb-admin [class^='select2'] {
     border-radius: 0 !important;
+}
+
+.crb-settings .crb-label-above {
+    color: #333;
+    font-weight: bold;
+    padding-bottom: 0.7em;
+}
+
+#crb-form-user_shield th,
+#crb-form-opt_shield th{
+    display: none;
 }
 
 /* Dashboard */
@@ -892,6 +911,12 @@ body.wp-cerber_page_cerber-integrity {
     color: #000;
 }
 
+.crb-scan-flon {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #0073aa;
+}
+
 @media screen and (max-width: 1600px) {
     .crb-settings .form-table td {
         padding-right: 10% !important;
@@ -1336,10 +1361,10 @@ div#whois:hover {
     margin-top: 0;
 }
 #diagnostic .diag-section {
-    background-color: #f7f7f7;
-    border: 2px solid #ccc;
-    width: 90%;
-    max-width:1000px;
+    background-color: #fafafa;
+    border-top: 2px solid #ddd;
+    /*width: 90%;
+    max-width:1000px;*/
     margin-bottom: 1em;
     padding: 1em;
 }
@@ -1373,12 +1398,28 @@ div#whois:hover {
 }
 
 .crb-plain-table {
-    border-collapse: collapse;
-    margin-top: 1em;
+    max-height: 440px;
+    overflow: auto;
 }
-.crb-plain-table td{
+.crb-plain-table table {
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+.crb-plain-table td {
     border: 1px solid #eee;
 }
+.crb-plain-fcw td:first-of-type {
+    width: 30%;
+}
+.crb-plain-table td:not(:first-of-type) {
+    color: #000;
+}
+.crb-plain-header,
+.crb-plain-fh td:first-of-type {
+    color: #000;
+    font-weight: bold;
+}
+
 
 .cerber-button span.dashicons-before {
     display: inline-block;
@@ -1676,6 +1717,13 @@ table.vtable > tbody > tr > td {
 .vtabcontent .form-table td {
     padding: 12px 10px 10px 0;
 }*/
+
+/* Nexus */
+
+.column-primary .crb-slave-url {
+    color: #555;
+}
+
 
 #crb-log-viewer pre {
     font-family: monospace;

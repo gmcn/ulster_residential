@@ -237,7 +237,7 @@ class FrmProAppController {
 	 *
 	 * @since 3.05
 	 */
-	public static function whitelabel_icon( $icon ) {
+	public static function whitelabel_icon( $icon, $use_svg = false ) {
 		$class = self::get_icon_class();
 		if ( empty( $class ) ) {
 			return $icon;
@@ -247,6 +247,9 @@ class FrmProAppController {
 		$icon = str_replace( 'frmfont ', '', $icon );
 		if ( $icon === 'frm_white_label_icon' ) {
 			$svg  = self::whitelabel_svg();
+			if ( $use_svg ) {
+				return $svg;
+			}
 			$icon = 'data:image/svg+xml;base64,' . base64_encode( $svg );
 		}
 
@@ -258,6 +261,7 @@ class FrmProAppController {
 <path fill="currentColor" d="M18.1 1.3H2C.9 1.3 0 2 0 3V17c0 1 .8 1.9 1.9 1.9H18c1 0 1.9-.9 1.9-2V3.2c0-1-.8-1.9-1.9-1.9zM18 16.9H2a.2.2 0 0 1-.2-.3V3.4c0-.2 0-.3.2-.3H18c.1 0 .2.1.2.3v13.2c0 .2 0 .3-.2.3zm-1.6-3.6v1c0 .2-.3.4-.5.4H8a.5.5 0 0 1-.5-.5v-1c0-.2.2-.4.5-.4h7.8c.2 0 .4.2.4.5zm0-3.8v1c0 .2-.3.4-.5.4H8a.5.5 0 0 1-.5-.4v-1c0-.2.2-.4.5-.4h7.8c.2 0 .4.2.4.4zm0-3.7v1c0 .2-.3.4-.5.4H8a.5.5 0 0 1-.5-.5v-1c0-.2.2-.4.5-.4h7.8c.2 0 .4.2.4.5zm-9.9.5a1.4 1.4 0 1 1-2.8 0 1.4 1.4 0 0 1 2.8 0zm0 3.7a1.4 1.4 0 1 1-2.8 0 1.4 1.4 0 0 1 2.8 0zm0 3.8a1.4 1.4 0 1 1-2.8 0 1.4 1.4 0 0 1 2.8 0z"/>
 </svg>';
 	}
+
 	/**
 	 * Change the icon on the editor button if set
 	 *

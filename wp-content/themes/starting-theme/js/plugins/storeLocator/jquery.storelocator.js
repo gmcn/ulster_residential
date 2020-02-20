@@ -2670,6 +2670,8 @@
 
 			openMap = $mapDiv.hasClass('bh-sl-map-open');
 
+			openMap = $(".loadingDiv").addClass("hidden");
+
 			// Set a variable for fullMapStart so we can detect the first run
 			if (
 				( _this.settings.fullMapStart === true && openMap === false ) ||

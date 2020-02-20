@@ -316,7 +316,7 @@ final class CRB_2FA {
 		if ( cerber_is_http_post()
 		     && ! empty( $twofactor['nonce'] )
 		     && $_POST['cerber_tag'] === $twofactor['nonce']
-		     && ( $pin = crb_array_get( $_POST, 'cerber_pin' ) )
+		     && ( $pin = cerber_get_post( 'cerber_pin' ) )
 		     && self::verify_pin( trim( $pin ) ) ) {
 
 			unset( $cus['2fa'] );
@@ -340,7 +340,7 @@ final class CRB_2FA {
 
 	static function process_ajax( $new_pin ) {
 		if ( ( ! $nonce = cerber_get_post( 'the_2fa_nonce', '\w+' ) )
-		     || ( ! $pin = crb_array_get( $_POST, 'cerber_verify_pin' ) ) ) {
+		     || ( ! $pin = cerber_get_post( 'cerber_verify_pin' ) ) ) {
 			return;
 		}
 

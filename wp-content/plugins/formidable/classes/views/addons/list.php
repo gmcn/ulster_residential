@@ -10,6 +10,11 @@
 
 	<?php include( FrmAppHelper::plugin_path() . '/classes/views/shared/errors.php' ); ?>
 
+	<?php esc_html_e( 'Missing add-ons?', 'formidable' ); ?>
+	<a href="#" id="frm_reconnect_link" class="frm-show-authorized" data-refresh="1">
+		<?php esc_html_e( 'Check now for a recent upgrade or renewal', 'formidable' ); ?>
+	</a>
+
 	<div id="the-list" class="frm-addons">
 		<?php foreach ( $addons as $slug => $addon ) { ?>
 			<div class="frm-card plugin-card-<?php echo esc_attr( $slug ); ?> frm-no-thumb frm-addon-<?php echo esc_attr( $addon['status']['type'] ); ?>">
@@ -57,7 +62,7 @@
 							<?php esc_html_e( 'Install', 'formidable' ); ?>
 						</a>
 					<?php } elseif ( ! empty( $license_type ) && $license_type === strtolower( $plan_required ) ) { ?>
-						<a class="install-now button button-secondary frm-button-secondary" href="<?php echo esc_url( FrmAppHelper::admin_upgrade_link( 'addons', 'account/licenses/' ) . '&utm_content=' . $addon['slug'] ); ?>" target="_blank" aria-label="<?php esc_attr_e( 'Upgrade Now', 'formidable' ); ?>">
+						<a class="install-now button button-secondary frm-button-secondary" href="<?php echo esc_url( FrmAppHelper::admin_upgrade_link( 'addons', 'account/downloads/' ) . '&utm_content=' . $addon['slug'] ); ?>" target="_blank" aria-label="<?php esc_attr_e( 'Upgrade Now', 'formidable' ); ?>">
 							<?php esc_html_e( 'Renew Now', 'formidable' ); ?>
 						</a>
 					<?php } else { ?>

@@ -15,10 +15,17 @@
 get_header(); ?>
 
 <?php
+
+  $retainerShowHide = get_field('retailer_area_showhide', 'option');
+
   include(locate_template("inc/retailer-area/login.php"));
   include(locate_template("inc/page-elements/title.php"));
   include(locate_template("inc/retailer-area/page-main/loggedin.php"));
-  include(locate_template("inc/retailer-area/page-main/children.php"));
+
+  if ($retainerShowHide == 1 || is_user_logged_in()) :
+    include(locate_template("inc/retailer-area/page-main/children.php"));
+  endif;
+
 ?>
 
 <?php

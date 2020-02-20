@@ -319,3 +319,12 @@
 }
 
 /* End Sections */
+
+/* Summary Field */
+
+.<?php echo esc_html( $settings['style_class'] ); ?> .frm-summary-page-wrapper {
+	border-color: <?php echo esc_html( $settings['border_color'] . $important ); ?>;
+	border-radius: <?php echo esc_html( $settings['border_radius'] . $important ); ?>;
+}
+
+/* End Summary Field */

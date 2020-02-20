@@ -74,6 +74,9 @@ function cerber_admin_link( $tab = '', $args = array(), $add_nonce = false ) {
 		elseif ( in_array( $tab, array( 'traffic', 'ti_settings' ) ) ) {
 			$page = 'cerber-traffic';
 		}
+		elseif ( in_array( $tab, array( 'user_shield', 'opt_shield' ) ) ) {
+			$page = 'cerber-shield';
+		}
 		elseif ( in_array( $tab, array( 'geo' ) ) ) {
 			$page = 'cerber-rules';
 		}
@@ -389,6 +392,12 @@ function cerber_check_environment(){
 		cerber_admin_notice('Warning: Traffic Inspector is disabled');
 	}
 
+	if ( cerber_is_admin_page( false, array( 'page' => 'cerber-shield' ) ) ) {
+		if ( CRB_DS::check_errors( $msg ) ) {
+			cerber_admin_notice( $msg );
+		}
+	}
+
 	$ex_list = get_loaded_extensions();
 
 	if ( ! in_array( 'curl', $ex_list ) ) {
@@ -420,6 +429,7 @@ function cerber_check_environment(){
  * @param string $related_setting
  */
 function cerber_add_issue( $code, $text, $related_setting = '' ) {
+	// TODO: implement this reporting feature
 	static $issues = array();
 	if ( ! isset( $issues[ $code ] ) ) {
 		$issues[ $code ] = array( $text, $related_setting );
@@ -539,10 +549,14 @@ function cerber_get_ip_id( $ip_id ) {
  *
  * @return bool
  */
-function cerber_is_ipv4($ip){
-	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) return true;
-	return false;
+function cerber_is_ipv4( $ip ) {
+	return ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ) ? true : false;
 }
+
+function cerber_is_ipv6( $ip ) {
+	return ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) ? true : false;
+}
+
 /**
  * Check if a given IP address belongs to a private network (private IP).
  * Universal: support IPv6 and IPv4.
@@ -664,14 +678,23 @@ function crb_array_column( $arr = array(), $column = '' ) {
 
 /**
  * @param $arr array
- * @param $key string|integer
+ * @param $key string|integer|array
  * @param $default mixed
+ * @param $pattern string REGEX pattern for value validation, UTF is not supported
  *
  * @return mixed
  */
 function crb_array_get( &$arr, $key, $default = false, $pattern = '' ) {
-	//return ( isset( $arr[ $key ] ) ) ? $arr[ $key ] : $default;
-	$ret = ( isset( $arr[ $key ] ) ) ? $arr[ $key ] : $default;
+	if ( is_array( $key ) ) {
+		$ret = crb_array_get_deep( $arr, $key );
+		if ( $ret === null ) {
+			$ret = $default;
+		}
+	}
+	else {
+		$ret = ( isset( $arr[ $key ] ) ) ? $arr[ $key ] : $default;
+	}
+
 	if ( ! $pattern ) {
 		return $ret;
 	}
@@ -695,6 +718,49 @@ function crb_array_get( &$arr, $key, $default = false, $pattern = '' ) {
 	} );
 
 	return array_filter( $ret );
+}
+
+/**
+ * Retrieve element from multi-dimensional array
+ *
+ * @param array $arr
+ * @param array $keys Keys (dimensions)
+ *
+ * @return mixed|null Value of the element if it's defined, null otherwise
+ */
+function crb_array_get_deep( &$arr, $keys ) {
+	$key = array_shift( $keys );
+	if ( isset( $arr[ $key ] ) ) {
+		if ( empty( $keys ) ) {
+			return $arr[ $key ];
+		}
+
+		return crb_array_get_deep( $arr[ $key ], $keys );
+	}
+
+	return null;
+}
+
+/**
+ * Compare two arrays by using keys: check if two arrays have different set of keys
+ *
+ * @param $arr1 array
+ * @param $arr2 array
+ *
+ * @return bool true if arrays have different set of keys
+ */
+function crb_array_diff_keys( &$arr1, &$arr2 ) {
+	if ( count( $arr1 ) != count( $arr2 ) ) {
+		return true;
+	}
+	if ( array_diff_key( $arr1, $arr2 ) ) {
+		return true;
+	}
+	if ( array_diff_key( $arr2, $arr1 ) ) {
+		return true;
+	}
+
+	return false;
 }
 
 /**
@@ -802,7 +868,6 @@ function cerber_is_wp_ajax( $use_filter = false ) {
 
 
 /**
- * More neat way to get $_GET field
  *
  * @param $key string
  * @param $pattern string
@@ -810,33 +875,17 @@ function cerber_is_wp_ajax( $use_filter = false ) {
  * @return bool|array|string
  */
 function cerber_get_get( $key, $pattern = '' ) {
-	if ( isset( $_GET[ $key ] ) ) {
-		$ret = $_GET[ $key ];
-		if ( ! $pattern ) {
-			return $ret;
-		}
-		$pattern = '/^' . $pattern . '$/i';
-		if ( preg_match( $pattern, $ret ) ) {
-			return $ret;
-		}
-	}
-
-	return false;
+	return crb_array_get( $_GET, $key, false, $pattern );
 }
-
+/**
+ *
+ * @param $key string
+ * @param $pattern string
+ *
+ * @return bool|array|string
+ */
 function cerber_get_post( $key, $pattern = '' ) {
-	if ( isset( $_POST[ $key ] ) ) {
-		$ret = $_POST[ $key ];
-		if ( ! $pattern ) {
-			return $ret;
-		}
-		$pattern = '/^' . $pattern . '$/i';
-		if ( preg_match( $pattern, $ret ) ) {
-			return $ret;
-		}
-	}
-
-	return false;
+	return crb_array_get( $_POST, $key, false, $pattern );
 }
 
 /**
@@ -1028,6 +1077,14 @@ function cerber_is_rest_permitted() {
 	return false;
 }
 
+/**
+ * Check if a user has at least one role from the list
+ *
+ * @param array $roles
+ * @param null $user_id
+ *
+ * @return bool
+ */
 function cerber_user_has_role( $roles = array(), $user_id = null ) {
 	if ( ! $user_id ) {
 		$user = wp_get_current_user();
@@ -1035,14 +1092,42 @@ function cerber_user_has_role( $roles = array(), $user_id = null ) {
 	else {
 		$user = get_userdata( $user_id );
 	}
+
 	if ( ! $user || empty( $user->roles ) ) {
 		return false;
 	}
+
+	if ( ! is_array( $roles ) ) {
+		$roles = array( $roles );
+	}
+
 	if ( array_intersect( $user->roles, $roles ) ) {
 		return true;
 	}
 
 	return false;
+}
+
+/**
+ * Check if all user roles are in the list
+ *
+ * @param array|string $roles
+ * @param int $user_id
+ *
+ * @return bool false if the user has role(s) other than listed in $roles
+ */
+function crb_user_has_role_strict( $roles, $user_id ) {
+	if ( ! $user_id || ! $user = get_userdata( $user_id ) ) {
+		return false;
+	}
+
+	if ( ! is_array( $roles ) ) {
+		$roles = array( $roles );
+	}
+
+	$user_roles = ( is_array( $user->roles ) ) ? $user->roles : array();
+
+	return ( ! array_diff( $user_roles, $roles ) );
 }
 
 function crb_get_rest_path() {
@@ -1075,7 +1160,8 @@ function crb_get_rest_url() {
 }
 
 function crb_is_user_blocked( $uid ) {
-	if ( ( $m = get_user_meta( $uid, CERBER_BUKEY, 1 ) )
+	if ( $uid
+	     && ( $m = get_user_meta( $uid, CERBER_BUKEY, 1 ) )
 	     && ! empty( $m['blocked'] )
 	     && $m[ 'u' . $uid ] == $uid ) {
 		return $m;
@@ -1145,33 +1231,32 @@ function cerber_get_uri_script() {
  * @return bool|string An extension if it's found, false otherwise
  */
 function cerber_detect_exec_extension( $line, $extra = array() ) {
-	$executable = array( 'php', 'phtm', 'phtml', 'phps', 'shtm', 'shtml', 'jsp', 'asp', 'aspx', 'exe', 'com', 'cgi', 'pl', 'py', 'pyc', 'pyo' );
+	static $executable = array( 'php', 'phtm', 'phtml', 'phps', 'shtm', 'shtml', 'jsp', 'asp', 'aspx', 'exe', 'com', 'cgi', 'pl', 'py', 'pyc', 'pyo' );
 
-	if ( empty( $line ) ) {
+	if ( empty( $line ) || ! strrpos( $line, '.' ) ) {
 		return false;
 	}
 
 	if ( $extra ) {
-		$executable = array_merge( $executable, $extra );
+		$ex_list = array_merge( $executable, $extra );
+	}
+	else {
+		$ex_list = $executable;
 	}
 
 	$line = trim( $line );
 	$line = trim( $line, '/' );
 
-	if ( ! strrpos( $line, '.' ) ) {
-		return false;
-	}
-
-	$parts = explode('.', $line);
-	array_shift($parts);
+	$parts = explode( '.', $line );
+	array_shift( $parts );
 
 	// First and last are critical for most server environments
-	$first_ext = array_shift($parts);
-	$last_ext = array_pop($parts);
+	$first_ext = array_shift( $parts );
+	$last_ext  = array_pop( $parts );
 
 	if ( $first_ext ) {
 		$first_ext = strtolower( $first_ext );
-		if ( in_array( $first_ext, $executable ) ) {
+		if ( in_array( $first_ext, $ex_list ) ) {
 			return $first_ext;
 		}
 		if ( preg_match( '/php\d+/', $first_ext ) ) {
@@ -1181,7 +1266,7 @@ function cerber_detect_exec_extension( $line, $extra = array() ) {
 
 	if ( $last_ext ) {
 		$last_ext = strtolower( $last_ext );
-		if ( in_array( $last_ext, $executable ) ) {
+		if ( in_array( $last_ext, $ex_list ) ) {
 			return $last_ext;
 		}
 		if ( preg_match( '/php\d+/', $last_ext ) ) {
@@ -1272,6 +1357,10 @@ function cerber_get_labels( $type = 'activity', $all = true ) {
 
 		$labels[70] = __( 'Request to REST API denied', 'wp-cerber' );
 		$labels[71] = __( 'XML-RPC request denied', 'wp-cerber' );
+		$labels[72] = __( 'User creation denied', 'wp-cerber' );
+		$labels[73] = __( 'User update denied', 'wp-cerber' );
+		$labels[74] = __( 'Role update denied', 'wp-cerber' );
+		$labels[75] = __( 'Setting update denied', 'wp-cerber' );
 
 		$labels[100] = __( 'Malicious request denied', 'wp-cerber' );
 
@@ -1309,6 +1398,11 @@ function cerber_get_labels( $type = 'activity', $all = true ) {
 
 		$labels[30] = 'Username is prohibited';
 		$labels[31] = __( 'Email address is not permitted', 'wp-cerber' );
+		$labels[32] = 'User role is prohibited';
+		$labels[33] = __( 'Permission denied', 'wp-cerber' );
+		$labels[34] = 'Unauthorized access denied';
+		$labels[35] = __( 'Invalid user', 'wp-cerber' );
+		$labels[36] = __( 'Incorrect password', 'wp-cerber' );
 	}
 
 	return $labels;
@@ -1318,12 +1412,12 @@ function crb_get_activity_set( $slice = 'malicious' ) {
 	switch ( $slice ) {
 		case 'malicious':
 			return array( 10, 11, 16, 17, 40, 50, 51, 52, 53, 54, 55, 56, 100 );
-		case 'suspicious':
-			return array( 10, 11, 16, 17, 20, 40, 50, 51, 52, 53, 54, 55, 56, 100, 70, 71, 300 );
-		case 'black':
+		case 'black': // Like 'malicious' but will cause an IP lockout when hit the limit
 			return array( 16, 17, 40, 50, 51, 52, 55, 56, 100, 300 );
-		case 'dashboard':
-			return array( 1, 2, 5, 10, 11, 12, 16, 17, 18, 19, 40, 41, 42, 50, 51, 52, 53, 54, 55, 56, 100, 300 );
+		case 'suspicious': // Uses when an admin inspects logs
+			return array( 10, 11, 16, 17, 20, 40, 50, 51, 52, 53, 54, 55, 56, 100, 70, 71, 72, 73, 74, 75, 300 );
+		case 'dashboard': // Important events for the plugin dashboard
+			return array( 1, 2, 5, 10, 11, 12, 16, 17, 18, 19, 40, 41, 42, 50, 51, 52, 53, 54, 55, 56, 72, 73, 74, 75, 100, 300 );
 	}
 
 	return array();
@@ -1851,23 +1945,50 @@ function cerber_db_use_mysqli() {
  * Natively escape a string for use in an SQL statement
  * The reason: https://make.wordpress.org/core/2017/10/31/changed-behaviour-of-esc_sql-in-wordpress-4-8-3/
  *
- * @param $string
+ * @param string $str
  *
  * @return string
  * @since 6.0
  */
-function cerber_real_escape( $string ) {
+function cerber_real_escape( $str ) {
+
+	$str = (string) $str;
+
+	if ( empty( $str ) ) { // @since 8.4.1
+		if ( $str === '0' ) {
+			return '0';
+		}
+
+		return '';
+	}
 
 	$db = cerber_get_db();
 
 	if ( cerber_db_use_mysqli() ) {
-		$escaped = mysqli_real_escape_string( $db->dbh, $string );
+		$escaped = mysqli_real_escape_string( $db->dbh, $str );
 	}
 	else {
-		$escaped = mysql_real_escape_string( $string, $db->dbh );
+		$escaped = mysql_real_escape_string( $str, $db->dbh );
 	}
 
 	return $escaped;
+}
+
+function cerber_db_get_errors( $erase = false ) {
+	global $cerber_db_errors;
+
+	if ( ! isset( $cerber_db_errors ) ) {
+		$cerber_db_errors = array();
+	}
+
+	if ( ! $erase ) {
+		return $cerber_db_errors;
+	}
+
+	$ret = $cerber_db_errors;
+	$cerber_db_errors = array();
+
+	return $ret;
 }
 
 /**
@@ -2140,6 +2261,10 @@ function crb_get_mysql_var( $var ) {
  * @return bool|array
  */
 function cerber_get_set( $key, $id = null, $unserialize = true ) {
+	if ( ! $key ) {
+		return false;
+	}
+
 	$key = preg_replace( '/[^a-z_\-\d]/i', '', $key );
 
 	$and = '';
@@ -2183,6 +2308,10 @@ function cerber_get_set( $key, $id = null, $unserialize = true ) {
  * @return bool
  */
 function cerber_update_set( $key, $value, $id = null, $serialize = true, $expires = null ) {
+
+	if ( ! $key ) {
+		return false;
+	}
 
 	$key = preg_replace( '/[^a-z_\-\d]/i', '', $key );
 
@@ -2342,9 +2471,7 @@ function cerber_get_groove_x( $regenerate = false ) {
 		$groove_1 = substr( str_shuffle( '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' ), 0, rand( 24, 32 ) );
 		$groove_x = array( $groove_0, $groove_1 );
 		update_site_option( 'cerber-groove-x', $groove_x );
-		add_action('init', function () {
-			cerber_htaccess_sync( 'main' ); // keep the .htaccess rule is up to date
-		});
+		crb_update_cookie_dependent();
 	}
 
 	return $groove_x;
@@ -2389,6 +2516,21 @@ function cerber_get_cookie_prefix() {
 	return '';
 }
 
+function crb_update_cookie_dependent() {
+	static $done = false;
+
+	if ( $done ) {
+		return;
+	}
+
+	//add_action( 'init', function () {
+	register_shutdown_function( function () {
+		cerber_htaccess_sync( 'main' ); // keep the .htaccess rule is up to date
+	} );
+
+	$done = true;
+}
+
 /**
  * Synchronize plugin settings with rules in the .htaccess file
  *
@@ -2406,9 +2548,9 @@ function cerber_htaccess_sync( $file, $settings = array() ) {
 	if ( 'main' == $file ) {
 		$rules    = array();
 		if ( ! empty( $settings['adminphp'] ) && ( ! defined( 'CONCATENATE_SCRIPTS' ) || ! CONCATENATE_SCRIPTS ) ) {
-		//if ( ! empty( $settings['adminphp'] ) ) {
 			// https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-6389
 			if ( ! apache_mod_loaded( 'mod_rewrite', true ) ) {
+				cerber_add_issue( 'no_mod', 'The Apache mod_rewrite module is not enabled on your web server. Ask your server administrator for assistance.', 'adminphp' );
 				return new WP_Error( 'no_mod', 'The Apache mod_rewrite module is not enabled on your web server. Ask your server administrator for assistance.' );
 			}
 			$groove_x = cerber_get_groove_x();
@@ -2494,8 +2636,7 @@ function cerber_update_htaccess( $file, $rules = array() ) {
 		return new WP_Error( 'htaccess-io', 'ERROR: Unable to get access to the file ' . $htaccess);
 	}
 
-	require_once( ABSPATH . 'wp-admin/includes/misc.php' );
-	$result = insert_with_markers( $htaccess, $marker, $rules );
+	$result = crb_insert_with_markers( $htaccess, $marker, $rules );
 
 	if ( $result || $result === 0 ) {
 		$result = 'The ' . $htaccess . ' file has been updated';
@@ -2728,6 +2869,37 @@ function cerber_is_base64_encoded( $val ) {
 	return false;
 }
 
+function crb_is_alphanumeric( $str ) {
+	return ! preg_match( '/[^\w\-]/', $str );
+}
+
+/**
+ * @param array $arr
+ * @param array $fields
+ *
+ * @return bool
+ */
+function crb_arrays_similar( &$arr, $fields ) {
+	if ( crb_array_diff_keys( $arr, $fields ) ) {
+		return false;
+	}
+
+	foreach ( $fields as $field => $pattern ) {
+		if ( is_callable( $pattern ) ) {
+			if ( ! call_user_func( $pattern, $arr[ $field ] ) ) {
+				return false;
+			}
+		}
+		else {
+			if ( ! preg_match( $pattern, $arr[ $field ] ) ) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 function cerber_get_html_label( $iid ) {
 	$css['scan-ilabel'] = '
 	color: #fff;
@@ -2749,19 +2921,24 @@ function cerber_get_html_label( $iid ) {
 
 }
 
-// @since v. 7.7 for PHP-FPM
-if ( ! function_exists( 'getallheaders' ) ) {
-	function getallheaders() {
-		$headers = array();
-		foreach ( $_SERVER as $name => $value ) {
-			if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
-				$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
-			}
-		}
+function crb_getallheaders() {
 
-		return $headers;
+	if ( function_exists( 'getallheaders' ) ) {
+		return getallheaders();
 	}
+
+	// @since v. 7.7 for PHP-FPM
+
+	$headers = array();
+	foreach ( $_SERVER as $name => $value ) {
+		if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
+			$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+		}
+	}
+
+	return $headers;
 }
+
 
 /**
  * Write message to the diagnostic log
@@ -2932,4 +3109,113 @@ function cerber_mask_email( $email ) {
 	$host = str_pad( substr( $host, strrpos( $host, '.' ) ), strlen( $host ), '*', STR_PAD_LEFT );
 
 	return $box . '@' . $host;
+}
+
+/**
+ * A modified clone of insert_with_markers() from wp-admin/includes/misc.php
+ * Removed switch_to_locale() and related stuff that were introduced in WP 5.3. and cause problem if calling ite before 'init' hook.
+ *
+ * Inserts an array of strings into a file (.htaccess ), placing it between
+ * BEGIN and END markers.
+ *
+ * Replaces existing marked info. Retains surrounding
+ * data. Creates file if none exists.
+ *
+ * @since 8.5.1
+ *
+ * @param string       $filename  Filename to alter.
+ * @param string       $marker    The marker to alter.
+ * @param array|string $insertion The new content to insert.
+ * @return bool True on write success, false on failure.
+ */
+function crb_insert_with_markers( $filename, $marker, $insertion ) {
+	if ( ! file_exists( $filename ) ) {
+		if ( ! is_writable( dirname( $filename ) ) ) {
+			return false;
+		}
+		if ( ! touch( $filename ) ) {
+			return false;
+		}
+	}
+	elseif ( ! is_writeable( $filename ) ) {
+		return false;
+	}
+
+	if ( ! is_array( $insertion ) ) {
+		$insertion = explode( "\n", $insertion );
+	}
+
+	$start_marker = "# BEGIN {$marker}";
+	$end_marker   = "# END {$marker}";
+
+	$fp = fopen( $filename, 'r+' );
+	if ( ! $fp ) {
+		return false;
+	}
+
+	// Attempt to get a lock. If the filesystem supports locking, this will block until the lock is acquired.
+	flock( $fp, LOCK_EX );
+
+	$lines = array();
+	while ( ! feof( $fp ) ) {
+		$lines[] = rtrim( fgets( $fp ), "\r\n" );
+	}
+
+	// Split out the existing file into the preceding lines, and those that appear after the marker
+	$pre_lines        = array();
+	$post_lines       = array();
+	$existing_lines   = array();
+	$found_marker     = false;
+	$found_end_marker = false;
+	foreach ( $lines as $line ) {
+		if ( ! $found_marker && false !== strpos( $line, $start_marker ) ) {
+			$found_marker = true;
+			continue;
+		}
+		elseif ( ! $found_end_marker && false !== strpos( $line, $end_marker ) ) {
+			$found_end_marker = true;
+			continue;
+		}
+		if ( ! $found_marker ) {
+			$pre_lines[] = $line;
+		}
+		elseif ( $found_marker && $found_end_marker ) {
+			$post_lines[] = $line;
+		}
+		else {
+			$existing_lines[] = $line;
+		}
+	}
+
+	// Check to see if there was a change
+	if ( $existing_lines === $insertion ) {
+		flock( $fp, LOCK_UN );
+		fclose( $fp );
+
+		return true;
+	}
+
+	// Generate the new file data
+	$new_file_data = implode(
+		"\n",
+		array_merge(
+			$pre_lines,
+			array( $start_marker ),
+			$insertion,
+			array( $end_marker ),
+			$post_lines
+		)
+	);
+
+	// Write to the start of the file, and truncate it to that length
+	fseek( $fp, 0 );
+	$bytes = fwrite( $fp, $new_file_data );
+	if ( $bytes ) {
+		ftruncate( $fp, ftell( $fp ) );
+	}
+	fflush( $fp );
+	flock( $fp, LOCK_UN );
+	fclose( $fp );
+
+	return (bool) $bytes;
 }

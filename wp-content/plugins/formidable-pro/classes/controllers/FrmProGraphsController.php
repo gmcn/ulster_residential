@@ -97,7 +97,10 @@ class FrmProGraphsController {
 		}
 
 		if ( ! isset( $atts['fields'] ) ) {
-			$atts['fields'] = $id . $ids;
+			$atts['fields'] = $id;
+			if ( ! empty( $ids ) ) {
+				$atts['fields'] .= $ids;
+			}
 		}
 	}
 
@@ -913,8 +916,11 @@ class FrmProGraphsController {
 
 		if ( ! empty( $graph_data ) ) {
 			$graph_label = $field->name;
-			$tooltip_text = self::get_tooltip_text( $atts );
-			$first_row = array( $graph_label, $tooltip_text );
+			$first_row = array( $graph_label );
+			if ( count( reset( $graph_data ) ) > 1 ) {
+				$tooltip_text = self::get_tooltip_text( $atts );
+				$first_row[] = $tooltip_text;
+			}
 
 			array_unshift( $graph_data, $first_row );
 
@@ -1065,14 +1071,6 @@ class FrmProGraphsController {
 			return array();
 		}
 
-		if ( $atts['type'] === 'histogram' ) {
-			foreach ( $meta_values as $meta ) {
-				$meta = self::get_displayed_value( $field, $meta );
-				$graph_data[] = $meta;
-			}
-			return $graph_data;
-		}
-
 		$count_values = array();
 		foreach ( $meta_values as $meta ) {
 			$meta = self::get_displayed_value( $field, $meta );
@@ -1092,6 +1090,7 @@ class FrmProGraphsController {
 		}
 
 		$graph_data = array();
+		$is_numeric_hist = false;
 		foreach ( $count_values as $meta_value => $count ) {
 			if ( $meta_value === '' ) {
 				continue;
@@ -1099,6 +1098,13 @@ class FrmProGraphsController {
 
 			if ( $atts['type'] == 'pie' ) {
 				$meta_value = (string) $meta_value;
+			} elseif ( $atts['type'] === 'histogram' && is_numeric( $meta_value ) && ( empty( $graph_data ) || $is_numeric_hist ) ) {
+				$is_numeric_hist = true;
+				$meta_value = (float) $meta_value;
+				for ( $i = 1; $i <= $count; $i++ ) {
+					$graph_data[] = array( $meta_value );
+				}
+				continue;
 			}
 
 			$graph_data[] = array( $meta_value, $count );
@@ -1404,7 +1410,7 @@ class FrmProGraphsController {
 		} else {
 			$date_format = get_option('date_format');
 			for ( $d = $start_timestamp; $d <= $end_timestamp; $d += 60 * 60 * 24 ) {
-				$all_dates[] = date( $date_format, $d );
+				$all_dates[] = gmdate( $date_format, $d );
 			}
 		}
 
@@ -1423,7 +1429,7 @@ class FrmProGraphsController {
 		if ( 'quarter' == $format ) {
 			$date = self::convert_date_to_quarter( $date );
 		} else {
-			$date = date( $format, $date );
+			$date = gmdate( $format, $date );
 		}
 
 		if ( ! in_array( $date, $all_dates ) ) {
@@ -1855,13 +1861,13 @@ class FrmProGraphsController {
 			}
 
 			if ( $atts['group_by'] == 'month' ) {
-				$x_value = date( 'F Y', strtotime( $x_value ) );
+				$x_value = gmdate( 'F Y', strtotime( $x_value ) );
 
 			} else if ( $atts['group_by'] == 'quarter' ) {
 				$x_value = self::convert_date_to_quarter( $x_value );
 
 			} else if ( $atts['group_by'] == 'year' ) {
-				$x_value = date( 'Y', strtotime( $x_value ) );
+				$x_value = gmdate( 'Y', strtotime( $x_value ) );
 			} else {
 				$x_value = self::get_displayed_value( $atts['x_axis_field'], $x_value );
 			}
@@ -1893,7 +1899,7 @@ class FrmProGraphsController {
 	 * @return bool
 	 */
 	private static function is_valid_date( $value ) {
-		return ( date( 'Y', strtotime( $value ) ) > 0 );
+		return ( gmdate( 'Y', strtotime( $value ) ) > 0 );
 	}
 
 	/**
@@ -1904,16 +1910,17 @@ class FrmProGraphsController {
 	 * @return string
 	 */
 	private static function convert_date_to_quarter( $date ) {
-		$value = date( 'Y-m-d', strtotime( $date ) );
+		$value = gmdate( 'Y-m-d', strtotime( $date ) );
+		$y     = gmdate( 'Y', strtotime( $value ) );
 
 		if ( preg_match('/-(01|02|03)-/', $value ) ) {
-			$value = __( 'Q1', 'formidable-pro' ) . ' ' . date('Y', strtotime($value));
+			$value = __( 'Q1', 'formidable-pro' ) . ' ' . $y;
 		} else if ( preg_match('/-(04|05|06)-/', $value) ) {
-			$value = __( 'Q2', 'formidable-pro' ) . ' ' . date('Y', strtotime($value));
+			$value = __( 'Q2', 'formidable-pro' ) . ' ' . $y;
 		} else if ( preg_match('/-(07|08|09)-/', $value) ) {
-			$value = __( 'Q3', 'formidable-pro' ) . ' ' . date('Y', strtotime($value));
+			$value = __( 'Q3', 'formidable-pro' ) . ' ' . $y;
 		} else if ( preg_match('/-(10|11|12)-/', $value) ) {
-			$value = __( 'Q4', 'formidable-pro' ) . ' ' . date('Y', strtotime($value));
+			$value = __( 'Q4', 'formidable-pro' ) . ' ' . $y;
 		}
 
 		return $value;
@@ -1974,7 +1981,7 @@ class FrmProGraphsController {
 	private static function convert_date_for_graph_display( $value ) {
 		if ( self::is_valid_date( $value ) ) {
 			$date_format = get_option('date_format');
-			$value = date( $date_format, strtotime( $value ) );
+			$value = gmdate( $date_format, strtotime( $value ) );
 		} else {
 			$value = '';
 		}

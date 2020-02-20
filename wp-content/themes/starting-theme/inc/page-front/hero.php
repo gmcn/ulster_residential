@@ -54,5 +54,5 @@
 
 		</ul>
   <?php endif; ?>
-<img class="scroll animated bounce" src="<?php echo get_template_directory_uri(); ?>/images/scroll-icon.svg" alt="">
+<img class="hidden-xs hidden-sm scroll animated bounce" src="<?php echo get_template_directory_uri(); ?>/images/scroll-icon.svg" alt="">
 </div>

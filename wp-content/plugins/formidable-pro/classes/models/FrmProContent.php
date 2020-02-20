@@ -183,6 +183,18 @@ class FrmProContent {
 		return $val !== '';
 	}
 
+	/**
+	 * Filter out entry_number shortcode when we have the entry position in the view
+	 *
+	 * @since 4.03.01
+	 */
+	public static function replace_entry_position_shortcode( $entry_args, $args, &$content ) {
+		preg_match_all( "/\[(if )?(entry_position)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?/s", $content, $shortcodes, PREG_PATTERN_ORDER );
+		foreach ( $shortcodes[0] as $short_key => $tag ) {
+			self::replace_single_shortcode( $shortcodes, $short_key, $tag, $entry_args['entry'], $entry_args['view'], $args, $content );
+		}
+	}
+
 	public static function replace_calendar_date_shortcode( $content, $date ) {
 		preg_match_all( "/\[(calendar_date)\b(.*?)(?:(\/))?\]/s", $content, $matches, PREG_PATTERN_ORDER );
 		if ( empty( $matches ) ) {
@@ -614,7 +626,7 @@ class FrmProContent {
 					if ( strtolower( $atts[ $att_name ] ) == 'now' ) {
 						$atts[ $att_name ] = FrmProAppHelper::get_date( 'H:i' );
 					} else {
-						$atts[ $att_name ] = date( 'H:i', strtotime( $atts[ $att_name ] ) );
+						$atts[ $att_name ] = gmdate( 'H:i', strtotime( $atts[ $att_name ] ) );
 					}
 
 					if ( ! $formatted_time ) {
@@ -622,6 +634,11 @@ class FrmProContent {
 						$formatted_time = true;
 					}
 				}
+			}
+		} else {
+			// Compare properly with &.
+			if ( is_callable( 'FrmAppHelper::decode_specialchars' ) ) {
+				FrmAppHelper::decode_specialchars( $replace_with );
 			}
 		}
 
@@ -642,7 +659,7 @@ class FrmProContent {
 				} elseif ( $atts[ $att_name ] == 'NOW' ) {
 					$atts[ $att_name ] = FrmProAppHelper::get_date( 'Y-m-d' );
 				} else {
-					$atts[ $att_name ] = date( 'Y-m-d', strtotime( $atts[ $att_name ] ) );
+					$atts[ $att_name ] = gmdate( 'Y-m-d', strtotime( $atts[ $att_name ] ) );
 				}
 			}
 			unset( $att_name );
@@ -658,7 +675,7 @@ class FrmProContent {
 
 		$compare = strtolower( $compare );
 		if ( strpos( $compare, 'like' ) === false ) {
-			$where_val = date( 'Y-m-d H:i:s', strtotime( $where_val ) );
+			$where_val = gmdate( 'Y-m-d H:i:s', strtotime( $where_val ) );
 
 			// If using less than or equal to, set the time to the end of the day
 			if ( $compare == '<=' || $compare == 'less_than' ) {

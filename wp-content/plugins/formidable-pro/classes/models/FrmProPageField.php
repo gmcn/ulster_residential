@@ -207,4 +207,32 @@ class FrmProPageField {
 		include( FrmProAppHelper::plugin_path() . '/css/progress.css.php' );
 		echo '</style>';
 	}
+
+	/**
+	 * @since 4.03
+	 *
+	 * @return array
+	 */
+	public static function get_form_pages( $form ) {
+		if ( ! is_object( $form ) ) {
+			$form = FrmForm::getOne( $form );
+		}
+
+		$page_breaks = FrmProFormsHelper::has_field( 'break', $form->id, false );
+		if ( empty( $page_breaks ) ) {
+			return array();
+		}
+
+		$rootline = FrmForm::get_option(
+			array(
+				'form'    => $form,
+				'option'  => 'rootline',
+				'default' => '',
+			)
+		);
+
+		$page_array = self::get_pages_array( $page_breaks, $form );
+
+		return compact( 'rootline', 'page_array' );
+	}
 }

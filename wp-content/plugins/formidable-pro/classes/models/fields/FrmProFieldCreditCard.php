@@ -297,7 +297,7 @@ class FrmProFieldCreditCard extends FrmFieldType {
 	private function validate_cc_expiration( &$errors, $args ) {
 		$values = $args['value'];
 		if ( isset( $values['month'] ) && ! empty( $values['month'] ) && ! empty( $values['year'] ) ) {
-			$is_past_date = ( $values['year'] <= date('Y') && $values['month'] < date('m') );
+			$is_past_date = ( $values['year'] <= gmdate( 'Y' ) && $values['month'] < gmdate( 'm' ) );
 			if ( $is_past_date ) {
 				$errors[ 'field' . $args['id'] . '-month' ] = __( 'That credit card is expired', 'formidable-pro' );
 				$errors[ 'field' . $args['id'] . '-year' ] = '';

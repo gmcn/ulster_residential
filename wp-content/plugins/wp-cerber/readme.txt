@@ -2,10 +2,10 @@
 Contributors: gioni
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SR8RJXFU35EW8
 Tags: security, malware scanner, antispam, firewall, limit login attempts, custom login url, login, recaptcha, captcha, activity, log, logging, whitelist, blacklist, access list
-Requires at least: 4.5
+Requires at least: 4.9
 Requires PHP: 5.4
-Tested up to: 5.2
-Stable tag: 8.4
+Tested up to: 5.3
+Stable tag: 8.5.3
 License: GPLv2
 
 Protection against hacker attacks and bots. Malware scanner & integrity checker. User activity log. Antispam reCAPTCHA. Limit login attempts.
@@ -14,11 +14,11 @@ Protection against hacker attacks and bots. Malware scanner & integrity checker.
 
 Defends WordPress against hacker attacks, spam, trojans and malware.
 Mitigates brute force attacks by limiting the number of login attempts through the login form, XML-RPC / REST API requests or using auth cookies.
-Tracks user and intruder activity with powerful email, mobile and desktop notifications.
-Stops spam: activates a specialized Cerber anti-spam engine and Google reCAPTCHA to protect registration, contact and comments forms.
+Tracks user and bad actors activity with flexible email, mobile and desktop notifications.
+Stops spam by using a specialized Cerber's anti-spam engine and Google reCAPTCHA to protect registration, contact and comments forms.
 Advanced malware scanner, integrity checker and file monitor.
 Hardening WordPress with a set of flexible security rules and sophisticated security algorithms.
-Restricts access with the Black IP Access List and the White IP Access List.
+Restricts access with Black and White IP Access Lists.
 
 **Features you will love**
 
@@ -40,15 +40,15 @@ Restricts access with the Black IP Access List and the White IP Access List.
 * Immediately blocks an intruder IP when attempting to log in with non-existent or prohibited username.
 * Restrict user registration or login with a username matching REGEX patterns.
 * [Restrict access to WP REST API with your own role-based security rules](https://wpcerber.com/restrict-access-to-wordpress-rest-api/).
-* Disable WordPress REST API completely.
-* Disable XML-RPC (block access to XML-RPC including Pingbacks and Trackbacks).
+* Block access to WordPress REST API completely.
+* Block access to XML-RPC (block access to XML-RPC including Pingbacks and Trackbacks).
 * Disable feeds (block access to the RSS, Atom and RDF feeds).
 * Restrict access to XML-RPC, REST API and feeds by **White IP Access list** by an IP address or an IP range.
 * [Authorized users only mode](https://wpcerber.com/only-logged-in-wordpress-users/)
 * [Block a user account](https://wpcerber.com/how-to-block-wordpress-user/).
 * Disable automatic redirection to the hidden login page.
 * **Stop user enumeration** (blocks access to author pages and prevents user data leaks via REST API).
-* Proactively **blocks IP subnet class C** for intruder's IP.
+* Proactively **blocks IP subnet class C**.
 * Anti-spam: **reCAPTCHA** to protect WordPress login, register and comment forms.
 * [reCAPTCHA for WooCommerce & WordPress forms](https://wpcerber.com/how-to-setup-recaptcha/).
 * Invisible reCAPTCHA for WordPress comments forms.
@@ -318,6 +318,24 @@ To get access to your dashboard you need to copy the WP Cerber Reset folder to t
 
 
 == Changelog ==
+
+= 8.5.3 =
+* New: The malware scanner and integrity checker window has got a new filter that enables you to filter out and navigate to specific issues quickly.
+* New: Cerber.Hub: new columns and filters have been added to the list of slave websites. The new columns display server IP addresses, hostnames, and countries where servers are located.
+* Bug fixed: Depending on the number of items in the access lists, the IP address 0.0.0.0 can be erroneously marked as whitelisted or blacklisted.
+* Bug fixed in Cerber.Hub: if a WordPress plugin is installed on several slave websites and the plugin needs to be updated on some of the slave websites, the plugin is shown as needs to be updated on all the slave websites.
+* [Read more](https://wpcerber.com/wp-cerber-security-8-5-3/)
+
+= 8.5 =
+* New: Data Shield module for advanced protection of user data and vital settings in the website database. Available in the PRO version.
+* Improvement: Compatibility with WooCommerce significantly improved.
+* Update: Strict filtering for the Custom login URL setting.
+* Update: Chinese (Taiwan) translation has been added. Thanks to Sid Lo.
+* Bug fixed: Custom login URL doesn't work after updating WordPress to 5.2.3.
+* Bug fixed: User Policies tabs are not switchable if a user role was declared with a hyphen instead of the underscore.
+* Bug fixed: A PHP warning while adding a network to the Black IP Access List from the Activity tab.
+* Bug fixed: An anti-spam false positive: some WordPress DB updates can't be completed.
+* [Read more](https://wpcerber.com/wp-cerber-security-8-5/)
 
 = 8.4 =
 * New: More flexible role-based GEO access policies.

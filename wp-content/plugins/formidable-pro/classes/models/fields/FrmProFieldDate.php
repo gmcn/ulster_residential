@@ -145,7 +145,7 @@ class FrmProFieldDate extends FrmFieldType {
 			$formated_date = FrmProAppHelper::convert_date( $value, $frmpro_settings->date_format, 'Y-m-d' );
 
 			//check format before converting
-			if ( $value != date( $frmpro_settings->date_format, strtotime( $formated_date ) ) ) {
+			if ( $value != gmdate( $frmpro_settings->date_format, strtotime( $formated_date ) ) ) {
 				$allow_it = apply_filters( 'frm_allow_date_mismatch', false, array(
 					'date' => $value, 'formatted_date' => $formated_date,
 				) );
@@ -183,7 +183,7 @@ class FrmProFieldDate extends FrmFieldType {
 		$rel_year = FrmField::get_option( $this->field, $start_end );
 
 		if ( is_string( $rel_year ) && strlen( $rel_year ) > 0 && ( '0' === $rel_year || '+' == $rel_year[0] || '-' == $rel_year[0] || strlen( $rel_year ) < 4 ) ) {
-			$rel_year = date( 'Y', strtotime( $rel_year . ' year' ) );
+			$rel_year = gmdate( 'Y', strtotime( $rel_year . ' year' ) );
 		}
 
 		return (int) $rel_year;
@@ -223,7 +223,7 @@ class FrmProFieldDate extends FrmFieldType {
 
 	protected function prepare_import_value( $value, $atts ) {
 		if ( ! empty( $value ) ) {
-			$value = date( 'Y-m-d', strtotime( $value ) );
+			$value = gmdate( 'Y-m-d', strtotime( $value ) );
 		}
 
 		return $value;

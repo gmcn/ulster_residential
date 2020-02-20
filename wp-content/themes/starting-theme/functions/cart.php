@@ -152,9 +152,18 @@ function cartProcessOrder()
         wp_reset_postdata();
     endif;
 
-    $to = 'ucm.orders@ulstercarpets.com, gary@cornellstudios.com';
+    $marketingEmail = $_POST["form_marketing"];
+
+    $to = 'ucm.orders@ulstercarpets.com';
     $subject = 'Request for samples from the Ulster Carpets Website';
-    $headers = array('Content-Type: text/html; charset=UTF-8', 'From: rachel@ulstercarpets.com');
+    $headers[] = 'Content-Type: text/html; charset=UTF-8';
+    $headers[] = 'From: Ulster Carpets Residential <rachel@ulstercarpets.com>';
+    //$headers = array('Content-Type: text/html; charset=UTF-8', 'From: rachel@ulstercarpets.com');
+
+    if ($marketingEmail) {
+      $headers[] = 'Cc: Rachel Carville <Rachel.Carville@ulstercarpets.com>';
+    }
+
     wp_mail($to, $subject, $emailContent, $headers);
     wp_redirect('basket/success');
 }

@@ -165,6 +165,90 @@ class FrmProEntriesController {
         }
     }
 
+	/**
+	 * Delete all entries in a form when the 'delete all' button is clicked.
+	 *
+	 * @since 4.02.04
+	 */
+	public static function destroy_all() {
+		if ( ! current_user_can( 'frm_delete_entries' ) || ! wp_verify_nonce( FrmAppHelper::simple_get( '_wpnonce', '', 'sanitize_text_field' ), '-1' ) ) {
+			$frm_settings = FrmAppHelper::get_settings();
+			wp_die( esc_html( $frm_settings->admin_permission ) );
+		}
+
+		$params  = FrmForm::get_admin_params();
+		$message = '';
+		$errors  = array();
+		$form_id = (int) $params['form'];
+
+		if ( $form_id ) {
+			$entry_ids = FrmDb::get_col( 'frm_items', array( 'form_id' => $form_id ) );
+			$action    = FrmFormAction::get_action_for_form( $form_id, 'wppost', 1 );
+
+			if ( $action ) {
+				// This action takes a while, so only trigger it if there are posts to delete.
+				foreach ( $entry_ids as $entry_id ) {
+					do_action( 'frm_before_destroy_entry', $entry_id );
+					unset( $entry_id );
+				}
+			}
+
+			$results = self::delete_form_entries( $form_id );
+			if ( $results ) {
+				FrmEntry::clear_cache();
+				$message = __( 'Entries Successfully Deleted', 'formidable' );
+			}
+		} else {
+			$errors = __( 'No Entries Selected', 'formidable' );
+		}
+
+		FrmEntriesController::display_list( $message, $errors );
+	}
+
+	/**
+	 * @since 4.02.04
+	 *
+	 * @param int $form_id
+	 */
+	private static function delete_form_entries( $form_id ) {
+		global $wpdb;
+
+		$form_ids = self::get_child_form_ids( $form_id );
+
+		$meta_query  = $wpdb->prepare( "DELETE em.* FROM {$wpdb->prefix}frm_item_metas as em INNER JOIN {$wpdb->prefix}frm_items as e on (em.item_id=e.id) WHERE form_id=%d", $form_id );
+		$entry_query = $wpdb->prepare( "DELETE FROM {$wpdb->prefix}frm_items WHERE form_id=%d", $form_id );
+
+		if ( ! empty( $form_ids ) ) {
+			$form_query  = ' OR form_id in (' . $form_ids . ')';
+			$meta_query  .= $form_query;
+			$entry_query .= $form_query;
+		}
+
+		$wpdb->query( $meta_query ); // WPCS: unprepared SQL ok.
+
+		return $wpdb->query( $entry_query ); // WPCS: unprepared SQL ok.
+	}
+
+	/**
+	 * @since 4.02.04
+	 *
+	 * @param int $form_id
+	 * @param bool|string $implode
+	 */
+	private static function get_child_form_ids( $form_id, $implode = ',' ) {
+		$form_ids       = array();
+		$child_form_ids = FrmDb::get_col( 'frm_forms', array( 'parent_form_id' => $form_id ) );
+		if ( $child_form_ids ) {
+			$form_ids = $child_form_ids;
+		}
+		$form_ids = array_filter( $form_ids, 'is_numeric' );
+		if ( $implode ) {
+			$form_ids = implode( $implode, $form_ids );
+		}
+
+		return $form_ids;
+	}
+
 	public static function bulk_actions( $action = 'list-form' ) {
 		$params = FrmForm::get_admin_params();
         $errors = array();
@@ -1044,6 +1128,7 @@ class FrmProEntriesController {
 		$atts['size']          = 'full';
 		$atts['show_filename'] = false;
 		$atts['add_link']      = false;
+		$atts['summary']       = false; // whether we're trying to display the summary field
 		return $atts;
 	}
 
@@ -1454,14 +1539,11 @@ class FrmProEntriesController {
 
         switch ( $action ) {
             case 'create':
-                return self::create();
             case 'edit':
-                return self::edit();
             case 'update':
-                return self::update();
             case 'duplicate':
-                return self::duplicate();
-
+			case 'destroy_all':
+				return self::$action();
             case 'new':
                 return self::new_entry();
 
@@ -1797,13 +1879,21 @@ class FrmProEntriesController {
 
 			foreach ( $atts['form_cols'] as $col ) {
 				$field_value = isset( $entry->metas[ $col->id ] ) ? $entry->metas[ $col->id ] : false;
+				$type = $col->type;
+
 				$val = FrmEntriesHelper::display_value( $field_value, $col, array(
-					'type' => $col->type, 'post_id' => $entry->post_id,
-					'entry_id' => $entry->id, 'show_filename' => false
+					'type'          => $type,
+					'post_id'       => $entry->post_id,
+					'entry_id'      => $entry->id,
+					'show_filename' => false,
 				) );
 
 				if ( $col->type == 'number' ) {
 					$val = empty( $val ) ? '0' : $val;
+					if ( ! is_numeric( $val ) ) {
+						// Repeaters my not be numeric.
+						$type = 'text';
+					}
 				} elseif ( $col->type == 'checkbox' && count( $col->options ) == 1 ) {
 					// force boolean values
 					$val = empty( $val ) ? false : true;
@@ -1819,7 +1909,7 @@ class FrmProEntriesController {
 					// add the fields to graphs on first loop only
 					$graph_vals['fields'][] = array(
 						'id'        => $col->id,
-						'type'      => $col->type,
+						'type'      => $type,
 						'name'      => $col->name,
 						'options'   => $col->options,
 						'field_options' => array( 'post_field' => isset( $col->field_options['post_field'] ) ? $col->field_options['post_field'] : '' ),
@@ -2867,7 +2957,8 @@ class FrmProEntriesController {
 			$invalid_msg = FrmFormsHelper::get_invalid_error_message( array( 'form' => $form ) );
 			$response['error_message'] = FrmFormsHelper::get_success_message( array(
 				'message' => $invalid_msg, 'form' => $form,
-				'entry_id' => 0, 'class' => 'frm_error_style',
+				'entry_id' => 0,
+				'class'    => FrmFormsHelper::form_error_class(),
 			) );
 		}
 

@@ -209,7 +209,7 @@ class FrmProHooksController {
     public static function load_admin_hooks() {
         add_action('frm_after_uninstall', 'FrmProDb::uninstall');
 		add_filter( 'frm_form_nav_list', 'FrmProAppController::form_nav', 10, 2 );
-		add_filter( 'frm_icon', 'FrmProAppController::whitelabel_icon' );
+		add_filter( 'frm_icon', 'FrmProAppController::whitelabel_icon', 10, 2 );
 		add_filter( 'frm_media_icon', 'FrmProAppController::whitelabel_media_icon' );
 
         // Displays Controller
@@ -369,6 +369,9 @@ class FrmProHooksController {
 		// Usage
 		add_filter( 'frm_usage_settings', 'FrmProUsageController::settings' );
 		add_filter( 'frm_usage_form', 'FrmProUsageController::form', 10, 2 );
+
+		// Summary field
+		add_action( 'frm_before_create_field', 'FrmProFieldSummary::maybeAddBreakFieldBeforeSummary', 10, 2 );
 	}
 
     public static function load_ajax_hooks() {
@@ -439,6 +442,7 @@ class FrmProHooksController {
 
 		// Updates
 		add_action( 'wp_ajax_frm_deauthorize', 'FrmProEddController::deactivate', 9 );
+		add_action( 'wp_ajax_frm_reset_cache', 'FrmProEddController::reset_cache' );
     }
 
     public static function load_form_hooks() {

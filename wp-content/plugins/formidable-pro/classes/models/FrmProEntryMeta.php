@@ -798,15 +798,15 @@ class FrmProEntryMeta {
             $where['e.user_id'] = $args['user_id'];
         }
 
-        // If start date is set
-        if ( isset( $args['start_date'] ) ) {
-            $where['e.created_at >'] = date( 'Y-m-d 00:00:00', strtotime( $args['start_date'] ) );
-        }
+		// If start date is set.
+		if ( isset( $args['start_date'] ) ) {
+			$where['e.created_at >'] = gmdate( 'Y-m-d 00:00:00', strtotime( $args['start_date'] ) );
+		}
 
-        // If end date is set
-        if ( isset( $args['end_date'] ) ) {
-            $where['e.created_at <'] = date( 'Y-m-d 23:59:59', strtotime( $args['end_date'] ) );
-        }
+		// If end date is set.
+		if ( isset( $args['end_date'] ) ) {
+			$where['e.created_at <'] = gmdate( 'Y-m-d 23:59:59', strtotime( $args['end_date'] ) );
+		}
 
 		// If is_draft is set
 		if ( isset( $args['is_draft'] ) ) {

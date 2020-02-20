@@ -30,15 +30,34 @@ figure {
 	margin: 1em 0; /* Extra wide images within figure tags don't overflow the content area. */
 }
 
+.display {
+	position: relative;
+	margin-bottom: 15px;
+	display: block;
+	z-index: 9999999;
+	height: 200px;
+	@include md {
+		height: 400px;
+	}
+	width: 100%;
+	background-color: #A1BEDE;
+	text-align: center;
+	img {
+		width: 100px;
+	}
+}
+
 .vert-align {
-	position: absolute;
-	top: 50%;
-	width: calc(100% - 30px);
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	-o-transform: translateY(-50%);
-	transform: translateY(-50%);
+	@include md {
+		position: absolute;
+		top: 50%;
+		width: calc(100% - 30px);
+		-webkit-transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		-o-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
 }
 
 a.policy {

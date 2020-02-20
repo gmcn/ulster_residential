@@ -1,3 +1,21 @@
+= 8.5.3 =
+* New: The malware scanner and integrity checker window has got a new filter that enables you to filter out and navigate to specific issues quickly.
+* New in Cerber.Hub: new columns and filters have been added to the list of slave websites. The new columns display server IP addresses, hostnames, and countries where servers are located.
+* Bug fixed: depending on the number of items in the access lists, the IP address 0.0.0.0 can be erroneously marked as whitelisted or blacklisted.
+* Bug fixed in Cerber.Hub: if a WordPress plugin is installed on several slave websites and the plugin needs to be updated on some of the slave websites, the plugin is shown as needs to be updated on all the slave websites.
+* [Read more](https://wpcerber.com/wp-cerber-security-8-5-3/)
+
+= 8.5 =
+* New: Data Shield module for advanced protection of user data and vital settings in the website database. Available in the PRO version.
+* Improvement: Compatibility with WooCommerce significantly improved.
+* Update: Strict filtering for the Custom login URL setting.
+* Update: Chinese (Taiwan) translation has been added. Thanks to Sid Lo.
+* Bug fixed: Custom login URL doesn't work after updating WordPress to 5.2.3.
+* Bug fixed: User Policies tabs are not switchable if a user role was declared with a hyphen instead of the underscore.
+* Bug fixed: A PHP warning while adding a network to the Black IP Access List from the Activity tab.
+* Bug fixed: An anti-spam false positive: some WordPress DB updates can't be completed.
+* [Read more](https://wpcerber.com/wp-cerber-security-8-5/)
+
 = 8.4 =
 * New: More flexible role-based GEO access policies.
 * New: A logged in users' sessions manager.

@@ -87,8 +87,21 @@
   }
 }
 
+.single-gallery, .single-ulsterathome {
+  .fancybox-title-inside-wrap {
+    display: none !important;
+  }
+}
+
 .gallery-single {
   margin-bottom: 15px;
+
+  a.fancybox {
+    text-transform: uppercase;
+    img {
+      margin-left: 10px;
+    }
+  }
   h2 {
     margin-top: 10px;
     font-size: 24px;
@@ -163,6 +176,15 @@
   margin: 50px;
   text-align: center;
   color: #707070;
+  .fancybox-title-inside-wrap {
+    display: none !important;
+  }
+  a.fancybox {
+    text-transform: uppercase;
+    img {
+      margin-left: 10px;
+    }
+  }
   h3 {
     font-size: 24px;
     font-weight: 700;

@@ -1649,7 +1649,7 @@ class FrmProFieldsHelper {
 	 */
 	public static function convert_to_static_year( $year ) {
 		if ( strlen( $year ) != 4 || strpos( $year, '-' ) !== false || strpos( $year, '+' ) !== false ) {
-			$year = date( 'Y', strtotime( $year . ' years' ) );
+			$year = gmdate( 'Y', strtotime( $year . ' years' ) );
 		}
 		return (int) $year;
 	}
@@ -1663,7 +1663,7 @@ class FrmProFieldsHelper {
 	* @return string $default_date
 	*/
 	private static function get_default_cal_date( $start_year, $end_year ) {
-		$current_year = (int) date('Y');
+		$current_year = (int) gmdate( 'Y' );
 
 		// If current year falls inside of the date range, make the default date today's date
 		if ( $current_year >= $start_year && $current_year <= $end_year ) {
@@ -1909,9 +1909,10 @@ class FrmProFieldsHelper {
 		}
 
 		$current_page = apply_filters( 'frm_get_current_page', $current_page, $page_numbers['page_breaks'], $page_numbers['go_back'] );
-		if ( $current_page < 0 ) {
+		if ( ! is_object( $current_page ) && $current_page < 0 ) {
 			$current_page = 0;
 		}
+
 		if ( ! $current_page || $current_page->field_order != $page_numbers['prev_page'] ) {
 			$page_numbers['prev_page'] = $current_page ? $current_page->field_order : 0;
 			foreach ( $page_numbers['page_breaks'] as $o => $pb ) {
@@ -2032,13 +2033,16 @@ class FrmProFieldsHelper {
 
 	public static function before_replace_shortcodes( $html, $field ) {
 		if ( isset( $field['classes'] ) && strpos( $field['classes'], 'frm_grid' ) !== false ) {
-            $opt_count = count($field['options']) + 1;
+			$opt_count = 1;
+			if ( isset( $field['options'] ) && is_array( $field['options'] ) ) {
+				$opt_count = count( $field['options'] ) + 1;
+			}
+
 			$html = str_replace( '[required_class]', '[required_class] frm_grid_' . $opt_count, $html );
 			if ( strpos( $html, ' horizontal_radio' ) ) {
-                $html = str_replace(' horizontal_radio', ' vertical_radio', $html);
+				$html = str_replace(' horizontal_radio', ' vertical_radio', $html );
 			}
-            unset($opt_count);
-        }
+		}
 
         return $html;
     }

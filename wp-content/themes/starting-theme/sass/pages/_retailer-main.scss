@@ -63,6 +63,24 @@
   }
 }
 
+.retailer_cta {
+  &_box {
+    padding: 25px 0;
+    border-top: 1px dotted #343A40;
+    img {
+      width: 100%;
+      margin-bottom: 15px;
+      @include md {
+        margin-bottom: 0;
+      }
+      transition: .5s;
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
 .retailer_children {
   &:last-of-type {
     @include md {
@@ -75,11 +93,10 @@
       text-align: left;
     }
     .vert-align {
-      padding: 25px;
+      @include md {
+        padding: 25px;
+      }
     }
-
-
-
 
   }
   &:nth-of-type(even) {
@@ -87,7 +104,9 @@
       text-align: right;
     }
     .vert-align {
-      padding: 25px;
+      @include md {
+        padding: 25px;
+      }
     }
     .retailer_children_count {
       p {
@@ -154,6 +173,7 @@
 }
 
 .useful-links {
+
   &_content {
     margin-top: -15px;
     padding: 50px 15px;
@@ -176,6 +196,22 @@
       font-size: 18px;
       @include md {
         font-size: 25px;
+      }
+    }
+    a.download {
+      background-color: #525C65;
+      color: #fff;
+      border-radius: 5px;
+      padding: 10px 20px;
+      display: inline-block;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 12px;
+      transition: .5s;
+      &:hover {
+        background: #BAC2C6;
       }
     }
     a.more {
@@ -236,10 +272,12 @@
         padding-right: 20px;
       }
       a {
-        margin-top: 15px;
+        margin-top: 50px;
         display: block;
         font-size: 16px;
         color: #2D353C;
+        margin-left: 15px;
+        margin-right: 15px;
       }
       a.view {
         padding: 10px 25px;
@@ -371,6 +409,59 @@
   }
 }
 
+
+
+.installation_download {
+  margin-bottom: 30px;
+  text-align: center;
+  &_wrapper {
+    background: #fff;
+    padding: 20px;
+    color: #2D353C;
+    margin-bottom: 15px;
+    img {
+      max-height: 220px;
+    }
+    h4 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
+    a {
+      font-size: 11px;
+      border-radius: 5px;
+      width: 100%;
+      display: block;
+      padding: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+    a.view {
+      background: #0F304E;
+      color: #fff;
+      border: 2px solid #0F304E;
+      transition: .5s;
+      &:hover {
+        background: #fff;
+        // border: 2px solid #0F304E;
+        color: #0F304E;
+      }
+    }
+    a.download {
+      border: 2px solid #0F304E;
+      color: #0F304E;
+      transition: .5s;
+      &:hover {
+        background: #0F304E;
+        color: #fff;
+        // border: 2px solid #0F304E;
+      }
+    }
+  }
+
+}
+
 .installation_calc {
   background: #14212C;
   color: #fff;
@@ -455,14 +546,16 @@
   background-color: rgba(0,0,0,.9);
   z-index: 99999999999999;
   .vert-align {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
+    @include md {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      -webkit-transform: translateY(-50%);
+      -moz-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      -o-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
   }
   .loginwrapper {
     text-align: left;

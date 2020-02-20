@@ -8,6 +8,7 @@
     		$eventImg = get_sub_field('event_img');
         $eventTitle = get_sub_field('event_title');
     		$eventDate = get_sub_field('event_date');
+        $eventUrl = get_sub_field('event_url');
 
     		?>
 
@@ -18,6 +19,9 @@
 
             <h3><?php echo $eventTitle ?></h3>
             <p><?php echo $eventDate ?></p>
+            <?php if ($eventUrl) : ?>
+              <a target="_blank" class="view" href="<?php echo $eventUrl ?>">Find Out More</a>
+            <?php endif; ?>
 
           </div>
 

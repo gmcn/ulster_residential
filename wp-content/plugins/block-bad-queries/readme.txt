@@ -10,9 +10,9 @@ Author URI: https://plugin-planet.com/
 Contributors: specialk, aldolat, WpBlogHost, jameswilkes, juliobox, lernerconsult
 Donate link: https://monzillamedia.com/donate.html
 Requires at least: 4.1
-Tested up to: 5.2
-Stable tag: 20190902
-Version: 20190902
+Tested up to: 5.3
+Stable tag: 20191109
+Version: 20191109
 Requires PHP: 5.6.20
 Text Domain: block-bad-queries
 Domain Path: /languages
@@ -198,6 +198,11 @@ Links, tweets and likes also appreciated. Thank you! :)
 
 If you like BBQ, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/block-bad-queries/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
+
+**2019/11/09**
+
+* Changes to `plugins_url()` for `BBQ_URL` constant
+* Tests on WordPress 5.3
 
 **2019/09/02**
 

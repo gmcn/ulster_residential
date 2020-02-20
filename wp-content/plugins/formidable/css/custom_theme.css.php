@@ -211,6 +211,7 @@ legend.frm_hidden{
 	margin-bottom:8px !important;
 }
 
+.with_frm_style .frm-edit-page-btn,
 .with_frm_style .frm_submit input[type=submit],
 .with_frm_style .frm_submit input[type=button],
 .with_frm_style .frm_submit button{
@@ -223,11 +224,13 @@ legend.frm_hidden{
 	margin: 0 auto;
 }
 
+.with_frm_style .frm_loading_prev .frm_ajax_loading,
 .with_frm_style .frm_loading_form .frm_ajax_loading{
 	/* keep this for reverse compatibility for old HTML */
 	visibility:visible !important;
 }
 
+.with_frm_style .frm_loading_prev .frm_prev_page,
 .with_frm_style .frm_loading_form .frm_button_submit {
 	position: relative;
 	opacity: .8;
@@ -235,6 +238,9 @@ legend.frm_hidden{
 	text-shadow: none !important;
 }
 
+.with_frm_style .frm_loading_prev .frm_prev_page:hover,
+.with_frm_style .frm_loading_prev .frm_prev_page:active,
+.with_frm_style .frm_loading_prev .frm_prev_page:focus,
 .with_frm_style .frm_loading_form .frm_button_submit:hover,
 .with_frm_style .frm_loading_form .frm_button_submit:active,
 .with_frm_style .frm_loading_form .frm_button_submit:focus {
@@ -244,6 +250,7 @@ legend.frm_hidden{
 	box-shadow: none;
 }
 
+.with_frm_style .frm_loading_prev .frm_prev_page::before,
 .with_frm_style .frm_loading_form .frm_button_submit:before {
 	content: '';
 	display: inline-block;

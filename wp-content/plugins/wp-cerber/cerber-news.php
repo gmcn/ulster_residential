@@ -123,6 +123,18 @@ function cerber_push_the_news( $version ) {
 	$news['8.4'][] = 'Improvement: The custom login page feature has been updated to eliminate possible conflicts with themes and other plugins.';
 	$news['8.4'][] = 'Improvement: Compatibility with operating systems that natively doesn’t support the PHP GLOB_BRACE constant.';
 
+	$news['8.5'][] = 'A new Data Shield module for advanced protection of user data and vital settings in the website database. Available in the PRO version.';
+	$news['8.5'][] = 'Improvement: Compatibility with WooCommerce significantly improved.';
+	$news['8.5'][] = 'Bug fixed: Custom login URL doesn\'t work after updating WordPress to 5.2.3.';
+	$news['8.5'][] = 'Bug fixed: User Policies tabs are not switchable if a user role was declared with a hyphen instead of the underscore.';
+	$news['8.5'][] = 'Bug fixed: A PHP warning while adding a network to the Black IP Access List from the Activity tab.';
+	$news['8.5'][] = 'Bug fixed: An anti-spam false positive: some WordPress DB updates can\'t be completed.';
+
+	$news['8.5.3'][] = 'The malware scanner and integrity checker window has got a new filter that enables you to filter out and navigate to specific issues quickly.';
+	$news['8.5.3'][] = 'New in Cerber.Hub: new columns and filters have been added to the list of slave websites. The new columns display server IP addresses, hostnames, and countries where servers are located.';
+	$news['8.5.3'][] = 'Bug fixed: depending on the number of items in the access lists, the IP address 0.0.0.0 can be erroneously marked as whitelisted or blacklisted.';
+	$news['8.5.3'][] = 'Bug fixed in Cerber.Hub: if a WordPress plugin is installed on several slave websites and the plugin needs to be updated on some of the slave websites, the plugin is shown as needs to be updated on all the slave websites.';
+
 	if ( ! empty( $news[ $version ] ) ) {
 		//$text = '<h3>What\'s new in WP Cerber '.$version.'</h3>';
 

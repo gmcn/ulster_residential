@@ -57,6 +57,7 @@ function cerber_admin_menu() {
 	add_action( 'load-' . $hook, 'crb_admin_screen_options' );
 
 	if ( lab_lab() ) {
+		add_submenu_page( 'cerber-security', __( 'Cerber Data Shield Policies', 'wp-cerber' ), __( 'Data Shield', 'wp-cerber' ), 'manage_options', 'cerber-shield', 'cerber_render_admin_page' );
 		add_submenu_page( 'cerber-security', __( 'Cerber Security Rules', 'wp-cerber' ), __( 'Security Rules', 'wp-cerber' ), 'manage_options', 'cerber-rules', 'cerber_render_admin_page' );
 	}
 
@@ -70,7 +71,9 @@ function cerber_admin_menu() {
 	add_submenu_page( 'cerber-security', __( 'Cerber antispam settings', 'wp-cerber' ), __( 'Antispam', 'wp-cerber' ), 'manage_options', 'cerber-recaptcha', 'cerber_render_admin_page' );
 
 	$hook = add_submenu_page( 'cerber-security', 'Cerber.Hub', 'Cerber.Hub', 'manage_options', 'cerber-nexus', 'nexus_admin_page' );
-	add_action( 'load-' . $hook, 'crb_admin_screen_options' );
+	if ( nexus_is_master() ) {
+		add_action( 'load-' . $hook, 'nexus_master_screen' );
+	}
 
 	add_submenu_page( 'cerber-security', __( 'Cerber tools', 'wp-cerber' ), __( 'Tools', 'wp-cerber' ), 'manage_options', 'cerber-tools', 'cerber_render_admin_page' );
 
@@ -631,7 +634,7 @@ function cerber_admin_request( $is_post = false ) {
 		elseif ( isset( $_GET['force_repair_db'] ) ) {
 			cerber_create_db();
 			cerber_upgrade_db( true );
-			cerber_admin_message( 'Cerber\'s DB tables have been upgraded' );
+			cerber_admin_message( 'Cerber\'s database tables have been repaired and upgraded' );
 			cerber_safe_redirect('force_repair_db');
 		}
         elseif ( isset( $_GET['truncate'] ) ) {
@@ -1897,12 +1900,6 @@ function cerber_show_scan_help() {
                         <p>Read more: <a href="https://wpcerber.com/wordpress-security-scanner/" target="_blank">Malware
                                 Scanner & Integrity Checker</a></p>
 
-                        <h2>Credits</h2>
-
-                        <p>Vulnerability information provided by <a href="https://wpvulndb.com/" target="_blank"
-                                                                    rel="noopener noreferrer">WPScan Vulnerability
-                                Database</a></p>
-
                     </div>
 
                 </td>
@@ -2768,7 +2765,7 @@ function cerber_admin_head() {
             #crb-activity td.acinfo div {
                 padding: 0.1em 0 0.1em 0.7em;
             }
-            .crb12, .crb16, .crb17, .crb18, .crb19, .crb41, .crb42, .crb50, .crb51, .crb52, .crb53, .crb54, .crb55, .crb56, .crb70, .crb71, .crb100 {
+            .crb12, .crb16, .crb17, .crb18, .crb19, .crb41, .crb42, .crb50, .crb51, .crb52, .crb53, .crb54, .crb55, .crb56, .crb70, .crb71, .crb72, .crb100 {
                 /*border-left: 4px solid #FF5733;*/
                 /*font-weight: bold;*/
                 border-left: 0.4em solid #FF5733;
@@ -3101,6 +3098,7 @@ function crb_admin_show_vtabs( $tabs_config, $submit = '', $hidden = array(), $f
 	$callbacks = array();
 
 	foreach ( $tabs_config as $tab_id => $tab ) {
+		$tab_id = str_replace( '-', '_', $tab_id );
 		$tablinks .= '<div class="tablinks ' . $b_class . '" data-tab-id="' . $tab_id . '">' . $tab['title'] . '<br/><span>' . crb_array_get( $tab, 'desc', '' ) . '</span></div>';
 		$tabs     .= '<div id="tab-' . $tab_id . '" class="vtabcontent" ' . $t_style . '>' . $tab['content'] . '</div>';
 		if ( $b_class ) {
@@ -4538,6 +4536,16 @@ function cerber_get_admin_page_config( $page = '' ) {
 				}
 			}
 		),
+		'cerber-shield' => array(
+			'title'    => __( 'Data Shield Policies', 'wp-cerber' ),
+			'tabs'     => array(
+				'user_shield' => array( 'bx-group', __( 'Accounts & Roles', 'wp-cerber' ) ),
+				'opt_shield'  => array( 'bx-slider', __( 'Site Settings', 'wp-cerber' ) ),
+			),
+			'callback' => function ( $tab ) {
+				cerber_show_settings_form( $tab );
+			}
+		),
 		'cerber-users' => array(
 			'title'    => __( 'User Policies', 'wp-cerber' ),
 			'tabs'     => array(
@@ -4724,7 +4732,137 @@ function cerber_show_tabs( $active, $tabs = array() ) {
 	echo '</h2>';
 }
 
-// Setting up menu editor -------------------------------------------------------
+// Access Lists (ACL) ---------------------------------------------------------
+
+/**
+ * Add IP to specified access list
+ *
+ * @param $ip string|array single IP address, string with IP network, range or associative range array
+ * @param $tag string 'B'|'W'
+ *
+ * @return bool|int|object Result of operation
+ */
+function cerber_acl_add( $ip, $tag, $comment = '' ) {
+	global $wpdb;
+	if ( is_string( $ip ) ) {
+		if ( ! cerber_is_ipv4( $ip ) ) {
+			$ip = cerber_short_ipv6( $ip );
+		}
+		if ( cerber_db_get_var( $wpdb->prepare( 'SELECT COUNT(ip) FROM ' . CERBER_ACL_TABLE . ' WHERE ip = %s', $ip ) ) ) {
+			return false; //__( 'Element is already in list', 'wp-cerber' );
+		}
+		$range = cerber_any2range( $ip );
+		if ( is_array( $range ) ) {
+			$begin = $range['begin'];
+			$end   = $range['end'];
+		}
+		else {
+			if ( cerber_is_ipv4( $ip ) ) {
+				$begin = ip2long( $ip );
+				$end   = ip2long( $ip );
+			}
+			else {
+				$begin = 7777777777;
+				$end   = 7777777777;
+			}
+		}
+
+		$result = $wpdb->insert( CERBER_ACL_TABLE, array(
+			'ip'            => $ip,
+			'ip_long_begin' => $begin,
+			'ip_long_end'   => $end,
+			'tag'           => $tag,
+			'comments'      => $comment
+		), array( '%s', '%d', '%d', '%s', '%s' ) );
+
+		return $result;
+	}
+    elseif ( is_array( $ip ) ) {
+		$range = $ip['range'];
+		$begin = $ip['begin'];
+		$end   = $ip['end'];
+		if ( cerber_db_get_var( $wpdb->prepare( 'SELECT COUNT(ip) FROM ' . CERBER_ACL_TABLE . ' WHERE ip_long_begin = %d AND ip_long_end = %d', $begin, $end ) ) ) {
+			return false;
+		}
+
+		$result = $wpdb->insert( CERBER_ACL_TABLE, array(
+			'ip'            => $range,
+			'ip_long_begin' => $begin,
+			'ip_long_end'   => $end,
+			'tag'           => $tag,
+			'comments'      => $comment
+		), array( '%s', '%d', '%d', '%s', '%s' ) );
+
+		return $result;
+
+		//return $wpdb->query( $wpdb->prepare( 'INSERT INTO ' . CERBER_ACL_TABLE . ' (ip, ip_long_begin, ip_long_end, tag) VALUES (%s,%d,%d,%s)', $range, $begin, $end, $tag ) );
+	}
+
+	return false;
+}
+
+function cerber_add_white( $ip, $comment = '' ) {
+	return cerber_acl_add( $ip, 'W', $comment );
+}
+
+function cerber_add_black( $ip, $comment = '' ) {
+	return cerber_acl_add( $ip, 'B', $comment );
+}
+
+function cerber_acl_remove( $ip ) {
+	global $wpdb;
+	if ( is_string( $ip ) ) {
+		return $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . CERBER_ACL_TABLE . ' WHERE ip = %s ', $ip ) );
+	}
+    elseif ( is_array( $ip ) ) {
+		return $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . CERBER_ACL_TABLE . ' WHERE ip_long_begin = %d AND ip_long_end = %d', $ip['begin'], $ip['end'] ) );
+	}
+
+	return false;
+}
+
+/**
+ * Can a given IP be added to the blacklist
+ *
+ * @param $ip
+ * @param string $list
+ *
+ * @return bool
+ */
+function cerber_can_be_listed( $ip, $list = 'B' ) {
+	if ( $list == 'B' ) {
+
+		if ( crb_acl_is_white( cerber_get_remote_ip() ) ) {
+			return true;
+		}
+
+		if ( is_string( $ip ) ) {
+
+			if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+				if ( cerber_is_myip( $ip ) ) {
+					return false;
+				}
+
+				return true;
+			}
+
+			$ip = cerber_any2range( $ip );
+		}
+        elseif ( ! isset( $ip['range'] )) {
+			return false;
+		}
+
+		if ( cerber_is_ip_in_range( $ip ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	return true;
+}
+
+// Setting up menu editor -----------------------------------------------------
 
 add_action( 'admin_head-nav-menus.php', function () {
 	add_meta_box( 'wp_cerber_nav_menu',

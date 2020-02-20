@@ -1,6 +1,6 @@
 <p class="frm-has-modal default-value-section-<?php echo esc_attr( $field['id'] . ( isset( $default_value_types['calc']['current'] ) ? '' : ' frm_hidden' ) ); ?>" id="calc-for-<?php echo esc_attr( $field['id'] ); ?>">
 	<label for="frm_default_value_<?php echo esc_attr( $field['id'] ); ?>">
-		<?php esc_html_e( 'Default Value', 'formidable' ); ?>
+		<?php esc_html_e( 'Default Value', 'formidable-pro' ); ?>
 		<span class="frm-sub-label">
 			(<?php esc_html_e( 'Calculation', 'formidable-pro' ); ?>)
 		</span>
@@ -21,7 +21,7 @@
 <?php
 FrmFieldsHelper::inline_modal(
 	array(
-		'title'    => __( 'Calculate Default Value', 'formidable' ),
+		'title'    => __( 'Calculate Default Value', 'formidable-pro' ),
 		'callback' => array( 'FrmProFieldsController', 'calculation_settings' ),
 		'args'     => compact( 'field' ),
 		'id'       => 'frm-calc-box-' . $field['id'],

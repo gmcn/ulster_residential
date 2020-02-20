@@ -293,16 +293,16 @@ function wpse325327_add_excerpts_to_pages() {
     add_post_type_support( 'page', 'excerpt' );
 }
 
-add_action( 'pre_get_posts', 'my_change_sort_order');
-    function my_change_sort_order($query){
-        if(is_archive()):
-         //If you wanted it for the archive of a custom post type use: is_post_type_archive( $post_type )
-           //Set the order ASC or DESC
-           $query->set( 'order', 'ASC' );
-           //Set the orderby
-           $query->set( 'orderby', 'menu_order' );
-        endif;
-	};
+	//Customise Speakers taxonomy archive display
+add_action( 'pre_get_posts', 'customise_speakers_taxonomy_archive_display' );
+function customise_speakers_taxonomy_archive_display ( $query ) {
+	if (($query->is_main_query()) && (is_tax())){
+
+		$query->set( 'orderby', 'menu_order' );
+		$query->set( 'order', 'ASC' );
+
+	}
+}
 
 //* Enqueue script to activate WOW.js
 add_action('wp_enqueue_scripts', 'sk_wow_init_in_footer');

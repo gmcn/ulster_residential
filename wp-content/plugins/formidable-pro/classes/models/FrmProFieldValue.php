@@ -6,7 +6,7 @@
 class FrmProFieldValue extends FrmFieldValue {
 
 	/**
-	 * FrmFieldValue constructor.
+	 * FrmProFieldValue constructor.
 	 *
 	 * @param stdClass $field
 	 * @param stdClass $entry
@@ -80,6 +80,15 @@ class FrmProFieldValue extends FrmFieldValue {
 	}
 
 	protected function prepare_displayed_value_for_field_with_child_entries( $atts = array() ) {
+		if ( ! is_array( $this->saved_value ) ) {
+			return;
+		}
+
+		$atts['entry'] = false;
+		if ( is_object( $this->displayed_value ) ) {
+			$atts['entry'] = $this->displayed_value;
+		}
+
 		$this->displayed_value = array();
 
 		if ( isset( $atts['include_fields'] ) ) {
@@ -90,10 +99,37 @@ class FrmProFieldValue extends FrmFieldValue {
 			$atts['fields'] = '';
 		}
 
-		foreach ( $this->saved_value as $child_id ) {
-			$child_values = new FrmProEntryValues( $child_id, $atts );
-			$this->displayed_value[ $child_id ] = $child_values->get_field_values();
+		foreach ( $this->saved_value as $k => $child_id ) {
+			if ( is_numeric( $child_id ) ) {
+				$child_values = new FrmProEntryValues( $child_id, $atts );
+				$this->displayed_value[ $child_id ] = $child_values->get_field_values();
+			} elseif ( is_object( $child_id ) ) {
+				if ( $atts['summary'] ) {
+					$this->set_actual_other_values( $child_id );
+				}
+
+				$atts['entry'] = $child_id;
+				$child_values = new FrmProEntryValues( 0, $atts );
+				$this->displayed_value[] = $child_values->get_field_values();
+				$atts['entry'] = false;
+			}
 		}
+	}
+
+	/**
+	 * Get the value entered in an other field to include
+	 * in the summary. This covers fields in child forms.
+	 *
+	 * @since 4.02.04
+	 */
+	private function set_actual_other_values( &$field ) {
+		if ( ! isset( $field->metas ) || ! isset( $field->metas['other'] ) ) {
+			return;
+		}
+
+		$values = array( 'item_meta' => $field->metas );
+		$values = FrmProEntry::mod_other_vals( $values, 'front' );
+		$field->metas = $values['item_meta'];
 	}
 
 	/**

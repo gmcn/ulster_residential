@@ -47,6 +47,8 @@ define('CERBER_OPT_T','cerber-traffic');
 define('CERBER_OPT_S','cerber-scanner');
 define('CERBER_OPT_E','cerber-schedule');
 define('CERBER_OPT_P','cerber-policies');
+define('CERBER_OPT_US','cerber-user_shield');
+define('CERBER_OPT_OS','cerber-opt_shield');
 define('CERBER_OPT_SL','cerber-nexus-slave');
 define('CERBER_OPT_MA','cerber-nexus_master');
 
@@ -58,7 +60,7 @@ function cerber_get_setting_id( $tab = null ) {
 	if ( ! $id ) {
 		$id = crb_admin_get_page();
 	}
-	// Some tab names doesn't match WP setting names
+	// Exceptions: some tab names (or page id) doesn't match WP setting names
     // tab => settings id
 	$map = array(
 		'scan_settings'    => 'scanner', // define('CERBER_OPT_S','cerber-scanner');
@@ -68,6 +70,7 @@ function cerber_get_setting_id( $tab = null ) {
 		'captcha'          => 'recaptcha',
 		'cerber-recaptcha' => 'antispam',
 		'global_policies'  => 'users',
+		'cerber-shield'    => 'user_shield',
 
 		'cerber-nexus' => 'nexus-slave',
 		'nexus_slave'  => 'nexus-slave',
@@ -114,6 +117,8 @@ function cerber_settings_config( $args = array() ) {
 		'policies'      => array( 'scanpls', 'scanrecover', 'scanexcl' ),
 		'antispam'      => array( 'antibot', 'antibot_more', 'commproc' ),
 		'recaptcha'     => array( 'recap' ),
+		'user_shield'   => array( 'acc_protect', 'role_protect' ),
+		'opt_shield'    => array( 'opt_protect' ),
 		'nexus-slave'   => array( 'slave_settings' ),
 		'nexus_master'  => array( 'master_settings' ),
 	);
@@ -402,6 +407,100 @@ function cerber_settings_config( $args = array() ) {
 			),
 		),
 
+		'acc_protect' => array(
+			'name'   => __( 'Protect user accounts', 'wp-cerber' ),
+			//'desc'   => 'These policies prevent site takeover (admin dashboard hijacking) by creating accounts with administrator privileges.',
+			'desc'   => 'These security measures prevent site takeover by preventing bad actors from creating additional administrator accounts or user privilege escalation.',
+			'fields' => array(
+				'ds_4acc'     => array(
+					'label'   => __( 'Restrict user account creation and user management with the following policies', 'wp-cerber' ),
+					//'doclink' => 'https://wpcerber.com/only-logged-in-wordpress-users/',
+					'type'    => 'checkbox',
+					//'pro'     => 1
+				),
+				'ds_regs_roles' => array(
+					'label'   => __( 'User registrations are limited to these roles', 'wp-cerber' ),
+					//'title'   => __( 'Roles restricted to new user registrations', 'wp-cerber' ),
+					'type'    => 'role_select',
+					'enabler' => array( 'ds_4acc' ),
+				),
+				'ds_add_acc'  => array(
+					'label'   => __( 'Users with these roles are permitted to create new accounts', 'wp-cerber' ),
+					'type'    => 'role_select',
+					'enabler' => array( 'ds_4acc' ),
+				),
+				'ds_edit_acc'    => array(
+					'label'   => __( 'Users with these roles are permitted to change sensitive user data', 'wp-cerber' ),
+					'type'    => 'role_select',
+					'enabler' => array( 'ds_4acc' ),
+				),
+				'ds_4acc_acl' => array(
+					'label'   => __( 'Do not apply these policies to the IP addresses in the White IP Access List', 'wp-cerber' ),
+					'type'    => 'checkbox',
+					'default' => 0,
+					'enabler' => array( 'ds_4acc' ),
+				),
+			),
+		),
+		'role_protect' => array(
+			'name'   => __( 'Protect user roles', 'wp-cerber' ),
+			'desc'   => 'These security measures prevent site takeover by preventing bad actors from creating new roles or role capabilities escalation.',
+			'fields' => array(
+				'ds_4roles'       => array(
+					'label'   => __( "Restrict roles and capabilities management with the following policies", 'wp-cerber' ),
+					//'doclink' => 'https://wpcerber.com/only-logged-in-wordpress-users/',
+					'type'    => 'checkbox',
+					'default' => 0,
+				),
+				'ds_add_role'    => array(
+					'label'   => __( 'Users with these roles are permitted to add new roles', 'wp-cerber' ),
+					'type'    => 'role_select',
+					'enabler' => array( 'ds_4roles' ),
+				),
+				'ds_edit_role' => array(
+					'label'   => __( "Users with these roles are permitted to change role capabilities", 'wp-cerber' ),
+					'type'    => 'role_select',
+					'enabler' => array( 'ds_4roles' ),
+				),
+				'ds_4roles_acl'   => array(
+					'label'   => __( 'Do not apply these policies to the IP addresses in the White IP Access List', 'wp-cerber' ),
+					'type'    => 'checkbox',
+					'default' => 0,
+					'enabler' => array( 'ds_4roles' ),
+				),
+			),
+		),
+		'opt_protect' => array(
+			'name'   => __( 'Protect site settings', 'wp-cerber' ),
+			'desc'   => 'These security measures prevent malware injection by preventing bad actors from altering vital site settings.',
+			'fields' => array(
+				'ds_4opts'       => array(
+					'label'   => __( "Restrict updating site settings with the following policies", 'wp-cerber' ),
+					//'doclink' => 'https://wpcerber.com/only-logged-in-wordpress-users/',
+					'type'    => 'checkbox',
+					'default' => 0,
+				),
+				'ds_4opts_roles'    => array(
+					'label'   => __( 'Users with these roles are permitted to change protected settings', 'wp-cerber' ),
+					'type'    => 'role_select',
+					'enabler' => array( 'ds_4opts' ),
+				),
+				'ds_4opts_list' => array(
+					'label'   => __( 'Protected settings', 'wp-cerber' ),
+					'type'    => 'checkbox_set',
+					'set'     => CRB_DS::get_settings_list(),
+					'enabler' => array( 'ds_4opts' ),
+				),
+				'ds_4opts_acl'   => array(
+					'label'   => __( 'Do not apply these policies to the IP addresses in the White IP Access List', 'wp-cerber' ),
+					'type'    => 'checkbox',
+					'default' => 0,
+					'enabler' => array( 'ds_4opts' ),
+				),
+			),
+		),
+
+
 		'us' => array(
 			//'name'   => __( 'User related settings', 'wp-cerber' ),
 			//'info'   => __( 'User related settings', 'wp-cerber' ),
@@ -415,7 +514,7 @@ function cerber_settings_config( $args = array() ) {
 				),
 				'authonlyacl'   => array(
 					'title'   => __( 'Use White IP Access List', 'wp-cerber' ),
-					'label'   => __( 'Do not apply this policy to IP addresses in the White IP Access List', 'wp-cerber' ),
+					'label'   => __( 'Do not apply these policy to the IP addresses in the White IP Access List', 'wp-cerber' ),
 					'type'    => 'checkbox',
 					'default' => 0,
 					'enabler' => array( 'authonly' ),
@@ -1104,7 +1203,7 @@ function cerber_wp_settings_setup( $screen_id, $sections = array() ) {
 				$config['class'] .= ' crb-disable-this';
 			}
 
-			add_settings_field( $field, $config['title'], 'cerber_field_show', $option, $section_id, $config );
+			add_settings_field( $field, crb_array_get($config,'title',''), 'cerber_field_show', $option, $section_id, $config );
 		}
 	}
 }
@@ -1116,7 +1215,7 @@ function cerber_wp_settings_setup( $screen_id, $sections = array() ) {
  */
 
 function cerber_get_setting_list() {
-	return array( CERBER_SETTINGS, CERBER_OPT, CERBER_OPT_H, CERBER_OPT_U, CERBER_OPT_A, CERBER_OPT_C, CERBER_OPT_N, CERBER_OPT_T, CERBER_OPT_S, CERBER_OPT_E, CERBER_OPT_P, CERBER_OPT_SL, CERBER_OPT_MA );
+	return array( CERBER_SETTINGS, CERBER_OPT, CERBER_OPT_H, CERBER_OPT_U, CERBER_OPT_A, CERBER_OPT_C, CERBER_OPT_N, CERBER_OPT_T, CERBER_OPT_S, CERBER_OPT_E, CERBER_OPT_P, CERBER_OPT_SL, CERBER_OPT_MA, CERBER_OPT_US, CERBER_OPT_OS );
 }
 
 /*
@@ -1259,12 +1358,20 @@ function cerber_field_show( $args ) {
 
 	$class = crb_array_get( $args, 'class', '' );
 
-	$data     = '';
+	$data = '';
+	$ena  = array();
 	if ( isset( $args['enabler'][0] ) ) {
-		$data .= ' data-enabler="crb-input-' . $args['enabler'][0] . '" ';
+		$ena['enabler'] = 'crb-input-' . $args['enabler'][0];
+		//$data           .= ' data-enabler="crb-input-' . $args['enabler'][0] . '" ';
 	}
 	if ( isset( $args['enabler'][1] ) ) {
-		$data .= ' data-enabler_value="' . $args['enabler'][1] . '" ';
+		$ena['enabler_value'] = $args['enabler'][1];
+		//$data                 .= ' data-enabler_value="' . $args['enabler'][1] . '" ';
+	}
+	if ( $ena ) {
+		foreach ( $ena as $att => $val ) {
+			$data .= ' data-' . $att . '="' . $val . '"';
+		}
 	}
 
 	switch ( $args['type'] ) {
@@ -1320,15 +1427,21 @@ function cerber_field_show( $args ) {
 			$html .= '<br/><label class="crb-below" for="' . $args['setting'] . '">' . $label . '</label>';
 			break;
 		case 'select':
-			$html = cerber_select( $name, $args['set'], $value, $class, $id, '', $placeholder );
+			$html = cerber_select( $name, $args['set'], $value, $class, $id, '', $placeholder, $ena );
 			//$html .= '<span class="">' . $label . '</span>';
 			$html .= '<br/><label class="crb-below">' . $label . '</label>';
 			break;
 		case 'role_select':
-			$html = cerber_role_select( $name . '[]', $value, '', true, '', '100%' );
+			if ( $label ) {
+				$label = '<p class="crb-label-above"><label for="' . $name . '">' . $label . '</label></p>';
+			}
+			$html = $label . cerber_role_select( $name . '[]', $value, '', true, '', '100%' ) . '<i ' . $data . '></i>';
 			break;
 		case 'checkbox_set':
-			$html = '<div class="crb-checkbox_set" style="line-height: 2em;">';
+			if ( $label ) {
+				$label = '<p class="crb-label-above"><label for="' . $name . '">' . $label . '</label></p>';
+			}
+			$html = '<div class="crb-checkbox_set" style="line-height: 2em;" ' . $data . '>' . $label;
 			foreach ( $args['set'] as $key => $item ) {
 				$v    = ( ! empty( $value[ $key ] ) ) ? $value[ $key ] : 0;
 				$html .= '<input type="checkbox" value="1" name="' . $name . '[' . $key . ']" ' . checked( 1, $v, false ) . $atts . '/>' . $item . '<br />';
@@ -1543,20 +1656,29 @@ add_filter( 'pre_update_option_'.CERBER_OPT, function ($new, $old, $option) {
 
 	if ( cerber_is_permalink_enabled() ) {
 		$new['loginpath'] = urlencode( str_replace( '/', '', $new['loginpath'] ) );
-		$new['loginpath'] = sanitize_text_field($new['loginpath']);
-		if ( $new['loginpath'] && $new['loginpath'] != $old['loginpath'] ) {
-			$href = cerber_get_home_url() . '/' . $new['loginpath'] . '/';
-			$url  = urldecode( $href );
-			$msg = array();
-			$msg_e = array();
-			$msg[]  = __( 'Attention! You have changed the login URL! The new login URL is', 'wp-cerber' ) . ': <a href="' . $href . '">' . $url . '</a>';
-			$msg_e[]  = __( 'Attention! You have changed the login URL! The new login URL is', 'wp-cerber' ) . ': ' . $url;
-			$msg[]  = __( 'If you use a caching plugin, you have to add your new login URL to the list of pages not to cache.', 'wp-cerber' );
-			$msg_e[]  = __( 'If you use a caching plugin, you have to add your new login URL to the list of pages not to cache.', 'wp-cerber' );
-			cerber_admin_notice( $msg );
-			cerber_send_email( 'newlurl', $msg_e );
+		$new['loginpath'] = sanitize_text_field( $new['loginpath'] );
+
+		if ( $new['loginpath'] ) {
+			if ( $new['loginpath'] == 'wp-admin'
+			     || preg_match( '/[#|\.\!\?\:\s]/', $new['loginpath'] ) ) {
+				cerber_admin_notice( __( 'ERROR:', 'wp-cerber' ) . ' You may not set this value for Custom login URL. Please specify another one.' );
+				$new['loginpath'] = $old['loginpath'];
+			}
+            elseif ( $new['loginpath'] != $old['loginpath'] ) {
+				$href    = cerber_get_home_url() . '/' . $new['loginpath'] . '/';
+				$url     = urldecode( $href );
+				$msg     = array();
+				$msg_e   = array();
+				$msg[]   = __( 'Attention! You have changed the login URL! The new login URL is', 'wp-cerber' ) . ': <a href="' . $href . '">' . $url . '</a>';
+				$msg_e[] = __( 'Attention! You have changed the login URL! The new login URL is', 'wp-cerber' ) . ': ' . $url;
+				$msg[]   = __( 'If you use a caching plugin, you have to add your new login URL to the list of pages not to cache.', 'wp-cerber' );
+				$msg_e[] = __( 'If you use a caching plugin, you have to add your new login URL to the list of pages not to cache.', 'wp-cerber' );
+				cerber_admin_notice( $msg );
+				cerber_send_email( 'newlurl', $msg_e );
+			}
 		}
-	} else {
+	}
+	else {
 		$new['loginpath'] = '';
 		$new['loginnowp'] = 0;
 	}
@@ -1575,6 +1697,10 @@ add_filter( 'pre_update_option_'.CERBER_OPT, function ($new, $old, $option) {
 
 	if ( absint( $new['keeplog'] ) == 0 ) {
 		$new['keeplog'] = '';
+	}
+
+	if ( $new['cookiepref'] != $old['cookiepref'] ) {
+		crb_update_cookie_dependent();
 	}
 
 	return $new;
@@ -1678,13 +1804,14 @@ add_filter( 'pre_update_option_'.CERBER_OPT_H, function ($new, $old, $option) {
 		return trim( $v, '/' );
 	} );
 
-	if ( empty( $new['adminphp'] ) ) {
+	/*if ( empty( $new['adminphp'] ) ) {
 		$new['adminphp'] = 0;
 	}
 
 	if ( ! isset( $old['adminphp'] ) ) {
 		$old['adminphp'] = '';
-	}
+	}*/
+
 	//if ( $new['adminphp'] != $old['adminphp'] ) {
 		$result = cerber_htaccess_sync( 'main', $new );
 		if ( is_wp_error( $result ) ) {
@@ -1693,9 +1820,10 @@ add_filter( 'pre_update_option_'.CERBER_OPT_H, function ($new, $old, $option) {
 		}
 	//}
 
-	if ( ! isset( $old['phpnoupl'] ) ) {
+	/*if ( ! isset( $old['phpnoupl'] ) ) {
 		$old['phpnoupl'] = '';
-	}
+	}*/
+
 	//if ( $new['phpnoupl'] != $old['phpnoupl'] ) {
 		$result = cerber_htaccess_sync( 'media', $new );
 		if ( is_wp_error( $result ) ) {
@@ -1729,6 +1857,37 @@ add_filter( 'pre_update_option_'.CERBER_OPT_T, function ($new, $old, $option) {
 	if ( $new['tikeeprec'] < 1 ) {
 		$new['tikeeprec'] = $old['tikeeprec'];
 		cerber_admin_notice( 'You may not set <b>Keep records for</b> to 0 days. To completely disable logging set <b>Logging mode</b> to Logging disabled.' );
+	}
+
+	return $new;
+}, 10, 3 );
+
+add_filter( 'pre_update_option_' . CERBER_OPT_US, function ( $new, $old, $option ) {
+
+	if ( ! empty( $new['ds_4acc'] ) ) {
+		CRB_DS::enable_shadowing( 1 );
+	}
+	else {
+		CRB_DS::disable_shadowing( 1 );
+	}
+
+	if ( ! empty( $new['ds_4roles'] ) ) {
+		CRB_DS::enable_shadowing( 2 );
+	}
+	else {
+		CRB_DS::disable_shadowing( 2 );
+	}
+
+	return $new;
+}, 10, 3 );
+
+add_filter( 'pre_update_option_' . CERBER_OPT_OS, function ( $new, $old, $option ) {
+
+	if ( ! empty( $new['ds_4opts'] ) ) {
+		CRB_DS::enable_shadowing( 3 );
+	}
+	else {
+		CRB_DS::disable_shadowing( 3 );
 	}
 
 	return $new;
@@ -1848,6 +2007,14 @@ function cerber_o_o_sanitizer( $value, $option, $old_value ) {
 	return $value;
 }
 
+add_action( 'updated_option', function () {
+	crb_reload_settings_cache();
+} );
+
+add_action( 'update_site_option', function () {
+	crb_reload_settings_cache();
+} );
+
 /**
  * Fill missed settings (array keys) with empty values
  * @since 5.8.2
@@ -1936,12 +2103,9 @@ if (is_multisite())  {
     add_action('admin_init', 'cerber_ms_update');
 }
 function cerber_ms_update() {
-	if ( !cerber_is_http_post() || ! isset( $_POST['action'] ) || $_POST['action'] != 'update' ) {
+	if ( ! cerber_is_http_post() || ! isset( $_POST['action'] ) || $_POST['action'] != 'update' ) {
 		return;
 	}
-	/*if ( ! isset( $_POST['option_page'] ) || false === strpos( $_POST['option_page'], 'cerberus-' ) ) {
-		return;
-	}*/
 
 	if ( ! $wp_id = cerber_get_wp_option_id() ) {  // 7.9.7
 		return;
@@ -1954,13 +2118,14 @@ function cerber_ms_update() {
 	// See wp_nonce_field() in the settings_fields() function
 	check_admin_referer($_POST['option_page'].'-options');
 
-	//$opt_name = 'cerber-' . substr( $_POST['option_page'], 9 ); // 8 = length of 'cerberus-'
-
 	$opt_name = 'cerber-' . $wp_id;
 
 	$old = (array) get_site_option( $opt_name );
 	$new = $_POST[ $opt_name ];
 	$new = apply_filters( 'pre_update_option_' . $opt_name, $new, $old, $opt_name );
+
+	$new = cerber_normalize( $new, $opt_name ); // @since 8.5.1
+
 	update_site_option( $opt_name, $new );
 }
 
@@ -1973,8 +2138,8 @@ function cerber_get_defaults() {
 	$all_defaults = array(
 		CERBER_OPT   => array(
 			'boot-mode'   => 0,
-			'attempts'   => 3,
-			'period'     => 60,
+			'attempts'   => 5,
+			'period'     => 30,
 			'lockout'    => 60,
 			'agperiod'   => 24,
 			'aglocks'    => 2,
@@ -2092,6 +2257,23 @@ function cerber_get_defaults() {
 			'tiphperr'    => 0,
 			'tithreshold' => '',
 			'tikeeprec'   => 7,
+		),
+		CERBER_OPT_US => array(
+			'ds_4acc'      => 0,
+			'ds_regs_roles'  => array(),
+			'ds_add_acc'   => array( 'administrator' ),
+			'ds_edit_acc'    => array( 'administrator' ),
+			'ds_4acc_acl'  => 0,
+			'ds_4roles'       => 0,
+			'ds_add_role'    => array( 'administrator' ),
+			'ds_edit_role' => array( 'administrator' ),
+			'ds_4roles_acl'   => 0,
+		),
+		CERBER_OPT_OS => array(
+			'ds_4opts'       => 0,
+			'ds_4opts_roles' => array( 'administrator' ),
+			'ds_4opts_list'  => CRB_DS::get_settings_list( false ),
+			'ds_4opts_acl'   => 0,
 		),
 		CERBER_OPT_S => array(
 			'scan_cpt'      => '',
@@ -2253,7 +2435,8 @@ function crb_move_fields( $from, $to, $fields ) {
  *
  */
 function cerber_save_settings( $options ) {
-	foreach ( cerber_get_defaults() as $option_name => $fields ) {
+
+    foreach ( cerber_get_defaults() as $option_name => $fields ) {
 		$filtered = array();
 		foreach ( $fields as $field_name => $def ) {
 			if ( isset( $options[ $field_name ] ) ) {
@@ -2264,6 +2447,8 @@ function cerber_save_settings( $options ) {
 			$result = update_site_option( $option_name, $filtered );
 		}
 	}
+
+	crb_reload_settings_cache();
 }
 
 /**
@@ -2301,10 +2486,11 @@ function cerber_get_options( $option = '' ) {
  * The replacement for cerber_get_options()
  *
  * @param string $option
+ * @param bool $purge_cache reload static cache from the DB
  *
  * @return array|bool|mixed
  */
-function crb_get_settings( $option = '' ) {
+function crb_get_settings( $option = '', $purge_cache = false ) {
 	global $wpdb;
 	static $united;
 
@@ -2315,7 +2501,7 @@ function crb_get_settings( $option = '' ) {
 		return cerber_get_options( $option );
 	}
 
-	if ( ! isset( $united ) ) {
+	if ( ! isset( $united ) || $purge_cache ) {
 
 		$options = cerber_get_setting_list();
 		$in      = '("' . implode( '","', $options ) . '")';
@@ -2360,6 +2546,10 @@ function crb_get_settings( $option = '' ) {
 	}
 
 	return $united;
+}
+
+function crb_reload_settings_cache() {
+	crb_get_settings( null, true );
 }
 
 /**

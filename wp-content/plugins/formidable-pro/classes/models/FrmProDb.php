@@ -7,7 +7,7 @@ class FrmProDb {
 	/**
 	 * @since 3.0.02
 	 */
-	public static $plug_version = '4.02.03';
+	public static $plug_version = '4.03.04';
 
 	/**
 	 * @since 2.3
@@ -372,7 +372,7 @@ class FrmProDb {
 				$formatted_time = FrmProAppHelper::format_time( $v );
 				if ( $formatted_time ) {
 					// double check to make sure the time is correct
-					$check_time = date( 'h:i A', strtotime( $formatted_time ) );
+					$check_time = gmdate( 'h:i A', strtotime( $formatted_time ) );
 					if ( $check_time != $v ) {
 						break;
 					}

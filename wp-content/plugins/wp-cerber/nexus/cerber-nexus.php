@@ -389,7 +389,6 @@ function nexus_is_slave() {
 }
 
 function nexus_diag_log( $msg ) {
-	global $cerber_db_errors;
 
 	if ( ( nexus_is_slave() && crb_get_settings( 'slave_diag' ) )
 	     || ( nexus_is_master() && crb_get_settings( 'master_diag' ) ) ) {
@@ -401,7 +400,7 @@ function nexus_diag_log( $msg ) {
 			$m = 'Master';
 		}
 
-		cerber_diag_log( $cerber_db_errors, 'NXS ' . $m );
+		cerber_diag_log( cerber_db_get_errors(), 'NXS ' . $m );
 
 		if ( is_array( $msg ) ) {
 			foreach ( $msg as $k => $v ) {

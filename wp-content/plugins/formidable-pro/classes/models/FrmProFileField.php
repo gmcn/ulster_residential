@@ -29,6 +29,7 @@ class FrmProFileField {
 				'maxFilesize' => round( $file_size, 2 ),
 				'maxFiles'    => $max,
 				'htmlID'      => $the_id,
+				'label'       => $atts['html_id'],
 				'uploadMultiple' => $is_multiple,
 				'fieldID'     => $field['id'],
 				'formID'            => $field['form_id'],

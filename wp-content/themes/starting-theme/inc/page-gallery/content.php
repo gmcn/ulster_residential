@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-6 gallery-single_thumb">
 
-      <?php the_post_thumbnail(); ?>
+      <?php the_post_thumbnail('large'); ?>
 
     </div>
     <div class="col-sm-6 col-md-3 gallery-single_content">
@@ -34,6 +34,33 @@
       <?php endif; ?>
 
       <?php echo the_content(); ?>
+
+      <?php
+      $images = get_field('additional_images');
+
+       if( $images ): ?>
+
+       <a class="fancybox" rel="group" href="<?php echo the_post_thumbnail_url(); ?>" title="">
+
+           View more images <img src="<?php echo get_template_directory_uri(); ?>/images/view_more_images.svg" alt="View More Images">
+
+       </a>
+
+        <!-- Hidden Gallery -->
+        <div class="hidden">
+          <?php foreach( $images as $image ): ?>
+
+              <a class="fancybox" rel="group" href="<?php echo esc_url($image['sizes']['large']); ?>" title="<?php echo esc_html($image['caption']); ?>">
+
+                  <img src="<?php echo esc_url($image['sizes']['thumbnail']); ?>" alt="<?php echo esc_attr($image['alt']); ?>" />
+
+              </a>
+
+
+          <?php endforeach; ?>
+          <?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
+        </div>
+      <?php endif; ?>
 
     </div>
 
@@ -86,6 +113,26 @@
       </div>
 
 
+
+    </div>
+
+
+
+
+  </div>
+
+  <div class="row inspiration_action">
+    <div class="col-xs-12 col-md-4 share">
+
+        <?php next_post_link( '%link', '<img src="' . get_template_directory_uri() . '/images/prev.svg" /> Previous' ); ?>
+
+    </div>
+    <div class="col-xs-6 col-md-4 back">
+      <a href="<?php echo site_url(); ?>/gallery/">Back to Gallery</a>
+    </div>
+    <div class="col-xs-6 col-md-4 next">
+
+      <?php previous_post_link( '%link', 'Next <img src="' . get_template_directory_uri() . '/images/next.svg" />' ); ?>
 
     </div>
   </div>

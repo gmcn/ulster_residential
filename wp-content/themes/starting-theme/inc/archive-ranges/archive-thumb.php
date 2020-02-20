@@ -9,9 +9,9 @@
         <div class="category__link"><span>VIEW PRODUCT RANGE</span></div>
     </a>
     <?php if ($thumb) { ?>
-        <img src="<?php echo $thumb['sizes']['square_thumbnail']; ?>" srcset="<?php echo $thumb['sizes']['square_thumbnail']; ?> 1x, <?php echo $thumb['sizes']['square_thumbnail-retina']; ?> 2x" alt="<?php $range->name; ?>">
+        <img src="<?php echo $thumb['sizes']['square_thumbnail']; ?>" srcset="<?php echo $thumb['sizes']['square_thumbnail']; ?> 1x, <?php echo $thumb['sizes']['square_thumbnail-retina']; ?> 2x" alt="<?php echo $range->name; ?>">
     <?php } else { ?>
-        <img src="<?php bloginfo('template_directory'); ?>/images/transparent.png" alt="<?php the_title(); ?>">
-    <?php } //end if post_thumbnail 
+        <img src="<?php bloginfo('template_directory'); ?>/images/transparent.png" alt="<?php echo the_title(); ?>">
+    <?php } //end if post_thumbnail
     ?>
 </div>

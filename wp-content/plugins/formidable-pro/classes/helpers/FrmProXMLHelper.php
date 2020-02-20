@@ -57,8 +57,14 @@ class FrmProXMLHelper {
             $entry['item_meta'] = $metas;
             unset($metas);
 
-            // edit entry if the key and created time match
-            $editing = FrmDb::get_var( 'frm_items', array( 'item_key' => $entry['item_key'], 'created_at' => date('Y-m-d H:i:s', strtotime($entry['created_at'])) ) );
+			// Edit entry if the key and created time match.
+			$editing = FrmDb::get_var(
+				'frm_items',
+				array(
+					'item_key'   => $entry['item_key'],
+					'created_at' => gmdate( 'Y-m-d H:i:s', strtotime( $entry['created_at'] ) ),
+				)
+			);
 
             if ( $editing ) {
 				FrmEntry::update_entry_from_xml( $entry['id'], $entry );
@@ -313,7 +319,7 @@ class FrmProXMLHelper {
 				}
 			}
 
-			$values[ $stamp ] = date( 'Y-m-d H:i:s', ( strtotime( $values[ $stamp ] ) - $offset ) );
+			$values[ $stamp ] = gmdate( 'Y-m-d H:i:s', ( strtotime( $values[ $stamp ] ) - $offset ) );
 
             unset($stamp);
         }

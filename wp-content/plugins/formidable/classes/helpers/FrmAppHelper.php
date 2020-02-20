@@ -11,7 +11,7 @@ class FrmAppHelper {
 	/**
 	 * @since 2.0
 	 */
-	public static $plug_version = '4.02.03';
+	public static $plug_version = '4.03.04';
 
 	/**
 	 * @since 1.07.02
@@ -106,7 +106,12 @@ class FrmAppHelper {
 			$query_args['utm_content'] = $content;
 		}
 
-		return add_query_arg( $query_args, $page ) . $anchor;
+		if ( is_array( $args ) && isset( $args['param'] ) ) {
+			$query_args['f'] = $args['param'];
+		}
+
+		$link = add_query_arg( $query_args, $page ) . $anchor;
+		return self::make_affiliate_url( $link );
 	}
 
 	/**
@@ -158,6 +163,29 @@ class FrmAppHelper {
 	 */
 	public static function show_logo( $atts = array() ) {
 		echo self::kses( self::svg_logo( $atts ), 'all' ); // WPCS: XSS ok.
+	}
+
+	/**
+	 * @since 4.03.02
+	 */
+	public static function show_header_logo() {
+		$icon = self::svg_logo(
+			array(
+				'height' => 35,
+				'width'  => 35,
+			)
+		);
+
+		$new_icon = apply_filters( 'frm_icon', $icon, true );
+		if ( $new_icon !== $icon ) {
+			if ( strpos( $new_icon, '<svg' ) === 0 ) {
+				$icon = str_replace( 'viewBox="0 0 20', 'width="30" height="35" style="color:#929699" viewBox="0 0 20', $new_icon );
+			} else {
+				// Show nothing if it isn't an SVG.
+				$icon = '<div style="height:39px"></div>';
+			}
+		}
+		echo self::kses( $icon, 'all' ); // WPCS: XSS ok.
 	}
 
 	/**
@@ -550,8 +578,52 @@ class FrmAppHelper {
 				self::decode_specialchars( $value[ $k ] );
 			}
 		} else {
-			$value = wp_specialchars_decode( $value, ENT_COMPAT );
+			self::decode_amp( $value );
 		}
+	}
+
+	/**
+	 * The wp_specialchars_decode function changes too much.
+	 * This will leave HTML as is, but still convert &.
+	 * Adapted from wp_specialchars_decode().
+	 *
+	 * @since 4.03.01
+	 *
+	 * @param string $string The string to prep.
+	 */
+	private static function decode_amp( &$string ) {
+		// Don't bother if there are no entities - saves a lot of processing
+		if ( empty( $string ) || strpos( $string, '&' ) === false ) {
+			return;
+		}
+
+		$translation = array(
+			'&quot;'  => '"',
+			'&#034;'  => '"',
+			'&#x22;'  => '"',
+			'&lt; '   => '< ', // The space preserves the HTML.
+			'&#060; ' => '< ', // The space preserves the HTML.
+			'&gt;'    => '>',
+			'&#062;'  => '>',
+			'&amp;'   => '&',
+			'&#038;'  => '&',
+			'&#x26;'  => '&',
+		);
+
+		$translation_preg = array(
+			'/&#0*34;/'   => '&#034;',
+			'/&#x0*22;/i' => '&#x22;',
+			'/&#0*60;/'   => '&#060;',
+			'/&#0*62;/'   => '&#062;',
+			'/&#0*38;/'   => '&#038;',
+			'/&#x0*26;/i' => '&#x26;',
+		);
+
+		// Remove zero padding on numeric entities
+		$string = preg_replace( array_keys( $translation_preg ), array_values( $translation_preg ), $string );
+
+		// Replace characters according to translation table
+		$string = strtr( $string, $translation );
 	}
 
 	/**
@@ -1236,7 +1308,7 @@ class FrmAppHelper {
 		if ( ! $is_rich_text ) {
 			$safe_text = htmlspecialchars( $safe_text, ENT_NOQUOTES );
 		}
-		$safe_text = str_replace( '&amp;', '&', $safe_text );
+		$safe_text = str_replace( '&amp; ', '& ', $safe_text );
 
 		return apply_filters( 'esc_textarea', $safe_text, $text );
 	}
@@ -1672,7 +1744,7 @@ class FrmAppHelper {
 
 		$formatted = self::get_localized_date( $date_format, $date );
 
-		$do_time = ( date( 'H:i:s', strtotime( $date ) ) != '00:00:00' );
+		$do_time = ( gmdate( 'H:i:s', strtotime( $date ) ) != '00:00:00' );
 		if ( $do_time ) {
 			$formatted .= self::add_time_to_date( $time_format, $date );
 		}
@@ -2054,6 +2126,7 @@ class FrmAppHelper {
 			'updating_msg' => __( 'Please wait while your site updates.', 'formidable' ),
 			'deauthorize'  => __( 'Are you sure you want to deauthorize Formidable Forms on this site?', 'formidable' ),
 			'url'          => self::plugin_url(),
+			'app_url'      => 'https://formidableforms.com/',
 			'loading'      => __( 'Loading&hellip;', 'formidable' ),
 			'nonce'        => wp_create_nonce( 'frm_ajax' ),
 		);
@@ -2188,7 +2261,7 @@ class FrmAppHelper {
 			if ( empty( $expired ) ) {
 				echo ' Please <a href="' . esc_url( admin_url( 'plugins.php?s=formidable%20forms%20pro' ) ) . '">update now</a>.';
 			} else {
-				echo '<br/>Please <a href="https://formidableforms.com/account/licenses/?utm_source=WordPress&utm_medium=outdated">renew now</a> to get the latest Pro version or <a href="https://downloads.wordpress.org/plugin/formidable.<?php echo esc_attr( $pro_version ); ?>.zip">download the previous Lite version</a> to revert.';
+				echo '<br/>Please <a href="https://formidableforms.com/account/downloads/?utm_source=WordPress&utm_medium=outdated">renew now</a> to get the latest Pro version or <a href="https://downloads.wordpress.org/plugin/formidable.<?php echo esc_attr( $pro_version ); ?>.zip">download the previous Lite version</a> to revert.';
 			}
 			?>
 		</div>

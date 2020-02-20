@@ -146,11 +146,6 @@ function frmProFormJS() {
 		}
 
 		var form = field.closest( 'form' );
-		var formID = '#' + form.attr( 'id' );
-		if ( formID === '#undefined' ) {
-			// use a class if there is not id for WooCommerce
-			formID = 'form.' + form.attr( 'class' ).replace( ' ', '.' );
-		}
 
 		field.dropzone( {
 			url: frm_js.ajax_url,
@@ -159,7 +154,7 @@ function frmProFormJS() {
 			maxFilesize: uploadFields[ i ].maxFilesize,
 			maxFiles: max,
 			uploadMultiple: uploadFields[ i ].uploadMultiple,
-			hiddenInputContainer: formID,
+			hiddenInputContainer: field.parent()[0],
 			dictDefaultMessage: uploadFields[ i ].defaultMessage,
 			dictFallbackMessage: uploadFields[ i ].fallbackMessage,
 			dictFallbackText: uploadFields[ i ].fallbackText,
@@ -183,6 +178,11 @@ function frmProFormJS() {
 				jQuery( this.element ).closest( 'form' ).removeClass( 'frm_ajax_submit' );
 			},
 			init: function() {
+				var hidden = field.parent().find('.dz-hidden-input');
+				if ( typeof hidden.attr('id') === 'undefined' ) {
+					hidden.attr( 'id', uploadFields[ i ].label );
+				}
+
 				this.on( 'sending', function( file, xhr, formData ) {
 
 					if ( ! anyPrecedingRequiredFieldsCompleted( uploadFields[ i ], selector ) ) {
@@ -207,6 +207,10 @@ function frmProFormJS() {
 						if ( uploadFields[ i ].uploadMultiple !== true ) {
 							jQuery( 'input[name="' + fieldName + '"]' ).val( mediaIDs[ m ] );
 						}
+					}
+
+					if ( this.options.uploadMultiple === false ) {
+						this.disable();
 					}
 				} );
 
@@ -242,13 +246,19 @@ function frmProFormJS() {
 				} );
 
 				this.on( 'removedfile', function( file ) {
+					var fileCount = this.files.length;
+
+					if ( this.options.uploadMultiple === false && fileCount < 1 ) {
+						this.enable();
+					}
+
 					if ( file.accepted !== false && uploadFields[ i ].uploadMultiple !== true ) {
 						jQuery( 'input[name="' + fieldName + '"]' ).val( '' );
 					}
 
 					if ( file.accepted !== false && typeof file.mediaID !== 'undefined' ) {
 						jQuery( file.previewElement ).remove();
-						var fileCount = this.files.length;
+						fileCount = this.files.length;
 						this.options.maxFiles = uploadFields[ i ].maxFiles - fileCount;
 					}
 				} );
@@ -3772,9 +3782,10 @@ function frmProFormJS() {
 	}
 
 	function generateSingleGoogleGraph( graphData ) {
-		google.load( 'visualization', '1.0', { packages: [ graphData.package ], callback: function() {
+		google.charts.load( 'current', { packages: [ graphData.package ] } );
+		google.charts.setOnLoadCallback( function() {
 			compileGoogleGraph( graphData );
-		} } );
+		} );
 	}
 
 	function compileGoogleGraph( graphData ) {
@@ -3919,13 +3930,15 @@ function frmProFormJS() {
 
 					// hide fields with conditional logic
 					jQuery( html ).find( 'input, select, textarea' ).each( function() {
-						if ( this.type != 'file' ) {
-
 							// Readonly dropdown fields won't have a name attribute
 							if ( this.name === '' ) {
 								return true;
 							}
-							fieldID = this.name.replace( 'item_meta[', '' ).split( ']' )[ 2 ].replace( '[', '' );
+							if ( this.type == 'file' ) {
+								fieldID = this.name.replace('file', '').split( '-' )[0];
+							} else {
+								fieldID = this.name.replace( 'item_meta[', '' ).split( ']' )[ 2 ].replace( '[', '' );
+							}
 							if ( jQuery.inArray( fieldID, checked ) == -1 ) {
 								if ( this.id === false || this.id === '' ) {
 									return;
@@ -3941,7 +3954,6 @@ function frmProFormJS() {
 								doCalculation( fieldID, fieldObject );
 								reset = 'persist';
 							}
-						}
 					} );
 
 					jQuery( html ).find( '.frm_html_container' ).each( function() {

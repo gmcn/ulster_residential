@@ -55,7 +55,7 @@ class FrmProCreditCardsController extends FrmProComboFieldsController {
 				'type'        => 'select',
 				'classes'     => 'frm_third frm_cc_exp_year',
 				'label'       => 1,
-				'options'     => range( date('Y'), date('Y') + 10 ),
+				'options'     => range( gmdate( 'Y' ), gmdate( 'Y' ) + 10 ),
 				'placeholder' => isset( $placeholder['year'] ) ? $placeholder['year'] : __( 'Year', 'formidable-pro' ),
 			),
 			'cvc'  => array(

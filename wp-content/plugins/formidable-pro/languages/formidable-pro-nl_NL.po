@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Formidable Forms package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2019-07-12 14:09+0000\n"
+"PO-Revision-Date: 2019-10-15 13:36+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,10 +11,10 @@ msgstr ""
 "Language: nl_NL\n"
 "Project-Id-Version: Formidable Forms\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-28T16:56:26+02:00\n"
+"POT-Creation-Date: 2019-10-15T15:35:13+02:00\n"
 "Last-Translator: Formidable Community\n"
 "Language-Team: Dutch\n"
-"X-Loco-Version: 2.3.0; wp-5.2.2"
+"X-Loco-Version: 2.3.0; wp-5.2.4"
 
 #. Plugin Name of the plugin
 msgid "Formidable Forms Pro"
@@ -36,6 +36,14 @@ msgstr ""
 #. Author of the plugin
 msgid "Strategy11"
 msgstr "Strategy11"
+
+#: classes/models/FrmProSummaryFormatter.php:75
+#: classes/controllers/FrmProEntriesController.php:1800
+#: classes/controllers/FrmProEntriesController.php:2333
+#: classes/helpers/FrmProAppHelper.php:302
+#: classes/helpers/FrmProEntriesHelper.php:854
+msgid "Edit"
+msgstr "Bewerken"
 
 #: classes/models/FrmProForm.php:62
 msgid "Unable to write to %s to protect your uploads."
@@ -63,8 +71,8 @@ msgid "Your submission was successfully saved."
 msgstr "Je bijdrage is met succes opgeslagen"
 
 #: classes/models/FrmProSettings.php:19
-#: classes/controllers/FrmProEntriesController.php:2340
-#: classes/controllers/FrmProEntriesController.php:2875
+#: classes/controllers/FrmProEntriesController.php:2435
+#: classes/controllers/FrmProEntriesController.php:2970
 msgid "Update"
 msgstr "Bijwerken"
 
@@ -72,15 +80,15 @@ msgstr "Bijwerken"
 msgid "You have already submitted that form"
 msgstr "Je hebt dit formulier al ingezonden"
 
-#: classes/models/FrmProFileField.php:38
+#: classes/models/FrmProFileField.php:39
 msgid "Drop files here to upload"
 msgstr "drop hier je bestanden om op te laden"
 
-#: classes/models/FrmProFileField.php:39
+#: classes/models/FrmProFileField.php:40
 msgid "Your browser does not support drag and drop file uploads."
 msgstr "Uw browser ondersteunt geen 'drag and drop' bestandsupload."
 
-#: classes/models/FrmProFileField.php:40
+#: classes/models/FrmProFileField.php:41
 msgid ""
 "Please use the fallback form below to upload your files like in the olden "
 "days."
@@ -88,45 +96,45 @@ msgstr ""
 "Gelieve de terug knop onder te gebruiken om je bestanden op te laden zoals "
 "vroeger"
 
-#: classes/models/FrmProFileField.php:41 classes/models/FrmProFileField.php:369
-#: classes/models/FrmProFileField.php:380
+#: classes/models/FrmProFileField.php:42 classes/models/FrmProFileField.php:370
+#: classes/models/FrmProFileField.php:381
 msgid "That file is too big. It must be less than %sMB."
 msgstr "Dit bestand is te groot. Het moet kleiner zijn dan %sMB."
 
-#: classes/models/FrmProFileField.php:43
+#: classes/models/FrmProFileField.php:44
 msgid "Server responded with %s code."
 msgstr "De server reageerde met %s code."
 
-#: classes/models/FrmProFileField.php:44
+#: classes/models/FrmProFileField.php:45
 msgid "Cancel upload"
 msgstr "Upload annuleren"
 
-#: classes/models/FrmProFileField.php:45
+#: classes/models/FrmProFileField.php:46
 msgid "Are you sure you want to cancel this upload?"
 msgstr "Weet je zeker dat je de upload wilt annuleren?"
 
-#: classes/models/FrmProFileField.php:46
-#: classes/views/frmpro-fields/front-end/file.php:53
+#: classes/models/FrmProFileField.php:47
+#: classes/views/frmpro-fields/front-end/file.php:54
 msgid "Remove file"
 msgstr "Verwijder bestand"
 
-#: classes/models/FrmProFileField.php:47 classes/models/FrmProFileField.php:410
+#: classes/models/FrmProFileField.php:48 classes/models/FrmProFileField.php:411
 msgid "You have uploaded more than %d file(s)."
 msgstr "U heeft meer dan %d bestanden opgeladen."
 
-#: classes/models/FrmProFileField.php:477
+#: classes/models/FrmProFileField.php:478
 msgid "This field is invalid"
 msgstr "Dit veld is onjuist ingevuld"
 
-#: classes/models/FrmProFileField.php:478
+#: classes/models/FrmProFileField.php:479
 msgid "is invalid"
 msgstr "is ongeldig"
 
-#: classes/models/FrmProFileField.php:481
+#: classes/models/FrmProFileField.php:482
 msgid "Sorry, this file type is not permitted."
 msgstr "Sorry, dit bestandsformaat is niet toegestaan."
 
-#: classes/models/FrmProFileField.php:570
+#: classes/models/FrmProFileField.php:571
 msgid "File upload failed"
 msgstr "Bestandsupload mislukt"
 
@@ -214,6 +222,14 @@ msgstr "Toevoegen"
 msgid "Remove"
 msgstr "Verwijder"
 
+#: classes/models/fields/FrmProFieldToggle.php:24
+msgid "Yes"
+msgstr ""
+
+#: classes/models/fields/FrmProFieldToggle.php:25
+msgid "No"
+msgstr ""
+
 #: classes/models/fields/FrmProFieldData.php:60
 #: classes/controllers/FrmProLookupFieldsController.php:12
 msgid "Dropdown"
@@ -273,76 +289,76 @@ msgid "One special character"
 msgstr "Een speciaal karakter"
 
 #: classes/models/fields/FrmProFieldCreditCard.php:45
-#: classes/controllers/FrmProCreditCardsController.php:109
+#: classes/controllers/FrmProCreditCardsController.php:108
 msgid "Card Number"
 msgstr ""
 
 #: classes/models/fields/FrmProFieldCreditCard.php:46
-#: classes/controllers/FrmProCreditCardsController.php:110
+#: classes/controllers/FrmProCreditCardsController.php:109
 msgid "CVC"
 msgstr "CVC-nummer"
 
 #: classes/models/fields/FrmProFieldCreditCard.php:88
-#: classes/models/fields/FrmProFieldCreditCard.php:165
-#: classes/controllers/FrmProCreditCardsController.php:53
+#: classes/models/fields/FrmProFieldCreditCard.php:166
+#: classes/controllers/FrmProCreditCardsController.php:52
 msgid "Month"
 msgstr "Maand"
 
 #: classes/models/fields/FrmProFieldCreditCard.php:89
-#: classes/models/fields/FrmProFieldCreditCard.php:166
-#: classes/controllers/FrmProCreditCardsController.php:60
+#: classes/models/fields/FrmProFieldCreditCard.php:167
+#: classes/controllers/FrmProCreditCardsController.php:59
 msgid "Year"
 msgstr "Jaar"
 
-#: classes/models/fields/FrmProFieldCreditCard.php:152
+#: classes/models/fields/FrmProFieldCreditCard.php:153
 msgid "Expiration:"
 msgstr ""
 
-#: classes/models/fields/FrmProFieldCreditCard.php:237
+#: classes/models/fields/FrmProFieldCreditCard.php:238
 msgid "That credit card number is invalid"
 msgstr "De creditkaart nummer is ongeldig"
 
-#: classes/models/fields/FrmProFieldCreditCard.php:301
+#: classes/models/fields/FrmProFieldCreditCard.php:302
 msgid "That credit card is expired"
 msgstr "Deze creditkaart is verlopen"
 
-#: classes/models/fields/FrmProFieldCreditCard.php:314
+#: classes/models/fields/FrmProFieldCreditCard.php:315
 msgid "Please enter a valid CVC"
 msgstr "Voer een geldige CVC in"
 
-#: classes/models/fields/FrmProFieldDivider.php:242
+#: classes/models/fields/FrmProFieldDivider.php:244
 msgid "Toggle fields"
 msgstr "Wissel velden"
 
 #: classes/models/fields/FrmProFieldAddress.php:100
-#: classes/controllers/FrmProAddressesController.php:150
+#: classes/controllers/FrmProAddressesController.php:151
 msgid "City"
 msgstr "Stad"
 
 #: classes/models/fields/FrmProFieldAddress.php:101
-#: classes/controllers/FrmProAddressesController.php:151
+#: classes/controllers/FrmProAddressesController.php:152
 msgid "State/Province"
 msgstr "Staat/Provincie"
 
 #: classes/models/fields/FrmProFieldAddress.php:102
-#: classes/controllers/FrmProAddressesController.php:152
+#: classes/controllers/FrmProAddressesController.php:153
 msgid "Zip/Postal"
 msgstr "Zip/Postcode"
 
 #: classes/models/fields/FrmProFieldAddress.php:103
 #: classes/models/fields/FrmProFieldAddress.php:114
-#: classes/controllers/FrmProAddressesController.php:127
-#: classes/controllers/FrmProAddressesController.php:153
+#: classes/controllers/FrmProAddressesController.php:128
+#: classes/controllers/FrmProAddressesController.php:154
 msgid "Country"
 msgstr "Land"
 
 #: classes/models/fields/FrmProFieldAddress.php:112
-#: classes/controllers/FrmProAddressesController.php:125
+#: classes/controllers/FrmProAddressesController.php:126
 msgid "Line 1"
 msgstr "Lijn 1"
 
 #: classes/models/fields/FrmProFieldAddress.php:113
-#: classes/controllers/FrmProAddressesController.php:126
+#: classes/controllers/FrmProAddressesController.php:127
 msgid "Line 2"
 msgstr "Lijn 2"
 
@@ -350,7 +366,7 @@ msgstr "Lijn 2"
 msgid "This value is invalid"
 msgstr "Deze waarde is niet geldig"
 
-#: classes/models/FrmProDb.php:688
+#: classes/models/FrmProDb.php:695
 msgid "Formidable Style"
 msgstr ""
 
@@ -409,7 +425,7 @@ msgstr "Gebruikersrol"
 #: classes/controllers/FrmProFormsController.php:362
 #: classes/views/displays/where_row.php:17
 #: classes/views/xml/map_csv_fields.php:50
-#: classes/helpers/FrmProFieldsHelper.php:2558
+#: classes/helpers/FrmProFieldsHelper.php:2570
 msgid "Post ID"
 msgstr "Bericht ID"
 
@@ -452,10 +468,6 @@ msgid ""
 msgstr ""
 "Vervang  'whatever' met de parameter naam. In url.com?product=form, de "
 "variable is 'product'. Gebruik je [get param=product] in je veld."
-
-#: classes/controllers/FrmProFormsController.php:373
-msgid "SERVER"
-msgstr "SERVER"
 
 #: classes/controllers/FrmProFormsController.php:374
 msgid "A variable from the PHP SERVER array."
@@ -603,7 +615,7 @@ msgstr ""
 
 #: classes/controllers/FrmProFormsController.php:730
 #: classes/controllers/FrmProFormsController.php:799
-#: classes/controllers/FrmProEntriesController.php:1869
+#: classes/controllers/FrmProEntriesController.php:1964
 #: classes/helpers/FrmProEntriesListHelper.php:77
 msgid "Search"
 msgstr "Zoeken"
@@ -940,7 +952,7 @@ msgstr "Entry sleutel"
 #: classes/views/xml/map_csv_fields.php:70
 #: classes/helpers/FrmProEntriesListHelper.php:68
 #: classes/helpers/FrmProEntriesListHelper.php:83
-#: classes/helpers/FrmProFieldsHelper.php:2556
+#: classes/helpers/FrmProFieldsHelper.php:2568
 msgid "Entry ID"
 msgstr "Inzendings ID"
 
@@ -980,59 +992,59 @@ msgstr "Ontwerpstatus"
 msgid "Calendar Date"
 msgstr "Kalender Datum"
 
-#: classes/controllers/FrmProCreditCardsController.php:85
+#: classes/controllers/FrmProCreditCardsController.php:84
 msgid "Expiration Month"
 msgstr "Vervalmaand"
 
-#: classes/controllers/FrmProCreditCardsController.php:86
+#: classes/controllers/FrmProCreditCardsController.php:85
 msgid "Expiration Year"
 msgstr "Vervaljaar"
 
-#: classes/controllers/FrmProFieldsController.php:171
+#: classes/controllers/FrmProFieldsController.php:172
 msgid "Select options"
 msgstr ""
 
-#: classes/controllers/FrmProFieldsController.php:171
+#: classes/controllers/FrmProFieldsController.php:172
 msgid "Select an option"
 msgstr ""
 
-#: classes/controllers/FrmProFieldsController.php:270
+#: classes/controllers/FrmProFieldsController.php:284
 msgid "Other"
 msgstr ""
 
-#: classes/controllers/FrmProFieldsController.php:319
+#: classes/controllers/FrmProFieldsController.php:331
 msgid "One Column"
 msgstr ""
 
-#: classes/controllers/FrmProFieldsController.php:320
+#: classes/controllers/FrmProFieldsController.php:332
 msgid "Two Columns"
 msgstr ""
 
-#: classes/controllers/FrmProFieldsController.php:321
+#: classes/controllers/FrmProFieldsController.php:333
 msgid "Three Columns"
 msgstr ""
 
-#: classes/controllers/FrmProFieldsController.php:322
+#: classes/controllers/FrmProFieldsController.php:334
 msgid "Four Columns"
 msgstr ""
 
-#: classes/controllers/FrmProFieldsController.php:323
+#: classes/controllers/FrmProFieldsController.php:335
 msgid "Inline Options"
 msgstr ""
 
-#: classes/controllers/FrmProFieldsController.php:438
+#: classes/controllers/FrmProFieldsController.php:492
 #: classes/views/frmpro-fields/options-form-before.php:45
 msgid "Select a taxonomy on the Form Actions tab of the Form Settings page"
 msgstr ""
 "Selecteer een taxonomie in het tabblad Formulieracties op de "
 "Formulierinstellingspagina"
 
-#: classes/controllers/FrmProFieldsController.php:894
-#: classes/controllers/FrmProFieldsController.php:900
+#: classes/controllers/FrmProFieldsController.php:948
+#: classes/controllers/FrmProFieldsController.php:954
 msgid "Show form uploads"
 msgstr "Geeft formulier uploads weer"
 
-#: classes/controllers/FrmProFieldsController.php:899
+#: classes/controllers/FrmProFieldsController.php:953
 msgid "Hide form uploads"
 msgstr "Verberg formulier uploads"
 
@@ -1041,8 +1053,8 @@ msgid "For Each"
 msgstr "Voor elk"
 
 #: classes/controllers/FrmProSettingsController.php:129
-#: classes/controllers/FrmProGraphsController.php:1699
-#: classes/controllers/FrmProGraphsController.php:1731
+#: classes/controllers/FrmProGraphsController.php:1707
+#: classes/controllers/FrmProGraphsController.php:1739
 msgid "Creation Date"
 msgstr "Aanmaak datum"
 
@@ -1093,15 +1105,15 @@ msgstr ""
 msgid "Styles"
 msgstr "Stijlen"
 
-#: classes/controllers/FrmProXMLController.php:159
+#: classes/controllers/FrmProXMLController.php:160
 msgid "All Fields are required"
 msgstr "Alle velden zijn verplicht"
 
-#: classes/controllers/FrmProXMLController.php:171
+#: classes/controllers/FrmProXMLController.php:172
 msgid "That CSV was not uploaded. Are CSV files allowed on your site?"
 msgstr ""
 
-#: classes/controllers/FrmProXMLController.php:198
+#: classes/controllers/FrmProXMLController.php:199
 msgid "CSV cannot be opened."
 msgstr "CSV kan niet worden geopend"
 
@@ -1223,45 +1235,45 @@ msgstr "De bijdrage is met succes gekopieerd"
 msgid "There was a problem duplicating that entry"
 msgstr "Er is een probllem opgetreden bij het kopiëren van de inzending"
 
-#: classes/controllers/FrmProEntriesController.php:185
+#: classes/controllers/FrmProEntriesController.php:269
 msgid "No entries were specified"
 msgstr "Geen bijdragen gespecificeerd"
 
-#: classes/controllers/FrmProEntriesController.php:212
+#: classes/controllers/FrmProEntriesController.php:296
 msgid "No form was found"
 msgstr "Geen formulier gevonden"
 
-#: classes/controllers/FrmProEntriesController.php:1080
+#: classes/controllers/FrmProEntriesController.php:1170
 msgid "Create Entry in Form"
 msgstr "Inzending aanmaken in formulier"
 
-#: classes/controllers/FrmProEntriesController.php:1123
+#: classes/controllers/FrmProEntriesController.php:1213
 msgid "Copied from Post"
 msgstr "Gekopieerd van bericht"
 
-#: classes/controllers/FrmProEntriesController.php:1166
-#: classes/controllers/FrmProEntriesController.php:1236
+#: classes/controllers/FrmProEntriesController.php:1256
+#: classes/controllers/FrmProEntriesController.php:1326
 msgid "You are trying to access an entry that does not exist."
 msgstr ""
 
-#: classes/controllers/FrmProEntriesController.php:1226
+#: classes/controllers/FrmProEntriesController.php:1316
 msgid "Save"
 msgstr "Bewaar"
 
-#: classes/controllers/FrmProEntriesController.php:1491
+#: classes/controllers/FrmProEntriesController.php:1578
 msgid "Post"
 msgstr "Bericht"
 
-#: classes/controllers/FrmProEntriesController.php:1492
+#: classes/controllers/FrmProEntriesController.php:1579
 #: classes/views/displays/where_options.php:25
 msgid "Draft"
 msgstr "Concept"
 
-#: classes/controllers/FrmProEntriesController.php:1493
+#: classes/controllers/FrmProEntriesController.php:1580
 msgid "Parent Entry ID"
 msgstr "Bovenliggende inzending ID"
 
-#: classes/controllers/FrmProEntriesController.php:1508
+#: classes/controllers/FrmProEntriesController.php:1595
 #: classes/controllers/FrmProDisplaysController.php:213
 #: classes/views/styles/_style_switcher.php:8
 #: classes/helpers/FrmProEntriesHelper.php:272
@@ -1269,19 +1281,19 @@ msgstr "Bovenliggende inzending ID"
 msgid "Duplicate"
 msgstr "Kopieer"
 
-#: classes/controllers/FrmProEntriesController.php:1529
+#: classes/controllers/FrmProEntriesController.php:1616
 #: classes/helpers/FrmProDisplaysHelper.php:87
 msgid "No Entries Found"
 msgstr "Geen bijdragen gevonden"
 
-#: classes/controllers/FrmProEntriesController.php:1530
-#: classes/controllers/FrmProEntriesController.php:1918
-#: classes/controllers/FrmProEntriesController.php:1992
-#: classes/controllers/FrmProEntriesController.php:2397
+#: classes/controllers/FrmProEntriesController.php:1617
+#: classes/controllers/FrmProEntriesController.php:2013
+#: classes/controllers/FrmProEntriesController.php:2087
+#: classes/controllers/FrmProEntriesController.php:2492
 msgid "Are you sure you want to delete that entry?"
 msgstr "Weet je zeker dat je deze inzending wilt verwijderen?"
 
-#: classes/controllers/FrmProEntriesController.php:1545
+#: classes/controllers/FrmProEntriesController.php:1632
 msgid ""
 "There are no matching fields. Please check your formresults shortcode to "
 "make sure you are using the correct form and field IDs."
@@ -1290,50 +1302,43 @@ msgstr ""
 "formulierresultaten en zorg ervoor dat u de juiste formulier- en veld-ID's "
 "gebruikt."
 
-#: classes/controllers/FrmProEntriesController.php:1713
-#: classes/controllers/FrmProEntriesController.php:2238
-#: classes/helpers/FrmProAppHelper.php:288
-#: classes/helpers/FrmProEntriesHelper.php:853
-msgid "Edit"
-msgstr "Bewerken"
-
-#: classes/controllers/FrmProEntriesController.php:1727
-#: classes/controllers/FrmProEntriesController.php:1975
+#: classes/controllers/FrmProEntriesController.php:1814
+#: classes/controllers/FrmProEntriesController.php:2070
 #: classes/helpers/FrmProEntriesListHelper.php:7
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: classes/controllers/FrmProEntriesController.php:2239
+#: classes/controllers/FrmProEntriesController.php:2334
 #: classes/views/frmpro-form-actions/_custom_field_row.php:34
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: classes/controllers/FrmProEntriesController.php:2348
+#: classes/controllers/FrmProEntriesController.php:2443
 msgid "You are missing options in your shortcode. A field_id is required."
 msgstr "Je mist opties in uw shortcode. Een field_id is verplicht."
 
-#: classes/controllers/FrmProEntriesController.php:2438
-#: classes/controllers/FrmProEntriesController.php:2718
+#: classes/controllers/FrmProEntriesController.php:2533
+#: classes/controllers/FrmProEntriesController.php:2813
 msgid "Your entry was successfully deleted"
 msgstr "Je inzending is met succces verwijderd"
 
-#: classes/controllers/FrmProEntriesController.php:2478
+#: classes/controllers/FrmProEntriesController.php:2573
 msgid "You are missing options in your shortcode. field_id is required."
 msgstr ""
 
-#: classes/controllers/FrmProEntriesController.php:2734
+#: classes/controllers/FrmProEntriesController.php:2829
 msgid "There was an error deleting that entry"
 msgstr "Er is een fout opgetreden bij het verwijderen van deze inzending"
 
-#: classes/controllers/FrmProEntriesController.php:2755
+#: classes/controllers/FrmProEntriesController.php:2850
 msgid "no one"
 msgstr "niemand"
 
-#: classes/controllers/FrmProEntriesController.php:2758
+#: classes/controllers/FrmProEntriesController.php:2853
 msgid "Resent to %s"
 msgstr ""
 
-#: classes/controllers/FrmProEntriesController.php:2760
+#: classes/controllers/FrmProEntriesController.php:2855
 msgid "Resent to No one! You do not have permission"
 msgstr ""
 
@@ -1390,8 +1395,8 @@ msgstr "Datum"
 
 #: classes/controllers/FrmProDisplaysController.php:243
 #: classes/views/displays/mb_advanced.php:111
-#: classes/helpers/FrmProFieldsHelper.php:2579
-#: classes/helpers/FrmProFieldsHelper.php:2605
+#: classes/helpers/FrmProFieldsHelper.php:2591
+#: classes/helpers/FrmProFieldsHelper.php:2617
 msgid "Key"
 msgstr "Sleutel"
 
@@ -1472,34 +1477,34 @@ msgstr "jaarlijks"
 msgid "There are no views with that ID"
 msgstr ""
 
-#: classes/controllers/FrmProEddController.php:146
-msgid "Already signed up?"
+#: classes/controllers/FrmProEddController.php:165
+msgid "Disconnect this site"
 msgstr ""
 
-#: classes/controllers/FrmProEddController.php:152
-msgid "Deauthorize this site"
-msgstr "Machtiging voor deze site intrekken"
-
-#: classes/controllers/FrmProEddController.php:172
+#: classes/controllers/FrmProEddController.php:204
 msgid "Verify a different license key"
 msgstr ""
 
-#: classes/controllers/FrmProEddController.php:174
+#: classes/controllers/FrmProEddController.php:206
 msgid "Enter your license key here"
 msgstr ""
 
-#: classes/controllers/FrmProEddController.php:182
+#: classes/controllers/FrmProEddController.php:214
 msgid "License is active"
 msgstr ""
 
-#: classes/controllers/FrmProEddController.php:187
+#: classes/controllers/FrmProEddController.php:220
 msgid "Save License"
 msgstr "Licentie opslaan"
 
-#: classes/controllers/FrmProEddController.php:196
+#: classes/controllers/FrmProEddController.php:230
 msgid "Use this license to enable Formidable Pro site-wide"
 msgstr ""
 "Gebruik deze licentie om Formidable Pro voor de hele website te activeren"
+
+#: classes/controllers/FrmProEddController.php:236
+msgid "Click to enter a license key manually"
+msgstr ""
 
 #: classes/controllers/FrmProGraphsController.php:19
 msgid "You must include a field id or key in your graph shortcode."
@@ -1513,51 +1518,51 @@ msgstr ""
 "Meerdere waardes gebruiken in de id grafiek parameter is verwijderd vanaf "
 "versie 2.02.04"
 
-#: classes/controllers/FrmProGraphsController.php:254
+#: classes/controllers/FrmProGraphsController.php:257
 msgid "No data"
 msgstr ""
 
-#: classes/controllers/FrmProGraphsController.php:608
-#: classes/controllers/FrmProGraphsController.php:1146
-#: classes/controllers/FrmProGraphsController.php:1732
+#: classes/controllers/FrmProGraphsController.php:611
+#: classes/controllers/FrmProGraphsController.php:1154
+#: classes/controllers/FrmProGraphsController.php:1740
 #: classes/views/frmpro-statistics/show.php:16
 msgid "Submissions"
 msgstr "Inschrijvingen"
 
-#: classes/controllers/FrmProGraphsController.php:1142
+#: classes/controllers/FrmProGraphsController.php:1150
 msgid "Total"
 msgstr "Totaal"
 
-#: classes/controllers/FrmProGraphsController.php:1144
+#: classes/controllers/FrmProGraphsController.php:1152
 #: classes/views/frmpro-statistics/show.php:73
 msgid "Average"
 msgstr "Gemiddeld"
 
-#: classes/controllers/FrmProGraphsController.php:1161
+#: classes/controllers/FrmProGraphsController.php:1169
 msgid "Fields"
 msgstr "Velden"
 
-#: classes/controllers/FrmProGraphsController.php:1701
+#: classes/controllers/FrmProGraphsController.php:1709
 msgid "Updated At"
 msgstr "Laatste update op"
 
-#: classes/controllers/FrmProGraphsController.php:1705
+#: classes/controllers/FrmProGraphsController.php:1713
 msgid "Invalid x-axis"
 msgstr "Ongeldige x as"
 
-#: classes/controllers/FrmProGraphsController.php:1908
+#: classes/controllers/FrmProGraphsController.php:1916
 msgid "Q1"
 msgstr "Q1"
 
-#: classes/controllers/FrmProGraphsController.php:1910
+#: classes/controllers/FrmProGraphsController.php:1918
 msgid "Q2"
 msgstr "Q2"
 
-#: classes/controllers/FrmProGraphsController.php:1912
+#: classes/controllers/FrmProGraphsController.php:1920
 msgid "Q3"
 msgstr "Q3"
 
-#: classes/controllers/FrmProGraphsController.php:1914
+#: classes/controllers/FrmProGraphsController.php:1922
 msgid "Q4"
 msgstr "Q4"
 
@@ -1927,8 +1932,8 @@ msgstr "Bewerk de inzending"
 #: classes/views/frmpro-entries/table.php:5
 #: classes/views/frmpro-entries/table.php:84
 #: classes/views/displays/mb_advanced.php:108
-#: classes/helpers/FrmProFieldsHelper.php:2578
-#: classes/helpers/FrmProFieldsHelper.php:2604
+#: classes/helpers/FrmProFieldsHelper.php:2590
+#: classes/helpers/FrmProFieldsHelper.php:2616
 msgid "ID"
 msgstr "ID"
 
@@ -2010,6 +2015,7 @@ msgid "Search Smart Tags"
 msgstr ""
 
 #: classes/views/frmpro-forms/instructions.php:39
+#: classes/views/frmpro-fields/back-end/default-terms.php:33
 msgid ""
 "Click smart value to dynamically populate this field. Smart values are not "
 "used when editing entries."
@@ -2167,11 +2173,15 @@ msgstr "Gebruik inhoud van pagina"
 msgid "Allow logged-in users to save drafts"
 msgstr "Ingelogde gebruikers toestaan om concepten op te slaan"
 
-#: classes/views/frmpro-forms/add_form_options.php:128
+#: classes/views/frmpro-forms/add_form_options.php:126
+msgid "File protection is not currently supported on NGINX servers."
+msgstr ""
+
+#: classes/views/frmpro-forms/add_form_options.php:133
 msgid "Protect all files uploaded in this form"
 msgstr "Bescherm alle bestanden die in dit formulier geüpload zijn"
 
-#: classes/views/frmpro-forms/add_form_options.php:142
+#: classes/views/frmpro-forms/add_form_options.php:147
 msgid "Copy this form to other blogs when Formidable Forms is activated"
 msgstr ""
 "Kopieer dit formulier naar andere blogs wanneer Formidable Forms is "
@@ -2199,14 +2209,14 @@ msgstr "Datum gebeurtenis"
 #: classes/views/displays/order_row.php:10
 #: classes/helpers/FrmProEntriesListHelper.php:65
 #: classes/helpers/FrmProEntriesListHelper.php:82
-#: classes/helpers/FrmProFieldsHelper.php:2560
+#: classes/helpers/FrmProFieldsHelper.php:2572
 msgid "Entry creation date"
 msgstr "Datum aanmaken inzending"
 
 #: classes/views/displays/_calendar_options.php:8
 #: classes/views/displays/_calendar_options.php:25
 #: classes/views/displays/order_row.php:13
-#: classes/helpers/FrmProFieldsHelper.php:2561
+#: classes/helpers/FrmProFieldsHelper.php:2573
 msgid "Entry update date"
 msgstr "Inzending bijgewerkt op"
 
@@ -2467,7 +2477,7 @@ msgstr ""
 #: classes/views/displays/order_row.php:7
 #: classes/views/xml/map_csv_fields.php:72
 #: classes/views/xml/map_csv_fields.php:73
-#: classes/helpers/FrmProFieldsHelper.php:2557
+#: classes/helpers/FrmProFieldsHelper.php:2569
 msgid "Entry Key"
 msgstr "Inzendings sleutel"
 
@@ -2545,11 +2555,11 @@ msgstr ""
 msgid "\"Other\" option"
 msgstr ""
 
-#: classes/views/frmpro-fields/options-form-top.php:9
+#: classes/views/frmpro-fields/options-form-top.php:3
 msgid "Collapsible: This section will slide open and closed."
 msgstr ""
 
-#: classes/views/frmpro-fields/options-form-top.php:11
+#: classes/views/frmpro-fields/options-form-top.php:5
 msgid "Collapsible"
 msgstr "Inklapbare"
 
@@ -2564,7 +2574,7 @@ msgid "Maximum upload size: %sMB"
 msgstr "Maximale uploadgrootte: %sMB"
 
 #: classes/views/frmpro-fields/back-end/field-data.php:8
-#: classes/views/frmpro-fields/back-end/field-form.php:8
+#: classes/views/frmpro-fields/back-end/field-form.php:9
 #: classes/views/lookup-fields/back-end/input.php:7
 msgid "This field is not set up yet."
 msgstr ""
@@ -2606,6 +2616,7 @@ msgid "Option Layout"
 msgstr ""
 
 #: classes/views/frmpro-fields/back-end/default-placeholder.php:22
+#: classes/views/frmpro-fields/back-end/calculations.php:3
 msgid "Default Value"
 msgstr ""
 
@@ -2616,6 +2627,18 @@ msgstr ""
 #: classes/views/frmpro-fields/back-end/default-placeholder.php:41
 msgid "Description"
 msgstr "Omschrijving"
+
+#: classes/views/frmpro-fields/back-end/summary-options.php:3
+msgid "Exclude Fields from Summary"
+msgstr ""
+
+#: classes/views/frmpro-fields/back-end/summary-options.php:21
+msgid "Exclude Fields"
+msgstr ""
+
+#: classes/views/frmpro-fields/back-end/summary-options.php:29
+msgid "Show these automatically excluded field types"
+msgstr ""
 
 #: classes/views/frmpro-fields/back-end/confirmation-placeholder.php:3
 msgid "Confirmation Placeholder"
@@ -2708,6 +2731,7 @@ msgid "Field List"
 msgstr ""
 
 #: classes/views/frmpro-fields/back-end/calculation-settings.php:31
+#: classes/views/frmpro-fields/back-end/summary-exclude-fields-settings.php:16
 msgid "Search Fields"
 msgstr ""
 
@@ -2717,8 +2741,12 @@ msgid ""
 "Example: [12]+[13]"
 msgstr ""
 
+#: classes/views/frmpro-fields/back-end/field-form.php:19
+msgid "Embedded Form: "
+msgstr ""
+
 #. translators: %1$s: Form name
-#: classes/views/frmpro-fields/back-end/field-form.php:23
+#: classes/views/frmpro-fields/back-end/field-form.php:24
 msgid "Embedded Form: %1$s"
 msgstr ""
 
@@ -2742,6 +2770,14 @@ msgstr ""
 #: classes/views/frmpro-fields/back-end/multi-select.php:10
 msgid "Autocomplete"
 msgstr "Automatisch voltooien"
+
+#: classes/views/frmpro-fields/back-end/default-terms.php:3
+msgid "No options found."
+msgstr ""
+
+#: classes/views/frmpro-fields/back-end/default-terms.php:10
+msgid "Search Terms"
+msgstr ""
 
 #: classes/views/frmpro-fields/back-end/password-options.php:2
 msgid ""
@@ -2869,6 +2905,13 @@ msgid ""
 msgstr ""
 "Deze knoppen zijn bedoeld als voorbeeld. Ze zijn functioneel in je formulier"
 
+#. translators: %1$s: HTML open link, %2$s: HTML close link
+#: classes/views/frmpro-fields/back-end/summary-exclude-fields-settings.php:5
+msgid ""
+"Select a field from the list below to exclude it from the summary OR "
+"%1$sLearn which fields are automatically included%2$s."
+msgstr ""
+
 #: classes/views/frmpro-fields/back-end/calendar.php:2
 msgid ""
 "Use four digit years or +/- years to make it dynamic. For example, use -5 "
@@ -2911,6 +2954,21 @@ msgstr ""
 
 #: classes/views/frmpro-fields/back-end/repeat-buttons.php:20
 msgid "Remove Label"
+msgstr ""
+
+#: classes/views/frmpro-fields/back-end/checkbox-limit.php:2
+msgid ""
+"The maximum number of this checkbox's options that the end user is allowed "
+"to select in one entry"
+msgstr ""
+
+#: classes/views/frmpro-fields/back-end/checkbox-limit.php:3
+msgid "Limit Selections"
+msgstr ""
+
+#: classes/views/frmpro-fields/back-end/field-summary.php:8
+msgid ""
+"Summary: This field displays a summary of values entered on previous pages."
 msgstr ""
 
 #: classes/views/frmpro-fields/back-end/autopopulate-values.php:6
@@ -2988,6 +3046,10 @@ msgstr ""
 
 #: classes/views/frmpro-fields/back-end/calculations.php:5
 msgid "Calculation"
+msgstr ""
+
+#: classes/views/frmpro-fields/back-end/calculations.php:24
+msgid "Calculate Default Value"
 msgstr ""
 
 #: classes/views/frmpro-fields/back-end/repeat-options.php:2
@@ -3383,7 +3445,7 @@ msgstr "Is niet van toepassing voor beheerders"
 msgid "No options found"
 msgstr "Geen opties gevonden"
 
-#: classes/helpers/FrmProEntryMetaHelper.php:170
+#: classes/helpers/FrmProEntryMetaHelper.php:171
 msgid "View all posts filed under %s"
 msgstr "Bekijk alle berichten onder %s"
 
@@ -3405,84 +3467,84 @@ msgstr "Exporteer naar CSV"
 msgid "All Fields"
 msgstr "Alle velden"
 
-#: classes/helpers/FrmProFieldsHelper.php:790
+#: classes/helpers/FrmProFieldsHelper.php:791
 msgid "The entered values do not match"
 msgstr ""
 
-#: classes/helpers/FrmProFieldsHelper.php:1342
+#: classes/helpers/FrmProFieldsHelper.php:1352
 msgid "No Categories"
 msgstr "Geen Categorieën"
 
-#: classes/helpers/FrmProFieldsHelper.php:2112
+#: classes/helpers/FrmProFieldsHelper.php:2123
 msgid "Confirm"
 msgstr "Bevestig"
 
-#: classes/helpers/FrmProFieldsHelper.php:2288
+#: classes/helpers/FrmProFieldsHelper.php:2300
 msgid "Edit Uploaded File"
 msgstr "Bewerk geupload bestand"
 
-#: classes/helpers/FrmProFieldsHelper.php:2554
+#: classes/helpers/FrmProFieldsHelper.php:2566
 msgid "Select a value to insert into the box below"
 msgstr "Selecteer een waarde om in het onderstaande vakje toe te voegen"
 
-#: classes/helpers/FrmProFieldsHelper.php:2559
+#: classes/helpers/FrmProFieldsHelper.php:2571
 msgid "User IP"
 msgstr "User IP"
 
-#: classes/helpers/FrmProFieldsHelper.php:2563
+#: classes/helpers/FrmProFieldsHelper.php:2575
 msgid "Form Fields"
 msgstr "Formulier velden"
 
-#: classes/helpers/FrmProFieldsHelper.php:2582
+#: classes/helpers/FrmProFieldsHelper.php:2594
 msgid "Thumbnail"
 msgstr "Thumbnail"
 
-#: classes/helpers/FrmProFieldsHelper.php:2585
+#: classes/helpers/FrmProFieldsHelper.php:2597
 msgid "Medium"
 msgstr "Medium"
 
-#: classes/helpers/FrmProFieldsHelper.php:2588
+#: classes/helpers/FrmProFieldsHelper.php:2600
 msgid "Large"
 msgstr "Groot"
 
-#: classes/helpers/FrmProFieldsHelper.php:2591
+#: classes/helpers/FrmProFieldsHelper.php:2603
 msgid "Full Size"
 msgstr "Volledig formaat"
 
-#: classes/helpers/FrmProFieldsHelper.php:2617
+#: classes/helpers/FrmProFieldsHelper.php:2629
 msgid "Helpers"
 msgstr "Helpers"
 
-#: classes/helpers/FrmProFieldsHelper.php:2618
+#: classes/helpers/FrmProFieldsHelper.php:2630
 msgid "Admin link to edit the entry"
 msgstr "Beheerders link om de inzending te kunnen bewerken"
 
-#: classes/helpers/FrmProFieldsHelper.php:2621
+#: classes/helpers/FrmProFieldsHelper.php:2633
 msgid "Link to view single page if showing dynamic entries"
 msgstr ""
 "Link naar enkelvoudige pagina als er dynamische inzendingen worden getoond"
 
-#: classes/helpers/FrmProFieldsHelper.php:2629
+#: classes/helpers/FrmProFieldsHelper.php:2641
 msgid "Add a rotating 'even' or 'odd' class"
 msgstr "Voeg een wisselende 'even' en 'oneven' klasse toe"
 
-#: classes/helpers/FrmProFieldsHelper.php:2633
+#: classes/helpers/FrmProFieldsHelper.php:2645
 msgid "Default Email Message"
 msgstr "Standaard e-mailbericht"
 
-#: classes/helpers/FrmProFieldsHelper.php:2636
+#: classes/helpers/FrmProFieldsHelper.php:2648
 msgid "Site URL"
 msgstr "Site URL"
 
-#: classes/helpers/FrmProFieldsHelper.php:2637
+#: classes/helpers/FrmProFieldsHelper.php:2649
 msgid "Site Name"
 msgstr "Site naam"
 
-#: classes/helpers/FrmProAppHelper.php:725
+#: classes/helpers/FrmProAppHelper.php:739
 msgid "Previous Page"
 msgstr ""
 
-#: classes/helpers/FrmProAppHelper.php:729
+#: classes/helpers/FrmProAppHelper.php:743
 msgid "Next Page"
 msgstr ""
 
@@ -3546,47 +3608,47 @@ msgstr "Laat een lijst met formidable inzendingen zien"
 msgid "Formidable Entries List"
 msgstr "Lijst met Formidable inzendingen"
 
-#: classes/widgets/FrmListEntries.php:213
+#: classes/widgets/FrmListEntries.php:214
 msgid "Title"
 msgstr "Titel"
 
-#: classes/widgets/FrmListEntries.php:216
+#: classes/widgets/FrmListEntries.php:217
 msgid "Use Settings from View"
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:226
+#: classes/widgets/FrmListEntries.php:227
 msgid "Views with a \"Both (Dynamic)\" format will show here."
 msgstr ""
 
-#: classes/widgets/FrmListEntries.php:228
+#: classes/widgets/FrmListEntries.php:229
 msgid "Page"
 msgstr "Pagina"
 
-#: classes/widgets/FrmListEntries.php:239
+#: classes/widgets/FrmListEntries.php:240
 msgid "Title Field"
 msgstr "Titel veld"
 
-#: classes/widgets/FrmListEntries.php:257
+#: classes/widgets/FrmListEntries.php:258
 msgid "List Entries by Category"
 msgstr "Toon inzendingen per categorie"
 
-#: classes/widgets/FrmListEntries.php:261
+#: classes/widgets/FrmListEntries.php:262
 msgid "Category Field"
 msgstr "Categorie veld"
 
-#: classes/widgets/FrmListEntries.php:277
+#: classes/widgets/FrmListEntries.php:278
 msgid "Show Entry Counts"
 msgstr "Laat het aantal inzendingen zien"
 
-#: classes/widgets/FrmListEntries.php:282
+#: classes/widgets/FrmListEntries.php:283
 msgid "Show Only Category Name"
 msgstr "laat alleen de categorienaam zien"
 
-#: classes/widgets/FrmListEntries.php:287
+#: classes/widgets/FrmListEntries.php:288
 msgid "Show Entries Beneath Categories"
 msgstr "Laat de inzendingen onde de categoriën zien"
 
-#: classes/widgets/FrmListEntries.php:294
+#: classes/widgets/FrmListEntries.php:295
 msgid "Entry Limit (leave blank to list all)"
 msgstr "inzendingen Limiet ( laat leeg om alles te gebruiken )"
 

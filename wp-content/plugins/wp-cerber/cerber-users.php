@@ -267,7 +267,7 @@ function crb_admin_show_role_policies() {
 		$tabs_config[ $role_id ] = array(
 			'title'   => $name,
 			//'desc'     => $info,
-			'content' => crb_admin_role_form( $role_id, $policies[ $role_id ] ),
+			'content' => crb_admin_role_form( $role_id, crb_array_get( $policies, $role_id ) ),
 		);
 	}
 

@@ -36,7 +36,7 @@ if ( FrmField::is_read_only( $field ) ) {
 ?>
 <input type="hidden" name="<?php echo esc_attr( $input_name ) ?>" value="<?php echo esc_attr( $hidden_value ) ?>" data-frmfile="<?php echo esc_attr( $field['id'] ) ?>" />
 
-<div class="frm_dropzone frm_<?php echo esc_attr( $file_settings['maxFiles'] == 1 ? 'single' : 'multi' ) ?>_upload frm_clearfix" id="<?php echo esc_attr( $file_name ) ?>_dropzone" aria-labelledby="<?php echo esc_html( $html_id ); ?>_label" role="group">
+<div class="frm_dropzone frm_<?php echo esc_attr( $file_settings['maxFiles'] == 1 ? 'single' : 'multi' ) ?>_upload frm_clearfix" id="<?php echo esc_attr( $file_name ) ?>_dropzone" role="group" <?php echo strip_tags( $aria ); ?>>
 	<div class="fallback">
 		<input type="file" name="<?php echo esc_attr( $file_name . ( $is_multiple ? '[]' : '' ) ) ?>" id="<?php echo esc_attr( $html_id ) ?>" <?php echo $extra_atts; do_action( 'frm_field_input_html', $field ) ?> />
 		<?php foreach ( $file_settings['mockFiles'] as $file ) { ?>
@@ -63,8 +63,8 @@ if ( FrmField::is_read_only( $field ) ) {
 	</div>
 	<div class="dz-message needsclick">
 		<span class="frm_icon_font frm_upload_icon"></span>
-		<span class="frm_upload_text"><?php echo esc_html( $field['drop_msg'] ); ?></span>
-		<span class="frm_compact_text"><?php echo esc_html( $field['choose_msg'] ); ?></span>
+		<span class="frm_upload_text"><button type="button"><?php echo esc_html( $field['drop_msg'] ); ?></button></span>
+		<span class="frm_compact_text"><button type="button"><?php echo esc_html( $field['choose_msg'] ); ?></button></span>
 		<div class="frm_small_text">
 			<?php echo esc_html( sprintf( __( 'Maximum upload size: %sMB', 'formidable-pro' ), $file_settings['maxFilesize'] ) ) ?>
 		</div>

@@ -183,19 +183,24 @@ function cerber_show_diag(){
         <div class="diag-section">
             <h3>Database Info</h3>
 			<?php echo cerber_db_diag(); ?>
-			<?php echo '<p style="text-align: right;"><a class="button button-secondary" href="' . wp_nonce_url( add_query_arg( array( 'force_repair_db' => 1 ) ), 'control', 'cerber_nonce' ) . '"><span class="dashicons dashicons-admin-tools" style="vertical-align: middle;"></span> Repair tables</a></p>'; ?>
+			<?php echo '<p style="text-align: right;"><a class="button button-secondary" href="' . wp_nonce_url( add_query_arg( array( 'force_repair_db' => 1 ) ), 'control', 'cerber_nonce' ) . '"><span class="dashicons dashicons-admin-tools" style="vertical-align: middle;"></span> Repair Cerber\'s Tables</a></p>'; ?>
         </div>
         <div class="diag-section">
-            <h3>Server Info</h3>
-            <textarea name="dia" class="code"><?php
-				echo 'PHP version: ' . phpversion() . "\n";
-				$server = $_SERVER;
-				unset($server['HTTP_COOKIE']);
-				foreach ( $server as $key => $value ) {
-					echo '[' . $key . '] => ' . @strip_tags( $value ) . "\n";
-				}
-				?>
-			</textarea>
+            <h3>Server Environment Variables</h3>
+		    <?php
+		    $server = $_SERVER;
+		    if ( ! empty( $server['HTTP_COOKIE'] ) ) {
+			    unset( $server['HTTP_COOKIE'] );
+		    }
+		    if ( ! empty( $server['HTTP_X_COOKIES'] ) ) {
+			    unset( $server['HTTP_X_COOKIES'] );
+		    }
+		    $se = array();
+		    foreach ( $server as $key => $value ) {
+			    $se[] = array( $key, @strip_tags( $value ) );
+		    }
+		    echo cerber_make_plain_table( $se );
+		    ?>
         </div>
         <div class="diag-section">
             <h3>Cerber Security Cloud Status</h3>
@@ -203,8 +208,8 @@ function cerber_show_diag(){
 			echo lab_status();
 			?>
             <p style="text-align: right;">
-                <a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( array( 'clean_up_the_cache' => 1 ) ), 'control', 'cerber_nonce' ); ?>">Clear up cache</a>
-                <a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( array( 'force_check_nodes' => 1 ) ), 'control', 'cerber_nonce' ); ?>">Recheck node status</a>
+                <a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( array( 'clean_up_the_cache' => 1 ) ), 'control', 'cerber_nonce' ); ?>">Clear Up Cache</a>
+                <a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( array( 'force_check_nodes' => 1 ) ), 'control', 'cerber_nonce' ); ?>">Recheck Node Statuses</a>
             </p>
         </div>
 	    <?php
@@ -235,6 +240,15 @@ function cerber_show_diag(){
 		    echo '</ol>';
 		    echo '</div>';
 	    }
+
+	    if ( $status = CRB_DS::get_status() ) {
+		    echo '
+            <div class="diag-section">
+            <h3>Data Shield Status</h3>';
+		    echo $status;
+		    echo '</div>';
+	    }
+
 	    ?>
     </form>
     <script type="text/javascript">
@@ -254,13 +268,13 @@ function cerber_show_lic() {
 	$valid = '';
 	if ( ! empty( $key[2] ) ) {
 		$lic = $key[2];
-		if ( $expires = lab_validate_lic( $lic ) ) {
+		if ( lab_validate_lic( $lic, $expires ) ) {
 			$valid = '
-                <p><span style="color: green;">This key is valid until '.$expires.'</span></p>
+                <p><span style="color: green;">This key is valid until ' . $expires . '</span></p>
                 <p>To move the key to another website or web server, please follow these steps: <a href="https://my.wpcerber.com/how-to-move-license-key/" target="_blank">https://my.wpcerber.com/how-to-move-license-key/</a></p>';
 		}
 		else {
-			$valid = '<p><span style="color: red;">This license key is invalid or expired</span></p>
+			$valid = '<p><span style="color: red;">This license key is invalid or expired ' . $expires . '</span></p>
 			<p>If you believe this key is valid, please follow these steps: <a href="https://my.wpcerber.com/how-to-fix-invalid-or-expired-key/" target="_blank">https://my.wpcerber.com/how-to-fix-invalid-or-expired-key/</a></p>';
 		}
 	}
@@ -308,22 +322,26 @@ function cerber_show_wp_diag(){
 	$tz = ( $tz !== 'UTC' ) ? '<span style="color: red;">' . $tz . '!</span>' : $tz;
 
 	$sys = array(
-		array( 'Server ', $_SERVER['SERVER_SOFTWARE'] ),
-		array( 'PHP version ', phpversion() ),
-		array( 'Server API ', php_sapi_name() ),
-		array( 'WordPress version', cerber_get_wp_version() ),
-		array( 'WordPress locale', get_locale() ),
-		array( 'Options DB table', $wpdb->prefix . 'options' ),
+		array( 'Web Server', $_SERVER['SERVER_SOFTWARE'] ),
+		array( 'PHP version', phpversion() ),
+		array( 'Server API', php_sapi_name() ),
 		array( 'Server platform', PHP_OS ),
 		array( 'Memory limit', @ini_get( 'memory_limit' ) ),
 		array( 'Default PHP timezone', $tz ),
+		array( 'WordPress version', cerber_get_wp_version() ),
+		array( 'WordPress locale', get_locale() ),
+		array( 'WordPress options DB table', $wpdb->prefix . 'options' ),
 	);
+
+	if ( 2 < substr_count( cerber_get_site_url(), '/' ) ) {
+		$sys[] = array( 'Subfolder WP installation', 'YES' );
+	}
 
 	if ( nexus_is_valid_request() ) {
 		$sys[] = array( 'The IP address of the master is detected as', cerber_get_remote_ip() );
 	}
 	else {
-		$sys[] = array( 'Your IP address is detected as', cerber_get_remote_ip() );
+		$sys[] = array( 'Your IP address is detected as', cerber_get_remote_ip() . ' (<a href="https://wpcerber.com/what-is-my-ip/" target="_blank">check it on the what is my IP address page</a>)' );
 	}
 
 	$ret[] = cerber_make_plain_table( $sys );
@@ -336,7 +354,15 @@ function cerber_show_wp_diag(){
 		$folder .= 'quarantine' . DIRECTORY_SEPARATOR;
 	}
 
-
+	if ( file_exists( ABSPATH . 'wp-config.php' )) {
+		$config = ABSPATH . 'wp-config.php';
+	}
+    elseif ( file_exists( dirname( ABSPATH ) . '/wp-config.php' ) ) {
+		$config = dirname( ABSPATH ) . '/wp-config.php';
+	}
+	else {
+		$config = 'None?';
+	}
 
 	$folders = array(
 		array( 'WordPress root folder (ABSPATH) ', ABSPATH ),
@@ -345,23 +371,15 @@ function cerber_show_wp_diag(){
 		array( 'WordPress plugins folder', cerber_get_plugins_dir() ),
 		array( 'WordPress themes folder', cerber_get_themes_dir() ),
 		array( 'WordPress must use plugin folder (WPMU_PLUGIN_DIR) ', WPMU_PLUGIN_DIR ),
+		array( 'WordPress config file', $config ),
 		array( 'PHP folder for uploading files', ini_get( 'upload_tmp_dir' ) ),
 		array( 'Server folder for temporary files', sys_get_temp_dir() ),
 		array( 'Server folder for user session data', session_save_path() ),
-		array( 'Security scanner quarantine folder', $folder ),
+		array( 'Cerber\'s quarantine folder', $folder ),
 		array( 'Cerber\'s diagnostic log', cerber_get_diag_log() )
 	);
 
-	if ( file_exists( ABSPATH . 'wp-config.php' )) {
-	    $config = ABSPATH . 'wp-config.php';
-	}
-    elseif ( file_exists( dirname( ABSPATH ) . '/wp-config.php' ) ) {
-		$config = dirname( ABSPATH ) . '/wp-config.php';
-	}
-	else {
-		$config = 'None?';
-    }
-	$folders[] = array( 'WordPress config file', $config );
+	//$folders[] = array( 'WordPress config file', $config );
 
 	if ( file_exists( ABSPATH . '.htaccess' ) ) {
 		$folders[] = array( 'Main .htaccess file', ABSPATH . '.htaccess' );
@@ -413,17 +431,27 @@ function cerber_show_wp_diag(){
 		$pls[] = array($data['Name'], $data['Version']);
 	}
 
-	$ret[] = 'Active plugins<br />'.cerber_make_plain_table( $pls );
+	$ret[] = '<p>Active plugins</p>' . cerber_make_plain_table( $pls );
 
-	echo implode("<br />",$ret);
+	echo implode("\n",$ret);
 }
 
-function cerber_make_plain_table( $data ) {
-	$ret = '<table class="crb-plain-table">';
+function cerber_make_plain_table( $data, $header = null, $first_header = false, $eq = false ) {
+	$class = 'crb-monospace ';
+	if ( $first_header ) {
+		$class .= ' crb-plain-fh ';
+	}
+	if ( ! $eq ) {
+		$class .= ' crb-plain-fcw ';
+	}
+	$ret = '<div class="crb-plain-table"><table class="' . $class . '">';
+	if ( $header ) {
+		$ret .= '<tr class="crb-plain-header"><td>' . implode( '</td><td>', $header ) . '</td></tr>';
+	}
 	foreach ( $data as $row ) {
 		$ret .= '<tr><td>' . implode( '</td><td>', $row ) . '</td></tr>';
 	}
-	$ret .= '</table>';
+	$ret .= '</table></div>';
 
 	return $ret;
 }
@@ -442,24 +470,28 @@ function cerber_db_diag(){
 
 	$ret = array();
 
-	$ret[] = 'Database name: ' . DB_NAME;
+	$db_info = array();
+
+	$db_info[] = array( 'Database name', DB_NAME );
 
 	$var       = crb_get_mysql_var( 'innodb_buffer_pool_size' );
 	$pool_size = round( $var / 1048576 );
-	$inno      = 'InnoDB buffer pool size: <b>' . $pool_size . ' MB</b>';
+	$inno      = $pool_size . ' MB';
 	if ( $pool_size < 16 ) {
 		$inno .= ' Your pool size is extremely small!';
 	}
     elseif ( $pool_size < 64 ) {
 		$inno .= ' It seems your pool size is too small.';
 	}
-	$ret[] = $inno;
+	$db_info[] = array( 'InnoDB buffer pool size', $inno );
 
 	$var   = crb_get_mysql_var( 'max_allowed_packet' );
-	$ret[] = 'Max allowed packet size: <b>' . round( $var / 1048576 ) . ' MB</b>';
+	$db_info[] = array( 'Max allowed packet size', round( $var / 1048576 ) . ' MB' );
 
-	$ret[] = 'Charset: '.$wpdb->charset;
-	$ret[] = 'Collate: '.$wpdb->collate;
+	$db_info[] = array( 'Charset', $wpdb->charset );
+	$db_info[] = array( 'Collate', $wpdb->collate );
+
+	$ret[] = cerber_make_plain_table($db_info);
 
 	$ret[] = cerber_table_info( CERBER_LOG_TABLE );
 	$ret[] = cerber_table_info( CERBER_ACL_TABLE );
@@ -493,24 +525,29 @@ function cerber_table_info( $table ) {
 	}
 	$cols = $wpdb->get_results( "SHOW FULL COLUMNS FROM " . $table );
 
-	$columns    = '<table><tr><th style="width: 30%">Field</th><th style="width: 30%">Type</th><th style="width: 30%">Collation</th></tr>';
+	$tb = array();
+	//$columns    = '<table><tr><th style="width: 30%">Field</th><th style="width: 30%">Type</th><th style="width: 30%">Collation</th></tr>';
 	foreach ( $cols as $column ) {
 		$column    = obj_to_arr_deep( $column );
 		$field     = array_shift( $column );
 		$type      = array_shift( $column );
 		$collation = array_shift( $column );
-		$columns  .= '<tr><td><b>' . $field . '</b></td><td>' . $type . '</td><td>' . $collation . '</td></tr>';
+		$tb[] = array( $field, $type, $collation );
+
+		//$columns  .= '<tr><td><b>' . $field . '</b></td><td>' . $type . '</td><td>' . $collation . '</td></tr>';
 	}
-	$columns .= '</table>';
+	//$columns .= '</table>';
+
+	$columns = cerber_make_plain_table( $tb, array( 'Field', 'Type', 'Collation' ) );
 
 	$rows = absint( cerber_db_get_var( 'SELECT COUNT(*) FROM ' . $table ) );
 
 	$sts = $wpdb->get_row( 'SHOW TABLE STATUS WHERE NAME = "' . $table .'"');
-	$status = '<table>';
+	$tb = array();
 	foreach ( $sts as $key => $value ) {
-		$status .= '<tr><td><b>' . $key . '</b></td><td>' . $value . '</td></tr>';
+		$tb[] = array( $key, $value );
 	}
-	$status .= '</table>';
+	$status = cerber_make_plain_table( $tb, null, true );
 
 	$truncate = '';
 	if ($rows) {

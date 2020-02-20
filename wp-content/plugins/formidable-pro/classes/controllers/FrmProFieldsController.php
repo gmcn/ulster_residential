@@ -621,7 +621,7 @@ class FrmProFieldsController {
 
         $formatted = array();
         foreach ( $disabled as $dis ) { //format to match javascript dates
-            $formatted[] = date('Y-n-j', strtotime($dis));
+			$formatted[] = gmdate( 'Y-n-j', strtotime( $dis ) );
         }
 
         $disabled = $formatted;
@@ -981,7 +981,7 @@ class FrmProFieldsController {
 	public static function delete_temp_files() {
 		remove_action( 'pre_get_posts', 'FrmProFileField::filter_media_library', 99 );
 
-		$timestamp_cutoff = date( 'Y-m-d H:i:s', strtotime( '-3 hours' ) );
+		$timestamp_cutoff = gmdate( 'Y-m-d H:i:s', strtotime( '-3 hours' ) );
 		$old_uploads = get_posts( array(
 			'post_type' => 'attachment',
 			'posts_per_page' => 50,

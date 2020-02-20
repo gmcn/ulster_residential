@@ -35,9 +35,28 @@ $child_query = new WP_Query( $args ); ?>
              <?php echo $excerpt ?>
            </p>
 
+
+
+
+
+
            <?php if ( is_user_logged_in() ) : ?>
-             <a href="<?php echo the_permalink(); ?>" class="more">view more</a>
-           <?php else : ?>
+
+             <?php if( have_rows('price_list') ): ?>
+             	<?php while( have_rows('price_list') ): the_row();
+             		// vars
+             		$priceRegion = get_sub_field('price_region');
+             		$priceListPdf = get_sub_field('price_list_pdf');
+             		?>
+                 <?php if ($priceRegion == $current_user->price_region): ?>
+                   <a class="more" href="<?php echo $priceListPdf ?>" download>
+                     Download Price List
+                   </a>
+                 <?php endif; ?>
+             	<?php endwhile; ?>
+              <?php else:  ?>
+                <a href="<?php echo the_permalink(); ?>" class="more">view more</a>
+             <?php endif; ?>
 
            <?php endif; ?>
          </div>
@@ -63,8 +82,22 @@ $child_query = new WP_Query( $args ); ?>
            </p>
 
            <?php if ( is_user_logged_in() ) : ?>
-             <a href="<?php echo the_permalink(); ?>" class="more">view more</a>
-           <?php else : ?>
+
+             <?php if( have_rows('price_list') ): ?>
+             	<?php while( have_rows('price_list') ): the_row();
+             		// vars
+             		$priceRegion = get_sub_field('price_region');
+             		$priceListPdf = get_sub_field('price_list_pdf');
+             		?>
+                 <?php if ($priceRegion == $current_user->price_region): ?>
+                   <a class="more" href="<?php echo $priceListPdf ?>" download>
+                     Download Price List
+                   </a>
+                 <?php endif; ?>
+             	<?php endwhile; ?>
+              <?php else:  ?>
+                <a href="<?php echo the_permalink(); ?>" class="more">view more</a>
+             <?php endif; ?>
 
            <?php endif; ?>
 
@@ -79,7 +112,6 @@ $child_query = new WP_Query( $args ); ?>
      <?php endif; ?>
 
     </div>
-
     <?php $i++; endwhile; ?>
   </div>
 

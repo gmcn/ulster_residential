@@ -126,7 +126,7 @@ class FrmProAppHelper {
 				// for reverse compatibility
 				$format = 'g:i A';
 			}
-			$time = date( $format, strtotime( $time ) );
+			$time = gmdate( $format, strtotime( $time ) );
 		}
 		return $time;
 	}
@@ -215,6 +215,7 @@ class FrmProAppHelper {
 	public static function display_to_datepicker_format() {
 		$formats = array(
 			'm/d/Y' => 'mm/dd/yy',
+			'n/j/Y' => 'm/d/yy',
 			'Y/m/d' => 'yy/mm/dd',
 			'd/m/Y' => 'dd/mm/yy',
 			'd.m.Y' => 'dd.mm.yy',
@@ -293,7 +294,7 @@ class FrmProAppHelper {
 			$dummy_ts = strtotime( $date_str );
 		}
 
-		return date( $to_format, $dummy_ts );
+		return gmdate( $to_format, $dummy_ts );
 	}
 
 	public static function get_edit_link( $id ) {
@@ -459,7 +460,7 @@ class FrmProAppHelper {
 		if ( $args['where_val'] == 'NOW' ) {
 			$args['where_val'] = self::get_date( $date_format );
 		} elseif ( ! self::option_is_like( $args['where_is'] ) ) {
-			$args['where_val'] = date( $date_format, strtotime( $args['where_val'] ) );
+			$args['where_val'] = gmdate( $date_format, strtotime( $args['where_val'] ) );
 		}
 	}
 

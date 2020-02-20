@@ -104,7 +104,7 @@ class FrmProFormsController {
 		}
 
 		if ( isset( $frm_vars['google_graphs'] ) && ! empty( $frm_vars['google_graphs'] ) ) {
-			wp_enqueue_script( 'google_jsapi', 'https://www.google.com/jsapi', array(), FrmAppHelper::plugin_version() );
+			wp_enqueue_script( 'google_jsapi', 'https://www.gstatic.com/charts/loader.js', array(), FrmAppHelper::plugin_version() );
 		}
 	}
 
@@ -332,8 +332,8 @@ class FrmProFormsController {
 	public static function add_form_status_options( $values ) {
 		FrmProStylesController::enqueue_jquery_css();
 		wp_enqueue_script( 'jquery-ui-datepicker' );
-		$values['open_date']  = empty( $values['open_date'] ) ? '' : date( 'Y-m-d H:i', strtotime( $values['open_date'] ) );
-		$values['close_date'] = empty( $values['close_date'] ) ? '' : date( 'Y-m-d H:i', strtotime( $values['close_date'] ) );
+		$values['open_date']  = empty( $values['open_date'] ) ? '' : gmdate( 'Y-m-d H:i', strtotime( $values['open_date'] ) );
+		$values['close_date'] = empty( $values['close_date'] ) ? '' : gmdate( 'Y-m-d H:i', strtotime( $values['close_date'] ) );
 
 		require( FrmProAppHelper::plugin_path() . '/classes/views/frmpro-forms/add_form_status_options.php' );
 	}
@@ -410,19 +410,7 @@ class FrmProFormsController {
             $frm_vars['show_fields'] = explode(',', $atts['fields']);
         }
 
-        if ( ! empty($atts['exclude_fields']) ) {
-            if ( ! is_array( $atts['exclude_fields'] ) ) {
-                $atts['exclude_fields'] = explode(',', $atts['exclude_fields']);
-            }
-
-            $query = array(
-                'form_id' => (int) $atts['id'],
-                'id NOT' => $atts['exclude_fields'],
-                'field_key NOT' => $atts['exclude_fields'],
-            );
-
-			$frm_vars['show_fields'] = FrmDb::get_col( $wpdb->prefix . 'frm_fields', $query );
-        }
+        self::set_included_fields( $atts );
 
         if ( $atts['entry_id'] && $atts['entry_id'] == 'last' ) {
             $user_ID = get_current_user_id();
@@ -447,6 +435,37 @@ class FrmProFormsController {
             }
         }
     }
+
+	/**
+	 * If fields are excluded in the form shortcode, set the list of all fields
+	 * that should be included.
+	 *
+	 * @since 4.03.03
+	 */
+	private static function set_included_fields( $atts ) {
+		global $frm_vars;
+		if ( empty( $atts['exclude_fields'] ) ) {
+			return;
+		}
+
+		if ( ! is_array( $atts['exclude_fields'] ) ) {
+			$atts['exclude_fields'] = explode(',', $atts['exclude_fields']);
+		}
+
+		$fields = FrmField::get_all_for_form( (int) $atts['id'], '', 'include' );
+		$exclude_id  = array_filter( $atts['exclude_fields'], 'is_numeric' );
+		$exclude_key = array_filter( $atts['exclude_fields'], 'is_string' );
+
+		$include_ids = array();
+		foreach ( $fields as $field ) {
+			if ( ! in_array( $field->id, $exclude_id ) && ! in_array( $field->field_key, $exclude_key ) ) {
+				$include_ids[] = $field->id;
+			}
+			unset( $field );
+		}
+
+		$frm_vars['show_fields'] = $include_ids;
+	}
 
 	public static function add_form_classes( $form ) {
 		echo ' frm_pro_form ';

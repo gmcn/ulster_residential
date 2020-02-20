@@ -34,7 +34,7 @@ else: ?>
               // Login form arguments.
               $args = array(
               'echo'           => true,
-              'redirect'       => '/retailer-area/',
+              'redirect'       => get_site_url() . '/retailer-area/',
               'form_id'        => 'loginform',
               'label_username' => __( 'Account #' ),
               'label_password' => __( 'Password' ),
