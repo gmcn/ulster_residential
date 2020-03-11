@@ -228,6 +228,12 @@ function cc_mime_types($mimes) {
 }
 add_filter('upload_mimes', 'cc_mime_types');
 
+function sert_heartbeat_settings( $settings ) {
+ $settings['interval'] = 100; //Anything between 15-120
+ return $settings;
+}
+add_filter( 'heartbeat_settings', 'sert_heartbeat_settings' );
+
 //remove pages from search, add page ID to array
 function exclude_search_filter( $query ) {
 	if ( $query->is_search && $query->is_main_query() ) {
@@ -245,6 +251,17 @@ function my_custom_login() {
 echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('stylesheet_directory') . '/login/custom-login-styles.css" />';
 }
 add_action('login_head', 'my_custom_login');
+
+/**
+ * Block wp-admin access for non-admins
+ */
+function ace_block_wp_admin() {
+	if ( is_admin() && ! current_user_can( 'administrator' ) && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		wp_safe_redirect( home_url() );
+		exit;
+	}
+}
+add_action( 'admin_init', 'ace_block_wp_admin' );
 
 //add sitewide ACF
 if( function_exists('acf_add_options_page') ) {
