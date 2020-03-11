@@ -2,17 +2,35 @@
     <div class="container-fluid useful">
     	<div class="row">
 
-        <div class="col-md-6 hidden-xs hidden-sm">
-          <p>Listed below are some other websites that you might be interested in:</p>
-        </div>
 
-        <div class="col-md-6">
-          <h2>Useful Links</h2>
-        </div>
+          <?php if (is_page('contact')) : ?>
+            <div class="col-md-6 hidden-xs hidden-sm">
+              <p>Listed below are some other websites that you might be interested in:</p>
+            </div>
+          <?php else : ?>
+            <div class="col-md-12 hidden-xs hidden-sm">
+              <p>Listed below are some of Ulster Carpets manufacturing videos as well as other carpet related websites you might be interested in</p>
+            </div>
+          <?php endif; ?>
 
-        <div class="col-md-6 hidden-md hidden-lg">
-          <p>Listed below are some other websites that you might be interested in:</p>
-        </div>
+
+
+          <?php if (is_page('contact')) : ?>
+            <div class="col-md-6">
+              <h2>Useful Links</h2>
+            </div>
+          <?php else : ?>
+          <?php endif; ?>
+
+        <?php if (is_page('contact')) : ?>
+          <div class="col-md-6 hidden-md hidden-lg">
+            <p>Listed below are some other websites that you might be interested in:</p>
+          </div>
+        <?php else : ?>
+          <div class="col-md-12 hidden-md hidden-lg">
+            <p>Listed below are some of Ulster Carpets manufacturing videos as well as other carpet related websites you might be interested in<p>
+          </div>
+        <?php endif; ?>
 
     	<?php while( have_rows('useful_links') ): the_row();
 
